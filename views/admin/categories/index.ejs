@@ -59,7 +59,7 @@
                 <% categories.forEach(category => { %>
                   <tr>
                     <td class="text-center">
-                      <img src="/uploads/<%= category.image || 'default-category.jpg' %>" 
+                      <img src="/uploads/categories/<%= category.image || 'default-category.jpg' %>"
                            alt="<%= category.name %>" 
                            class="img-thumbnail category-thumbnail"
                            style="width: 60px; height: 60px; object-fit: cover;">
@@ -146,7 +146,7 @@
         <h5 class="modal-title" id="addCategoryModalLabel">Thêm danh mục mới</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/admin/categories/store" method="POST" enctype="multipart/form-data">
+      <form action="/admin/categories" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
           <% if (typeof csrfToken !== 'undefined') { %>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">

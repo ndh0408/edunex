@@ -1,9 +1,9 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        <a href="/admin/products/create" class="btn btn-primary">
             <i class="fas fa-plus me-1"></i> Thêm sản phẩm
-        </button>
+        </a>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -32,7 +32,13 @@
                         <% products.forEach(product => { %>
                             <tr>
                                 <td>
-                                    <img src="/uploads/<%= product.image || 'default-product.jpg' %>" 
+                                    <% 
+                                    let imageUrl = '/uploads/products/default-product.jpg'; // Default image path
+                                    if (product.images && product.images.length > 0 && product.images[0]) {
+                                        imageUrl = '/uploads/products/' + product.images[0];
+                                    }
+                                    %>
+                                    <img src="<%= imageUrl %>" 
                                          alt="<%= product.name %>" 
                                          class="img-thumbnail"
                                          style="width: 50px; height: 50px; object-fit: cover;">
@@ -40,28 +46,23 @@
                                 <td><%= product.name %></td>
                                 <td><%= product.category ? product.category.name : 'Chưa phân loại' %></td>
                                 <td><%= (product.price || 0).toLocaleString('vi-VN') %> ₫</td>
-                                <td><%= product.stock || 0 %></td>
+                                <td><%= product.countInStock === undefined ? 0 : product.countInStock %></td>
                                 <td>
-                                    <% if (product.active) { %>
-                                        <span class="badge bg-success">Đang bán</span>
+                                    <% if (product.status === 'published') { %>
+                                        <span class="badge bg-success">Đã xuất bản</span>
+                                    <% } else if (product.status === 'draft') { %>
+                                        <span class="badge bg-warning text-dark">Bản nháp</span>
+                                    <% } else if (product.status === 'outOfStock') { %>
+                                         <span class="badge bg-secondary">Hết hàng</span>
                                     <% } else { %>
                                         <span class="badge bg-danger">Ngừng bán</span>
                                     <% } %>
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-info edit-btn"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editProductModal"
-                                                data-id="<%= product._id %>"
-                                                data-name="<%= product.name %>"
-                                                data-category="<%= product.category ? product.category._id : '' %>"
-                                                data-price="<%= product.price || 0 %>"
-                                                data-stock="<%= product.stock || 0 %>"
-                                                data-active="<%= product.active ? 'true' : 'false' %>"
-                                                data-image="<%= product.image || 'default-product.jpg' %>">
+                                        <a href="/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-info">
                                             <i class="fas fa-edit"></i>
-                                        </button>
+                                        </a>
                                         <button type="button" class="btn btn-sm btn-danger delete-btn"
                                                 data-id="<%= product._id %>"
                                                 data-name="<%= product.name %>">
@@ -87,167 +88,8 @@
     </div>
 </div>
 
-<!-- Modal Thêm sản phẩm -->
-<div class="modal fade" id="addProductModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm sản phẩm mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="addProductForm" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Tên sản phẩm</label>
-                        <input type="text" class="form-control" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
-                        <select class="form-select" name="category" required>
-                            <option value="">Chọn danh mục</option>
-                            <% if (categories && categories.length > 0) { %>
-                                <% categories.forEach(category => { %>
-                                    <option value="<%= category._id %>"><%= category.name %></option>
-                                <% }); %>
-                            <% } %>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giá</label>
-                        <input type="number" class="form-control" name="price" min="0" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Số lượng</label>
-                        <input type="number" class="form-control" name="stock" min="0" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh</label>
-                        <input type="file" class="form-control" name="image" accept="image/*">
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="active" checked>
-                            <label class="form-check-label">Đang bán</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary">Thêm</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Sửa sản phẩm -->
-<div class="modal fade" id="editProductModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Sửa sản phẩm</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="editProductForm" enctype="multipart/form-data">
-                <input type="hidden" name="id">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Tên sản phẩm</label>
-                        <input type="text" class="form-control" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
-                        <select class="form-select" name="category" required>
-                            <option value="">Chọn danh mục</option>
-                            <% if (categories && categories.length > 0) { %>
-                                <% categories.forEach(category => { %>
-                                    <option value="<%= category._id %>"><%= category.name %></option>
-                                <% }); %>
-                            <% } %>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giá</label>
-                        <input type="number" class="form-control" name="price" min="0" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Số lượng</label>
-                        <input type="number" class="form-control" name="stock" min="0" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh</label>
-                        <input type="file" class="form-control" name="image" accept="image/*">
-                        <div class="mt-2">
-                            <img src="" alt="" class="img-thumbnail" id="currentImage" style="max-width: 100px;">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="active">
-                            <label class="form-check-label">Đang bán</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary">Lưu</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <script>
 $(document).ready(function() {
-    // Xử lý form thêm sản phẩm
-    $('#addProductForm').on('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        
-        $.ajax({
-            url: '/admin/products',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    location.reload();
-                } else {
-                    alert(response.message || 'Có lỗi xảy ra');
-                }
-            },
-            error: function() {
-                alert('Có lỗi xảy ra');
-            }
-        });
-    });
-
-    // Xử lý form sửa sản phẩm
-    $('#editProductForm').on('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const id = formData.get('id');
-        
-        $.ajax({
-            url: `/admin/products/${id}`,
-            type: 'PUT',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    location.reload();
-                } else {
-                    alert(response.message || 'Có lỗi xảy ra');
-                }
-            },
-            error: function() {
-                alert('Có lỗi xảy ra');
-            }
-        });
-    });
-
     // Xử lý nút xóa
     $('.delete-btn').on('click', function() {
         const id = $(this).data('id');
@@ -269,25 +111,6 @@ $(document).ready(function() {
                 }
             });
         }
-    });
-
-    // Xử lý nút sửa
-    $('.edit-btn').on('click', function() {
-        const id = $(this).data('id');
-        const name = $(this).data('name');
-        const category = $(this).data('category');
-        const price = $(this).data('price');
-        const stock = $(this).data('stock');
-        const active = $(this).data('active') === 'true';
-        const image = $(this).data('image');
-        
-        $('#editProductForm input[name="id"]').val(id);
-        $('#editProductForm input[name="name"]').val(name);
-        $('#editProductForm select[name="category"]').val(category);
-        $('#editProductForm input[name="price"]').val(price);
-        $('#editProductForm input[name="stock"]').val(stock);
-        $('#editProductForm input[name="active"]').prop('checked', active);
-        $('#currentImage').attr('src', `/uploads/${image}`);
     });
 
     // Setup search

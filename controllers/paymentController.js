@@ -193,6 +193,7 @@ exports.capturePayPalPayment = async (req, res) => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
+      data: {} // Add empty JSON object body as recommended by PayPal
     });
 
     console.log("PayPal capture response:", response.data);
@@ -237,6 +238,10 @@ exports.capturePayPalPayment = async (req, res) => {
     }
   } catch (error) {
     console.error("PayPal capture payment error:", error);
+    // Log more details from PayPal if available (especially for 4xx errors)
+    if (error.response && error.response.data) {
+      console.error("PayPal Error Details:", JSON.stringify(error.response.data, null, 2));
+    }
     req.flash("error_msg", "Có lỗi xảy ra khi xử lý thanh toán PayPal");
     res.redirect("/users/orders");
   }

@@ -1,444 +1,310 @@
-<div class="container-fluid">
-  <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><%= product ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm mới' %></h1>
-    <a href="/admin/products" class="btn btn-secondary">
-      <i class="fas fa-arrow-left me-2"></i>Quay lại
+<div class="container-fluid px-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Chỉnh sửa sản phẩm</h1>
+    <a href="/admin/products" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
     </a>
   </div>
 
-  <!-- Product Form -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Thông tin sản phẩm</h6>
-    </div>
+  <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <form id="product-form" action="<%= product ? `/admin/products/${product._id}?_method=PUT` : '/admin/products' %>" method="POST" enctype="multipart/form-data">
+      <!-- Form submits to PUT route -->
+      <form action="/admin/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data" id="productForm">
+        <!-- CSRF Token -->
+        <% if (typeof csrfToken !== 'undefined') { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } %>
         
-        <!-- Basic Information -->
-        <div class="row mb-4">
+        <div class="row">
+          <!-- Left Column: Main Info -->
           <div class="col-lg-8">
-            <div class="card">
-              <div class="card-header">
-                <h6 class="mb-0">Thông tin cơ bản</h6>
-              </div>
-              <div class="card-body">
-                <!-- Name -->
-                <div class="mb-3">
-                  <label for="name" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="name" name="name" value="<%= product ? product.name : '' %>" required>
-                </div>
-                
-                <!-- Slug -->
-                <div class="mb-3">
-                  <label for="slug" class="form-label">Slug</label>
-                  <input type="text" class="form-control" id="slug" name="slug" value="<%= product ? product.slug : '' %>">
-                  <small class="text-muted">Để trống sẽ tự động tạo từ tên sản phẩm</small>
-                </div>
-                
-                <!-- Description -->
-                <div class="mb-3">
-                  <label for="description" class="form-label">Mô tả <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="description" name="description" rows="10" required><%= product ? product.description : '' %></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-lg-4">
             <div class="card mb-4">
-              <div class="card-header">
-                <h6 class="mb-0">Hình ảnh</h6>
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin cơ bản</h5>
               </div>
               <div class="card-body">
                 <div class="mb-3">
-                  <label for="images" class="form-label">Hình ảnh sản phẩm <span class="text-danger">*</span></label>
-                  <input type="file" class="form-control" id="images" name="images" multiple <%= !product ? 'required' : '' %>>
-                  <small class="text-muted">Có thể chọn nhiều hình ảnh</small>
+                  <label for="name" class="form-label fw-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>" required>
                 </div>
                 
-                <% if (product && product.images && product.images.length > 0) { %>
-                  <div class="product-images mt-3">
-                    <label class="form-label">Hình ảnh hiện tại</label>
-                    <div class="row">
-                      <% product.images.forEach((image, index) => { %>
-                        <div class="col-4 mb-2 position-relative">
-                          <img src="/uploads/<%= image %>" class="img-thumbnail" alt="<%= product.name %>">
-                          <div class="form-check position-absolute" style="top: 5px; right: 20px;">
-                            <input class="form-check-input" type="checkbox" name="removeImages[]" value="<%= image %>" id="removeImage<%= index %>">
-                            <label class="form-check-label" for="removeImage<%= index %>">
-                              <i class="fas fa-trash text-danger"></i>
-                            </label>
-                          </div>
-                        </div>
-                      <% }); %>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="category" class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                      <select class="form-select" id="category" name="category" required>
+                        <option value="">-- Chọn danh mục --</option>
+                        <% categories.forEach(category => { %>
+                          <option value="<%= category._id %>" <%= (product.category && product.category.toString() === category._id.toString()) ? 'selected' : '' %>><%= category.name %></option>
+                        <% }); %>
+                      </select>
                     </div>
-                    <small class="text-muted">Chọn để xóa</small>
                   </div>
-                <% } %>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="brand" class="form-label fw-bold">Thương hiệu</label>
+                      <input type="text" class="form-control" id="brand" name="brand" value="<%= product.brand || '' %>">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="price" class="form-label fw-bold">Giá gốc (VNĐ) <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>" min="0" required>
+                        <span class="input-group-text">VNĐ</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="discountPrice" class="form-label fw-bold">Giá khuyến mãi (VNĐ)</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="discountPrice" name="discountPrice" value="<%= product.discountPrice || '' %>" min="0">
+                        <span class="input-group-text">VNĐ</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="countInStock" class="form-label fw-bold">Số lượng tồn kho <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control" id="countInStock" name="countInStock" value="<%= product.countInStock %>" min="0" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="colors" class="form-label fw-bold">Màu sắc</label>
+                      <input type="text" class="form-control" id="colors" name="colors" value="<%= (product.colors || []).join(', ') %>" placeholder="Đen, Trắng, Đỏ,...">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="sizes" class="form-label fw-bold">Kích thước</label>
+                      <input type="text" class="form-control" id="sizes" name="sizes" value="<%= (product.sizes || []).join(', ') %>" placeholder="S, M, L, XL,...">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="status" class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
+                      <select class="form-select" id="status" name="status" required>
+                        <option value="published" <%= product.status === 'published' ? 'selected' : '' %>>Đã xuất bản</option>
+                        <option value="draft" <%= product.status === 'draft' ? 'selected' : '' %>>Bản nháp</option>
+                        <option value="outOfStock" <%= product.status === 'outOfStock' ? 'selected' : '' %>>Hết hàng</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold d-block">Tùy chọn</label>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="featured" name="featured" <%= product.featured ? 'checked' : '' %>>
+                        <label class="form-check-label" for="featured">Sản phẩm nổi bật</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <div class="card">
-              <div class="card-header">
-                <h6 class="mb-0">Phân loại</h6>
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-align-left me-2"></i>Mô tả sản phẩm</h5>
               </div>
               <div class="card-body">
-                <!-- Category -->
                 <div class="mb-3">
-                  <label for="category" class="form-label">Danh mục <span class="text-danger">*</span></label>
-                  <select class="form-select" id="category" name="category" required>
-                    <option value="">Chọn danh mục</option>
-                    <% categories.forEach(category => { %>
-                      <option value="<%= category._id %>" <%= product && product.category && product.category.toString() === category._id.toString() ? 'selected' : '' %>>
-                        <%= category.name %>
-                      </option>
-                    <% }); %>
-                  </select>
+                  <label for="shortDescription" class="form-label fw-bold">Mô tả ngắn</label>
+                  <textarea class="form-control" id="shortDescription" name="shortDescription" rows="3" placeholder="Nhập mô tả ngắn gọn về sản phẩm..."><%= product.shortDescription || '' %></textarea>
                 </div>
                 
-                <!-- Brand -->
                 <div class="mb-3">
-                  <label for="brand" class="form-label">Thương hiệu</label>
-                  <input type="text" class="form-control" id="brand" name="brand" value="<%= product ? product.brand : '' %>">
-                </div>
-                
-                <!-- Status -->
-                <div class="mb-3">
-                  <label for="status" class="form-label">Trạng thái</label>
-                  <select class="form-select" id="status" name="status">
-                    <option value="published" <%= product && product.status === 'published' ? 'selected' : '' %>>Đã xuất bản</option>
-                    <option value="draft" <%= product && product.status === 'draft' ? 'selected' : '' %>>Bản nháp</option>
-                    <option value="outOfStock" <%= product && product.status === 'outOfStock' ? 'selected' : '' %>>Hết hàng</option>
-                  </select>
-                </div>
-                
-                <!-- Featured -->
-                <div class="form-check mb-3">
-                  <input class="form-check-input" type="checkbox" id="featured" name="featured" <%= product && product.featured ? 'checked' : '' %>>
-                  <label class="form-check-label" for="featured">
-                    Sản phẩm nổi bật
-                  </label>
+                  <label for="description" class="form-label fw-bold">Mô tả chi tiết</label>
+                  <textarea class="form-control" id="description" name="description" rows="6" placeholder="Nhập mô tả chi tiết về sản phẩm..."><%= product.description || '' %></textarea>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        <!-- Pricing and Inventory -->
-        <div class="row mb-4">
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header">
-                <h6 class="mb-0">Giá và tồn kho</h6>
+            
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-list-alt me-2"></i>Thông số kỹ thuật</h5>
               </div>
               <div class="card-body">
-                <!-- Regular Price -->
-                <div class="mb-3">
-                  <label for="price" class="form-label">Giá gốc <span class="text-danger">*</span></label>
-                  <div class="input-group">
-                    <input type="number" class="form-control" id="price" name="price" value="<%= product ? product.price : '' %>" min="0" required>
-                    <span class="input-group-text">₫</span>
-                  </div>
-                </div>
-                
-                <!-- Discount Price -->
-                <div class="mb-3">
-                  <label for="discountPrice" class="form-label">Giá khuyến mãi</label>
-                  <div class="input-group">
-                    <input type="number" class="form-control" id="discountPrice" name="discountPrice" value="<%= product && product.discountPrice ? product.discountPrice : '' %>" min="0">
-                    <span class="input-group-text">₫</span>
-                  </div>
-                  <small class="text-muted">Để trống nếu không có khuyến mãi</small>
-                </div>
-                
-                <!-- Stock -->
-                <div class="mb-3">
-                  <label for="countInStock" class="form-label">Số lượng tồn kho <span class="text-danger">*</span></label>
-                  <input type="number" class="form-control" id="countInStock" name="countInStock" value="<%= product ? product.countInStock : 0 %>" min="0" required>
-                </div>
-                
-                <!-- SKU -->
-                <div class="mb-3">
-                  <label for="sku" class="form-label">Mã sản phẩm (SKU)</label>
-                  <input type="text" class="form-control" id="sku" name="sku" value="<%= product && product.sku ? product.sku : '' %>">
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header">
-                <h6 class="mb-0">Thông số kỹ thuật</h6>
-              </div>
-              <div class="card-body">
+                <p class="text-muted">Thêm hoặc chỉnh sửa thông số kỹ thuật</p>
                 <div id="specifications-container">
-                  <% if (product && product.specifications && Array.isArray(product.specifications) && product.specifications.length > 0) { %>
-                    <% product.specifications.forEach((spec, index) => { %>
-                      <div class="specification-item mb-3 row">
-                        <div class="col-5">
-                          <input type="text" class="form-control" name="specifications[keys][]" placeholder="Tên thông số" value="<%= spec.key %>">
-                        </div>
-                        <div class="col-5">
-                          <input type="text" class="form-control" name="specifications[values][]" placeholder="Giá trị" value="<%= spec.value %>">
-                        </div>
-                        <div class="col-2">
-                          <button type="button" class="btn btn-danger remove-specification">
-                            <i class="fas fa-times"></i>
-                          </button>
-                        </div>
+                  <% (product.specifications || []).forEach((spec, index) => { %>
+                    <div class="specification-row row g-2 mb-2 align-items-center">
+                      <div class="col-md-5">
+                        <input type="text" class="form-control" name="specifications[<%= index %>][key]" value="<%= spec.key %>" placeholder="Tên thông số">
                       </div>
-                    <% }); %>
-                  <% } else { %>
-                    <!-- No specifications yet -->
-                  <% } %>
+                      <div class="col-md-5">
+                        <input type="text" class="form-control" name="specifications[<%= index %>][value]" value="<%= spec.value %>" placeholder="Giá trị">
+                      </div>
+                      <div class="col-md-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-specification">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                  <% }); %>
                 </div>
-                
-                <div class="text-center">
-                  <button type="button" id="add-specification" class="btn btn-sm btn-primary">
+                <div class="mt-2">
+                  <button type="button" id="add-specification" class="btn btn-sm btn-success">
                     <i class="fas fa-plus me-1"></i> Thêm thông số
                   </button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        <!-- Variants -->
-        <div class="row mb-4">
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header">
-                <h6 class="mb-0">Phân loại sản phẩm</h6>
+          
+          <!-- Right Column: Images & Actions -->
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-images me-2"></i>Hình ảnh sản phẩm</h5>
               </div>
               <div class="card-body">
-                <!-- Colors -->
                 <div class="mb-3">
-                  <label class="form-label">Màu sắc</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="color-input" placeholder="Thêm màu">
-                    <button type="button" id="add-color" class="btn btn-outline-primary">Thêm</button>
-                  </div>
-                  <div id="colors-container" class="mt-2">
-                    <% if (product && product.colors && product.colors.length > 0) { %>
-                      <% product.colors.forEach(color => { %>
-                        <div class="badge bg-primary me-1 mb-1 p-2">
-                          <%= color %>
-                          <input type="hidden" name="colors[]" value="<%= color %>">
-                          <a href="#" class="text-white ms-1 remove-color"><i class="fas fa-times"></i></a>
-                        </div>
-                      <% }); %>
-                    <% } %>
-                  </div>
+                  <label class="form-label fw-bold">Thêm ảnh mới</label>
+                  <input type="file" class="form-control image-upload" id="images" name="images" multiple accept="image/*">
+                  <div class="form-text">Tối đa 5 ảnh, kích thước tối đa 2MB/ảnh. Ảnh mới sẽ được thêm vào.</div>
                 </div>
                 
-                <!-- Sizes -->
-                <div class="mb-3">
-                  <label class="form-label">Kích thước</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="size-input" placeholder="Thêm kích thước">
-                    <button type="button" id="add-size" class="btn btn-outline-primary">Thêm</button>
-                  </div>
-                  <div id="sizes-container" class="mt-2">
-                    <% if (product && product.sizes && product.sizes.length > 0) { %>
-                      <% product.sizes.forEach(size => { %>
-                        <div class="badge bg-secondary me-1 mb-1 p-2">
-                          <%= size %>
-                          <input type="hidden" name="sizes[]" value="<%= size %>">
-                          <a href="#" class="text-white ms-1 remove-size"><i class="fas fa-times"></i></a>
-                        </div>
-                      <% }); %>
-                    <% } %>
-                  </div>
+                <label class="form-label fw-bold">Ảnh hiện tại:</label>
+                <div id="current-images-container" class="d-flex flex-wrap gap-2 mb-2">
+                   <% (product.images || []).forEach((imageFile) => { %>
+                    <div class="current-image-item position-relative">
+                        <img src="/uploads/products/<%= imageFile %>" alt="Current Image" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                        <!-- Optional: Add delete button for existing images -->
+                         <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-current-image" data-filename="<%= imageFile %>" style="width: 25px; height: 25px; padding: 0; border-radius: 50%; font-size: 0.7rem;">
+                           <i class="fas fa-times"></i>
+                         </button>
+                         <!-- Hidden input to track images to be removed -->
+                         <input type="hidden" name="removeImages[]" value="<%= imageFile %>" disabled>
+                    </div>
+                   <% }); %>
+                </div>
+
+                <label class="form-label fw-bold">Xem trước ảnh mới:</label>
+                <div class="image-preview-container mt-1 d-flex flex-wrap gap-2">
+                  <!-- Image previews will be displayed here -->
+                </div>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-save me-2"></i>Lưu thay đổi</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Lưu thay đổi
+                  </button>
+                  <a href="/admin/products" class="btn btn-outline-secondary">
+                     <i class="fas fa-times me-2"></i>Hủy
+                   </a>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        <!-- Submit buttons -->
-        <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary me-2" onclick="window.location.href='/admin/products'">Hủy</button>
-          <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
+<!-- Include necessary scripts for image preview, spec management etc. -->
+<!-- Assuming similar JS functionality as create.ejs is needed -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize rich text editor for description
-    if (typeof ClassicEditor !== 'undefined') {
-      ClassicEditor
-        .create(document.querySelector('#description'))
-        .catch(error => {
-          console.error(error);
+document.addEventListener('DOMContentLoaded', function() {
+  // --- Image Preview for New Images ---
+  const imageUpload = document.querySelector('.image-upload');
+  const previewContainer = document.querySelector('.image-preview-container');
+  
+  if (imageUpload && previewContainer) {
+    imageUpload.addEventListener('change', function() {
+      previewContainer.innerHTML = ''; // Clear previous new previews
+      if (this.files && this.files.length > 0) {
+        Array.from(this.files).forEach((file, index) => {
+          if (!file.type.match('image.*')) return;
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const card = document.createElement('div');
+            card.className = 'card image-preview'; card.style.width = '80px';
+            card.innerHTML = `<img src="${e.target.result}" class="card-img-top" alt="Preview" style="height: 80px; object-fit: cover;">`;
+            previewContainer.appendChild(card);
+          };
+          reader.readAsDataURL(file);
         });
-    }
-    
-    // Auto-generate slug from name
-    const nameInput = document.getElementById('name');
-    const slugInput = document.getElementById('slug');
-    
-    nameInput.addEventListener('input', function() {
-      if (!slugInput.value || slugInput.value === '') {
-        slugInput.value = nameInput.value
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/[\s_-]+/g, '-')
-          .replace(/^-+|-+$/g, '');
       }
     });
-    
-    // Specifications handling
-    const specificationsContainer = document.getElementById('specifications-container');
-    const addSpecificationBtn = document.getElementById('add-specification');
-    
-    addSpecificationBtn.addEventListener('click', function() {
-      const html = `
-        <div class="specification-item mb-3 row">
-          <div class="col-5">
-            <input type="text" class="form-control" name="specifications[keys][]" placeholder="Tên thông số">
-          </div>
-          <div class="col-5">
-            <input type="text" class="form-control" name="specifications[values][]" placeholder="Giá trị">
-          </div>
-          <div class="col-2">
-            <button type="button" class="btn btn-danger remove-specification">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+  }
+
+  // --- Specification Management ---
+  const specContainer = document.getElementById('specifications-container');
+  const addSpecBtn = document.getElementById('add-specification');
+  let specCounter = (specContainer.querySelectorAll('.specification-row').length || 0) - 1; // Initialize based on existing rows
+
+  if (specContainer && addSpecBtn) {
+    addSpecBtn.addEventListener('click', function() {
+      specCounter++;
+      const newRow = document.createElement('div');
+      newRow.className = 'specification-row row g-2 mb-2 align-items-center';
+      newRow.innerHTML = `
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="specifications[${specCounter}][key]" placeholder="Tên thông số">
+        </div>
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="specifications[${specCounter}][value]" placeholder="Giá trị">
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-specification">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       `;
-      
-      specificationsContainer.insertAdjacentHTML('beforeend', html);
-      
-      // Attach event listener to the new remove button
-      const removeButtons = document.querySelectorAll('.remove-specification');
-      removeButtons[removeButtons.length - 1].addEventListener('click', function() {
-        this.closest('.specification-item').remove();
-      });
+      specContainer.appendChild(newRow);
     });
-    
-    // Attach event listeners to existing remove buttons
-    document.querySelectorAll('.remove-specification').forEach(button => {
-      button.addEventListener('click', function() {
-        this.closest('.specification-item').remove();
-      });
-    });
-    
-    // Colors handling
-    const colorInput = document.getElementById('color-input');
-    const addColorBtn = document.getElementById('add-color');
-    const colorsContainer = document.getElementById('colors-container');
-    
-    addColorBtn.addEventListener('click', function() {
-      const color = colorInput.value.trim();
-      if (color !== '') {
-        // Check if color already exists
-        const existingColors = document.querySelectorAll('input[name="colors[]"]');
-        let colorExists = false;
-        
-        existingColors.forEach(existing => {
-          if (existing.value.toLowerCase() === color.toLowerCase()) {
-            colorExists = true;
-          }
-        });
-        
-        if (!colorExists) {
-          const html = `
-            <div class="badge bg-primary me-1 mb-1 p-2">
-              ${color}
-              <input type="hidden" name="colors[]" value="${color}">
-              <a href="#" class="text-white ms-1 remove-color"><i class="fas fa-times"></i></a>
-            </div>
-          `;
-          
-          colorsContainer.insertAdjacentHTML('beforeend', html);
-          colorInput.value = '';
-          
-          // Attach event listener to the new remove button
-          const removeButtons = document.querySelectorAll('.remove-color');
-          removeButtons[removeButtons.length - 1].addEventListener('click', function(e) {
-            e.preventDefault();
-            this.closest('.badge').remove();
-          });
-        } else {
-          alert('Màu này đã tồn tại!');
-        }
+
+    specContainer.addEventListener('click', function(e) {
+      const removeBtn = e.target.closest('.remove-specification');
+      if (removeBtn) {
+        removeBtn.closest('.specification-row').remove();
       }
     });
-    
-    // Attach event listeners to existing remove color buttons
-    document.querySelectorAll('.remove-color').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.closest('.badge').remove();
-      });
-    });
-    
-    // Sizes handling
-    const sizeInput = document.getElementById('size-input');
-    const addSizeBtn = document.getElementById('add-size');
-    const sizesContainer = document.getElementById('sizes-container');
-    
-    addSizeBtn.addEventListener('click', function() {
-      const size = sizeInput.value.trim();
-      if (size !== '') {
-        // Check if size already exists
-        const existingSizes = document.querySelectorAll('input[name="sizes[]"]');
-        let sizeExists = false;
-        
-        existingSizes.forEach(existing => {
-          if (existing.value.toLowerCase() === size.toLowerCase()) {
-            sizeExists = true;
-          }
-        });
-        
-        if (!sizeExists) {
-          const html = `
-            <div class="badge bg-secondary me-1 mb-1 p-2">
-              ${size}
-              <input type="hidden" name="sizes[]" value="${size}">
-              <a href="#" class="text-white ms-1 remove-size"><i class="fas fa-times"></i></a>
-            </div>
-          `;
-          
-          sizesContainer.insertAdjacentHTML('beforeend', html);
-          sizeInput.value = '';
-          
-          // Attach event listener to the new remove button
-          const removeButtons = document.querySelectorAll('.remove-size');
-          removeButtons[removeButtons.length - 1].addEventListener('click', function(e) {
-            e.preventDefault();
-            this.closest('.badge').remove();
-          });
-        } else {
-          alert('Kích thước này đã tồn tại!');
-        }
-      }
-    });
-    
-    // Attach event listeners to existing remove size buttons
-    document.querySelectorAll('.remove-size').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.closest('.badge').remove();
-      });
-    });
-    
-    // Form validation
-    const form = document.getElementById('product-form');
-    form.addEventListener('submit', function(e) {
-      const price = parseFloat(document.getElementById('price').value);
-      const discountPrice = parseFloat(document.getElementById('discountPrice').value);
-      
-      if (discountPrice && discountPrice >= price) {
-        e.preventDefault();
-        alert('Giá khuyến mãi phải nhỏ hơn giá gốc!');
-      }
-    });
-  });
+  }
+
+  // --- Remove Current Image Logic ---
+   const currentImagesContainer = document.getElementById('current-images-container');
+   if (currentImagesContainer) {
+     currentImagesContainer.addEventListener('click', function(e) {
+       const removeBtn = e.target.closest('.remove-current-image');
+       if (removeBtn) {
+         const imageItem = removeBtn.closest('.current-image-item');
+         const hiddenInput = imageItem.querySelector('input[name="removeImages[]"]');
+         if (imageItem.style.opacity === '0.5') {
+            // Already marked, unmark it
+            imageItem.style.opacity = '1';
+            removeBtn.classList.remove('btn-success'); removeBtn.classList.add('btn-danger');
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            hiddenInput.disabled = true; // Disable input when unmarking
+         } else {
+            // Mark for removal
+            imageItem.style.opacity = '0.5';
+            removeBtn.classList.remove('btn-danger'); removeBtn.classList.add('btn-success');
+            removeBtn.innerHTML = '<i class="fas fa-undo"></i>'; // Change to undo icon
+             hiddenInput.disabled = false; // Enable input to submit filename
+         }
+       }
+     });
+   }
+
+});
 </script> 

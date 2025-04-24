@@ -59,7 +59,7 @@
         <div class="col-6 col-md-4">
           <a href="/products?category=<%= category.slug %>" class="text-decoration-none">
             <div class="category-card">
-              <img src="<%= category.image ? '/uploads/' + category.image : 'https://via.placeholder.com/300x200?text=' + category.name %>" alt="<%= category.name %>">
+              <img src="<%= category.image ? '/uploads/categories/' + category.image : 'https://via.placeholder.com/300x200?text=' + category.name %>" alt="<%= category.name %>">
               <div class="category-overlay">
                 <h3 class="m-0"><%= category.name %></h3>
               </div>
@@ -143,7 +143,7 @@
           <div class="card product-card h-100">
             <div class="position-relative">
               <a href="/products/<%= product.slug %>">
-                <img src="<%= product.images && product.images.length > 0 ? '/uploads/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>">
+                <img src="<%= product.images && product.images.length > 0 ? '/uploads/products/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>">
               </a>
               
               <% if (product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price) { %>
@@ -174,8 +174,28 @@
                   <% } %>
                 </div>
                 <div class="product-rating">
-                  <%= renderStars(product.rating) %>
-                  <small class="text-muted">(<%= product.numReviews %>)</small>
+                  <% 
+                    // Calculate rating directly from reviews if available
+                    const rating = product.reviews && product.reviews.length > 0 
+                      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
+                      : 0;
+                    const numReviews = product.reviews ? product.reviews.length : 0;
+                  %>
+                  
+                  <%# Use the renderStars helper if defined, otherwise inline stars %>
+                  <% if (typeof renderStars === 'function') { %>
+                    <%- renderStars(rating) %>
+                  <% } else { %>
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <% if (i <= Math.round(rating)) { %>
+                        <i class="fas fa-star text-warning"></i>
+                      <% } else { %>
+                        <i class="far fa-star text-warning"></i>
+                      <% } %>
+                    <% } %>
+                  <% } %>
+                  
+                  <small class="text-muted">(<%= numReviews %>)</small>
                 </div>
               </div>
             </div>
@@ -208,7 +228,7 @@
           <div class="card product-card h-100">
             <div class="position-relative">
               <a href="/products/<%= product.slug %>">
-                <img src="<%= product.images && product.images.length > 0 ? '/uploads/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>">
+                <img src="<%= product.images && product.images.length > 0 ? '/uploads/products/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>">
               </a>
               
               <% if (product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price) { %>
@@ -240,8 +260,28 @@
                   <% } %>
                 </div>
                 <div class="product-rating">
-                  <%= renderStars(product.rating) %>
-                  <small class="text-muted">(<%= product.numReviews %>)</small>
+                  <% 
+                    // Calculate rating directly from reviews if available
+                    const rating = product.reviews && product.reviews.length > 0 
+                      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
+                      : 0;
+                    const numReviews = product.reviews ? product.reviews.length : 0;
+                  %>
+                  
+                  <%# Use the renderStars helper if defined, otherwise inline stars %>
+                  <% if (typeof renderStars === 'function') { %>
+                    <%- renderStars(rating) %>
+                  <% } else { %>
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <% if (i <= Math.round(rating)) { %>
+                        <i class="fas fa-star text-warning"></i>
+                      <% } else { %>
+                        <i class="far fa-star text-warning"></i>
+                      <% } %>
+                    <% } %>
+                  <% } %>
+                  
+                  <small class="text-muted">(<%= numReviews %>)</small>
                 </div>
               </div>
             </div>
@@ -274,7 +314,7 @@
           <div class="card product-card h-100">
             <div class="position-relative">
               <a href="/products/<%= product.slug %>">
-                <img src="<%= product.images && product.images.length > 0 ? '/uploads/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>">
+                <img src="<%= product.images && product.images.length > 0 ? '/uploads/products/' + product.images[0] : 'https://via.placeholder.com/300?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>" style="height: 200px; object-fit: cover;">
               </a>
               
               <% if (product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price) { %>
@@ -306,8 +346,28 @@
                   <% } %>
                 </div>
                 <div class="product-rating">
-                  <%= renderStars(product.rating) %>
-                  <small class="text-muted">(<%= product.numReviews %>)</small>
+                  <% 
+                    // Calculate rating directly from reviews if available
+                    const rating = product.reviews && product.reviews.length > 0 
+                      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
+                      : 0;
+                    const numReviews = product.reviews ? product.reviews.length : 0;
+                  %>
+                  
+                  <%# Use the renderStars helper if defined, otherwise inline stars %>
+                  <% if (typeof renderStars === 'function') { %>
+                    <%- renderStars(rating) %>
+                  <% } else { %>
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <% if (i <= Math.round(rating)) { %>
+                        <i class="fas fa-star text-warning"></i>
+                      <% } else { %>
+                        <i class="far fa-star text-warning"></i>
+                      <% } %>
+                    <% } %>
+                  <% } %>
+                  
+                  <small class="text-muted">(<%= numReviews %>)</small>
                 </div>
               </div>
             </div>

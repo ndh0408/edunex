@@ -136,7 +136,7 @@
                 
                 <!-- Product image -->
                 <a href="/products/<%= product.slug %>">
-                  <img src="<%= product.images && product.images.length > 0 ? `/uploads/${product.images[0]}` : 'https://via.placeholder.com/300?text=No+Image' %>" 
+                  <img src="<%= product.images && product.images.length > 0 ? `/uploads/products/${product.images[0]}` : 'https://via.placeholder.com/300?text=No+Image' %>" 
                        class="card-img-top" 
                        alt="<%= product.name %>"
                        style="height: 200px; object-fit: cover;">

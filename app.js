@@ -70,6 +70,9 @@ app.use(passport.session());
 // Flash messages
 app.use(flash());
 
+// Initialize CSRF protection AFTER session and cookie parser
+// app.use(csrf());
+
 // CSRF Error Handler (Keep this, place it after session/passport but before routes)
 app.use(function (err, req, res, next) {
   if (err.code === 'EBADCSRFTOKEN') {
@@ -96,7 +99,7 @@ app.use(function (err, req, res, next) {
   }
 });
 
-// Global variables
+// Global variables (Add csrfToken here)
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');

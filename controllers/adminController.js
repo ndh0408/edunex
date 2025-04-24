@@ -44,11 +44,17 @@ exports.getUsers = async (req, res) => {
         res.locals.layout = 'admin/layout';
         res.render('admin/users', { 
             users, 
-            title: 'Quản lý người dùng' 
+            title: 'Quản lý người dùng', 
+            csrfToken: req.csrfToken()
         });
     } catch (error) {
         console.error('Get users error:', error);
-        res.status(500).render('error', { message: 'Error fetching users' });
+        // Ensure layout and title are set for error page
+        res.locals.layout = 'admin/layout'; 
+        res.status(500).render('error', { 
+            title: 'Lỗi hệ thống', // Add title here
+            message: 'Error fetching users' 
+        });
     }
 };
 
@@ -193,36 +199,202 @@ exports.getProducts = async (req, res) => {
     }
 };
 
-exports.createProduct = async (req, res) => {
+// Add this function to render the create product page
+exports.getCreateProductPage = async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+        const categories = await Category.find();
+        res.locals.layout = 'admin/layout'; // Ensure layout is set
+        res.render('admin/products/create', {
+            title: 'Thêm sản phẩm mới',
+            categories: categories,
+            csrfToken: req.csrfToken() // Pass CSRF token for the form
+        });
+    } catch (error) {
+        console.error('Error getting create product page:', error);
+        req.flash('error_msg', 'Không thể tải trang thêm sản phẩm.');
+        res.redirect('/admin/products');
+    }
+};
+
+exports.createProduct = async (req, res) => {
+    console.log('--- Received req.body ---');
+    console.log(JSON.stringify(req.body, null, 2)); // Log incoming body
+
+    // Add validation rules in routes/admin.js later
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        // Handle validation errors - redirect back with errors
+        errors.array().forEach(error => req.flash('error_msg', error.msg));
+        // Need to fetch categories again to re-render the create page
+        try {
+            const categories = await Category.find();
+            res.locals.layout = 'admin/layout'; // Ensure layout is set
+            return res.render('admin/products/create', { 
+                title: 'Thêm sản phẩm mới',
+                categories: categories,
+                error_msg: req.flash('error_msg'),
+                product: req.body // Send back old input
+            });
+        } catch (fetchError) {
+             req.flash('error_msg', 'Lỗi tải trang thêm sản phẩm.');
+             return res.redirect('/admin/products');
+        }
+    }
+
+    try {
+        const productData = { ...req.body };
+
+        console.log('--- Initial productData.specifications ---');
+        console.log(JSON.stringify(productData.specifications, null, 2)); // Log before processing
+
+        // 1. Handle Images (req.files from multer)
+        if (req.files && req.files.length > 0) {
+            productData.images = req.files.map(file => file.filename);
+        } else {
+            // Handle case where no images were uploaded (might be required by schema)
+            productData.images = []; // Or handle as error if required
         }
 
-        const product = new Product(req.body);
-    await product.save();
-        res.status(201).json({ message: 'Product created successfully', product });
+        // 2. Handle Colors and Sizes (split string into array)
+        if (productData.colors && typeof productData.colors === 'string') {
+            productData.colors = productData.colors.split(',').map(color => color.trim()).filter(Boolean);
+        }
+        if (productData.sizes && typeof productData.sizes === 'string') {
+            productData.sizes = productData.sizes.split(',').map(size => size.trim()).filter(Boolean);
+        }
+
+        // 3. Handle Specifications (restructure array)
+        if (productData.specifications && typeof productData.specifications === 'object') {
+            // Assuming input names like specifications[0][key], specifications[0][value]
+            // Object.values might work if the keys are numeric indices from the form
+            const specsArray = Object.values(productData.specifications);
+            console.log('--- specsArray from Object.values ---');
+            console.log(JSON.stringify(specsArray, null, 2)); // Log after Object.values
+
+             // Filter out entries where key or value is empty
+            productData.specifications = specsArray.filter(spec => spec && spec.key && spec.key.trim() !== '' && spec.value && spec.value.trim() !== '')
+                                               .map(spec => ({ key: spec.key.trim(), value: spec.value.trim() })); 
+            
+            console.log('--- Final productData.specifications before save ---');
+            console.log(JSON.stringify(productData.specifications, null, 2)); // Log after processing
+        } else {
+            console.log('--- productData.specifications was not an object or did not exist ---');
+            productData.specifications = []; // Ensure it's an array if not provided correctly
+        }
+
+        // 4. Handle Featured (convert checkbox value)
+        productData.featured = productData.featured === 'on' || productData.featured === true || productData.featured === 'true';
+
+        const product = new Product(productData);
+        await product.save();
+
+        // 5. Redirect with Flash Message
+        req.flash('success_msg', 'Sản phẩm đã được thêm thành công!');
+        res.redirect('/admin/products');
+
     } catch (error) {
         console.error('Create product error:', error);
-        res.status(500).json({ message: 'Error creating product' });
+        let errorMessage = 'Lỗi khi thêm sản phẩm.';
+        if (error.errors) { // Mongoose validation errors
+            errorMessage = Object.values(error.errors).map(e => e.message).join(', ');
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        req.flash('error_msg', `Lỗi: ${errorMessage}`);
+        
+        // Redirect back to create page on error, passing old data
+        try {
+            const categories = await Category.find();
+            res.locals.layout = 'admin/layout'; // Ensure layout is set
+            res.render('admin/products/create', { 
+                title: 'Thêm sản phẩm mới',
+                categories: categories,
+                error_msg: req.flash('error_msg'),
+                product: req.body // Send back old input
+            });
+        } catch (fetchError) {
+             req.flash('error_msg', 'Lỗi tải trang thêm sản phẩm sau khi có lỗi.');
+             res.redirect('/admin/products');
+        }
     }
 };
 
 exports.updateProduct = async (req, res) => {
-  try {
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
-    if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+    const productId = req.params.id;
+    // Add validation rules later if needed
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach(error => req.flash('error_msg', error.msg));
+        // Redirect back to product list or edit page? Redirecting to list for now.
+        return res.redirect('/admin/products'); 
+    }
+
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            req.flash('error_msg', 'Không tìm thấy sản phẩm để cập nhật.');
+            return res.redirect('/admin/products');
         }
-        res.json({ message: 'Product updated successfully', product });
+
+        const updateData = { ...req.body };
+
+        // 1. Handle NEW Images (req.files from multer)
+        if (req.files && req.files.length > 0) {
+            const newImageFilenames = req.files.map(file => file.filename);
+            // Add new images to the existing array (or replace if needed)
+            updateData.images = [...(product.images || []), ...newImageFilenames];
+            // TODO: Add logic here to potentially remove old images selected for deletion
+        } else {
+             // Keep existing images if no new files are uploaded
+             updateData.images = product.images; 
+        }
+
+        // 2. Handle Colors and Sizes (split string into array)
+        if (updateData.colors && typeof updateData.colors === 'string') {
+            updateData.colors = updateData.colors.split(',').map(color => color.trim()).filter(Boolean);
+        }
+         if (updateData.sizes && typeof updateData.sizes === 'string') {
+            updateData.sizes = updateData.sizes.split(',').map(size => size.trim()).filter(Boolean);
+        }
+
+        // 3. Handle Specifications (restructure array)
+        if (updateData.specifications && typeof updateData.specifications === 'object') {
+            const specsArray = Object.values(updateData.specifications);
+            updateData.specifications = specsArray.filter(spec => spec && spec.key && spec.key.trim() !== '' && spec.value && spec.value.trim() !== '')
+                                                .map(spec => ({ key: spec.key.trim(), value: spec.value.trim() }));
+        } else {
+             // If specifications wasn't submitted or malformed, keep the old ones or clear them?
+             // Keeping old ones seems safer unless explicitly cleared.
+             // If the form *always* submits the specifications field (even if empty), 
+             // we might need different logic or a hidden field to indicate clearing.
+            updateData.specifications = product.specifications; // Keep old if not submitted correctly
+            // Alternatively, if empty submission means clear: updateData.specifications = [];
+        }
+         // Remove the original specifications object from req.body copy
+        delete updateData.specifications; 
+
+        // 4. Handle Featured (convert checkbox value - form sends value only if checked)
+        updateData.featured = updateData.featured === 'on' || updateData.featured === true || updateData.featured === 'true';
+
+        // Update the product document
+        Object.assign(product, updateData);
+        await product.save();
+
+        // 5. Redirect with Flash Message
+        req.flash('success_msg', 'Sản phẩm đã được cập nhật thành công!');
+        res.redirect('/admin/products');
+
     } catch (error) {
-        console.error('Update product error:', error);
-        res.status(500).json({ message: 'Error updating product' });
+        console.error(`Update product error for ID ${productId}:`, error);
+        let errorMessage = 'Lỗi khi cập nhật sản phẩm.';
+        if (error.errors) { // Mongoose validation errors
+            errorMessage = Object.values(error.errors).map(e => e.message).join(', ');
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        req.flash('error_msg', `Lỗi: ${errorMessage}`);
+        // Redirect back to product list on error
+        res.redirect('/admin/products');
     }
 };
 
@@ -236,6 +408,56 @@ exports.deleteProduct = async (req, res) => {
     } catch (error) {
         console.error('Delete product error:', error);
         res.status(500).json({ message: 'Error deleting product' });
+    }
+};
+
+// Function to get full product details as JSON for the edit modal
+exports.getProductJSON = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id).populate('category', 'id name'); // Populate category if needed
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm' });
+        }
+        // We might want to send the category ID directly if the select uses IDs
+        const productData = product.toObject(); // Convert to plain object if needed
+        if (productData.category) {
+          productData.category = productData.category._id; // Send only the ID
+        }
+        res.json(productData); // Send full product data
+    } catch (error) {
+        console.error('Get product JSON error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi khi tải dữ liệu sản phẩm' });
+    }
+};
+
+// Add this function to render the edit product page
+exports.getEditProductPage = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await Product.findById(productId);
+        const categories = await Category.find();
+
+        if (!product) {
+            req.flash('error_msg', 'Không tìm thấy sản phẩm.');
+            return res.redirect('/admin/products');
+        }
+        
+        // --- DEBUGGING --- 
+        console.log("Product data fetched for edit page:", JSON.stringify(product, null, 2));
+        console.log("Specifications:", product.specifications);
+        // --- END DEBUGGING ---
+
+        res.locals.layout = 'admin/layout'; // Ensure layout is set
+        res.render('admin/products/edit', {
+            title: `Chỉnh sửa: ${product.name}`,
+            product: product,
+            categories: categories,
+            csrfToken: req.csrfToken() // Pass CSRF token for the form
+        });
+    } catch (error) {
+        console.error('Error getting edit product page:', error);
+        req.flash('error_msg', 'Không thể tải trang chỉnh sửa sản phẩm.');
+        res.redirect('/admin/products');
     }
 };
 
@@ -390,22 +612,57 @@ exports.getCategories = async (req, res) => {
             title: 'Quản lý danh mục',
             currentPage: currentPage,
             totalPages: totalPages,
-            paginationUrl: paginationUrl // Pass the helper function
+            paginationUrl: paginationUrl, // Pass the helper function
+            csrfToken: req.csrfToken() // Add CSRF token here
         });
     } catch (error) {
         console.error('Get categories error:', error);
-        res.status(500).render('error', { message: 'Error fetching categories' });
+        // Ensure title is passed to error view
+        res.status(500).render('error', { 
+            title: 'Lỗi hệ thống',
+            message: 'Error fetching categories' 
+        });
     }
 };
 
 exports.createCategory = async (req, res) => {
     try {
-        const category = new Category(req.body);
+        // Get data from form body
+        const categoryData = { ...req.body };
+
+        // Check if an image file was uploaded by multer
+        if (req.file) {
+            // Add the filename to the category data
+            // Assuming your Category schema has an 'image' field
+            categoryData.image = req.file.filename; 
+        } else {
+            // Optional: Set a default image or handle case with no image
+            categoryData.image = 'default-category.jpg'; // Example default
+        }
+        
+        // Ensure boolean conversion for 'featured' if using checkbox
+        categoryData.featured = categoryData.featured === 'on' || categoryData.featured === true || categoryData.featured === 'true';
+
+        const category = new Category(categoryData);
         await category.save();
-        res.status(201).json({ message: 'Category created successfully', category });
+
+        // Set success flash message
+        req.flash('success_msg', 'Danh mục đã được tạo thành công!');
+        // Redirect back to the category list page
+        res.redirect('/admin/categories');
+
     } catch (error) {
         console.error('Create category error:', error);
-        res.status(500).json({ message: 'Error creating category' });
+        // Set error flash message
+        let errorMessage = 'Lỗi khi tạo danh mục.';
+        if (error.errors) { // Handle Mongoose validation errors
+            errorMessage = Object.values(error.errors).map(e => e.message).join(', ');
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        req.flash('error_msg', `Lỗi: ${errorMessage}`);
+        // Redirect back to the category list page even on error
+        res.redirect('/admin/categories');
     }
 };
 

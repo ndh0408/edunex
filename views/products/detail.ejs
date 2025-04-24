@@ -31,14 +31,14 @@
       <div class="product-images">
         <% if (product.images && product.images.length > 0) { %>
           <div class="main-image-container mb-3">
-            <img id="main-product-image" src="/uploads/<%= product.images[0] %>" class="img-fluid rounded" alt="<%= product.name %>">
+            <img id="main-product-image" src="/uploads/products/<%= product.images[0] %>" class="img-fluid rounded" alt="<%= product.name %>">
           </div>
           
           <% if (product.images.length > 1) { %>
             <div class="image-thumbnails d-flex overflow-auto">
               <% product.images.forEach((image, index) => { %>
                 <div class="thumbnail-container me-2">
-                  <img src="/uploads/<%= image %>" 
+                  <img src="/uploads/products/<%= image %>" 
                        class="img-thumbnail <%= index === 0 ? 'active' : '' %>" 
                        alt="<%= product.name %> - <%= index + 1 %>"
                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
@@ -281,14 +281,20 @@
                 %>
                 
                 <% for (let i = 5; i >= 1; i--) { %>
+                  <% 
+                    let barWidth = 0;
+                    if (totalRatings > 0) {
+                      barWidth = (ratings[i] / totalRatings * 100);
+                    }
+                  %>
                   <div class="d-flex align-items-center mb-2">
                     <div style="width: 60px">
                       <span><%= i %> <i class="fas fa-star text-warning"></i></span>
                     </div>
                     <div class="progress flex-grow-1 mx-2" style="height: 10px;">
                       <div class="progress-bar bg-warning" role="progressbar" 
-                           style="width: <%= totalRatings > 0 ? (ratings[i] / totalRatings * 100) : 0 %>%" 
-                           aria-valuenow="<%= totalRatings > 0 ? (ratings[i] / totalRatings * 100) : 0 %>" 
+                           style="width: <%= barWidth %>%;" 
+                           aria-valuenow="<%= barWidth %>" 
                            aria-valuemin="0" 
                            aria-valuemax="100"></div>
                     </div>
@@ -395,7 +401,7 @@
               
               <!-- Product image -->
               <a href="/products/<%= product.slug %>">
-                <img src="<%= product.images && product.images.length > 0 ? `/uploads/${product.images[0]}` : 'https://via.placeholder.com/300?text=No+Image' %>" 
+                <img src="<%= product.images && product.images.length > 0 ? `/uploads/products/${product.images[0]}` : 'https://via.placeholder.com/300?text=No+Image' %>" 
                      class="card-img-top" 
                      alt="<%= product.name %>"
                      style="height: 200px; object-fit: cover;">
