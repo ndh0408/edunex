@@ -1,0 +1,51 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h4 class="text-center mb-0">Đăng nhập</h4>
+        </div>
+        <div class="card-body p-4">
+          <% if (locals.messages && messages.error) { %>
+            <div class="alert alert-danger">
+              <%= messages.error %>
+            </div>
+          <% } %>
+          
+          <form action="/users/login" method="POST">
+            <% if (typeof csrfToken !== "undefined") { %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <% } %>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">Mật khẩu</label>
+              <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            
+            <div class="mb-3 d-flex justify-content-between">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                <label class="form-check-label" for="remember">
+                  Ghi nhớ đăng nhập
+                </label>
+              </div>
+              <a href="/users/forgot-password" class="text-decoration-none">Quên mật khẩu?</a>
+            </div>
+            
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
+            </div>
+          </form>
+          
+          <div class="text-center mt-4">
+            <p class="mb-0">Chưa có tài khoản? <a href="/users/register" class="text-decoration-none">Đăng ký ngay</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,133 @@
+<div class="container py-5">
+  <div class="row g-4">
+    <!-- Sidebar -->
+    <div class="col-lg-3 mb-4 mb-lg-0">
+      <%- include('../users/partials/sidebar', { active: 'profile' }) %>
+    </div>
+    
+    <!-- Main content -->
+    <div class="col-lg-9">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white py-3 border-0">
+          <h4 class="mb-0 fw-bold"><i class="fas fa-user-edit me-2 text-primary"></i>Thông tin tài khoản</h4>
+        </div>
+        <div class="card-body p-4">
+          <% if (locals.messages && messages.success) { %>
+            <div class="alert alert-success alert-dismissible fade show rounded-3">
+              <i class="fas fa-check-circle me-2"></i><%= messages.success %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+          
+          <form action="/users/profile?_method=PUT" method="POST" class="profile-form">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" id="name" name="name" class="form-control rounded-3" value="<%= user.name %>" required>
+                  <label for="name">Họ tên</label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="email" id="email" class="form-control rounded-3" value="<%= user.email %>" readonly>
+                  <label for="email">Email</label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="tel" id="phone" name="phone" class="form-control rounded-3" value="<%= user.phone || '' %>">
+                  <label for="phone">Số điện thoại</label>
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <div class="alert alert-info rounded-3 d-flex align-items-center border-0">
+                  <i class="fas fa-info-circle me-3 fa-lg"></i>
+                  <div>
+                    Bạn có thể đổi mật khẩu tại đây hoặc truy cập trang <a href="/users/change-password" class="alert-link">Đổi mật khẩu</a>.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-12 mb-2">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="changePassword">
+                  <label class="form-check-label" for="changePassword">
+                    Đổi mật khẩu
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div id="passwordChangeFields" class="d-none mt-4">
+              <div class="row g-4">
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <input type="password" id="currentPassword" name="currentPassword" class="form-control rounded-3">
+                    <label for="currentPassword">Mật khẩu hiện tại</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-floating mb-3">
+                    <input type="password" id="newPassword" name="newPassword" class="form-control rounded-3">
+                    <label for="newPassword">Mật khẩu mới</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-floating mb-3">
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control rounded-3">
+                    <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+              <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">
+                <i class="fas fa-save me-2"></i>Cập nhật thông tin
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const changePasswordCheckbox = document.getElementById('changePassword');
+    const passwordFields = document.getElementById('passwordChangeFields');
+    
+    if (changePasswordCheckbox && passwordFields) {
+      // Initial state check
+      if (changePasswordCheckbox.checked) {
+        passwordFields.classList.remove('d-none');
+      }
+      
+      // Setup event listener
+      changePasswordCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          passwordFields.classList.remove('d-none');
+          
+          // Make password fields required when checkbox is checked
+          passwordFields.querySelectorAll('input').forEach(input => {
+            input.setAttribute('required', 'required');
+          });
+        } else {
+          passwordFields.classList.add('d-none');
+          
+          // Remove required attribute when checkbox is unchecked
+          passwordFields.querySelectorAll('input').forEach(input => {
+            input.removeAttribute('required');
+          });
+        }
+      });
+    }
+  });
+</script> 

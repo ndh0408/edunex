@@ -1,0 +1,422 @@
+<header class="site-header">
+  <!-- Top Bar -->
+  <div class="bg-dark text-white py-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <small><i class="fas fa-phone-alt me-2"></i> Hotline: 0123 456 789</small>
+          <small class="ms-3"><i class="fas fa-envelope me-2"></i> Email: support@fashionstore.com</small>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <% if (locals.user) { %>
+            <div class="dropdown d-inline">
+              <a class="text-white text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user-circle me-1"></i> <%= user.name %>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/users/profile"><i class="fas fa-user me-2"></i> Tài khoản</a></li>
+                <li><a class="dropdown-item" href="/users/orders"><i class="fas fa-clipboard-list me-2"></i> Đơn hàng</a></li>
+                <li><a class="dropdown-item" href="/users/wishlist"><i class="fas fa-heart me-2"></i> Yêu thích</a></li>
+                <% if (user.role === 'admin') { %>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-primary" href="/admin"><i class="fas fa-tachometer-alt me-2"></i> Admin</a></li>
+                <% } %>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a></li>
+              </ul>
+            </div>
+          <% } else { %>
+            <a href="/users/login" class="text-white text-decoration-none me-3"><i class="fas fa-sign-in-alt me-1"></i> Đăng nhập</a>
+            <a href="/users/register" class="text-white text-decoration-none"><i class="fas fa-user-plus me-1"></i> Đăng ký</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <h2 class="m-0 text-primary">Fashion<span class="text-secondary">Store</span></h2>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">Trang chủ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle <%= typeof page !== 'undefined' && page === 'products' ? 'active' : '' %>" href="#" role="button" data-bs-toggle="dropdown">
+              Sản phẩm
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Hiển thị danh mục -->
+              <li><a class="dropdown-item" href="/products">Tất cả sản phẩm</a></li>
+              <% if (locals.categories && categories.length > 0) { %>
+                <li><hr class="dropdown-divider"></li>
+                <% categories.forEach(category => { %>
+                  <li><a class="dropdown-item" href="/products?category=<%= category.slug %>"><%= category.name %></a></li>
+                <% }); %>
+              <% } %>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= typeof page !== 'undefined' && page === 'sale' ? 'active' : '' %>" href="/products?discount=true">Khuyến mãi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">Giới thiệu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">Liên hệ</a>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center">
+          <!-- Search Form -->
+          <div class="position-relative me-3 search-container">
+            <input id="search-input" class="form-control me-2 rounded-pill" type="search" placeholder="Tìm kiếm...">
+            <div id="search-results" class="position-absolute bg-white shadow rounded-3 d-none search-results">
+              <div class="search-spinner text-center p-3 d-none">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Đang tìm kiếm...</span>
+                </div>
+              </div>
+              <div class="search-content"></div>
+            </div>
+          </div>
+          
+          <!-- Wishlist icon -->
+          <a href="/users/wishlist" class="btn btn-outline-secondary position-relative me-2 wishlist-btn">
+            <i class="far fa-heart"></i>
+            <% if (locals.user && user.wishlist && user.wishlist.length > 0) { %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count">
+                <%= user.wishlist.length %>
+              </span>
+            <% } %>
+          </a>
+          
+          <!-- Cart icon -->
+          <a href="/cart" class="btn btn-outline-primary position-relative cart-btn">
+            <i class="fas fa-shopping-cart"></i>
+            <% if (locals.cart && cart.length > 0) { %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= cart.length %>
+              </span>
+            <% } %>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Tạo khoảng cách sau header -->
+<div class="header-spacer"></div>
+
+<script>
+  // Live search functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const searchSpinner = document.querySelector('.search-spinner');
+    const searchContent = document.querySelector('.search-content');
+    let searchTimeout;
+    let currentSearchQuery = '';
+    
+    if (searchInput && searchResults) {
+      // Add clear button to search input
+      searchInput.insertAdjacentHTML('afterend', '<button type="button" class="btn-clear-search" aria-label="Clear search"><i class="fas fa-times"></i></button>');
+      const clearSearchButton = document.querySelector('.btn-clear-search');
+      
+      // Hide clear button initially
+      clearSearchButton.style.display = 'none';
+      
+      // Show/hide clear button based on input
+      searchInput.addEventListener('input', function() {
+        clearSearchButton.style.display = this.value.trim() ? 'flex' : 'none';
+      });
+      
+      // Clear search when button is clicked
+      clearSearchButton.addEventListener('click', function() {
+        searchInput.value = '';
+        searchResults.classList.add('d-none');
+        this.style.display = 'none';
+        searchInput.focus();
+      });
+      
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        currentSearchQuery = query;
+        
+        // Clear previous timeout
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+          searchResults.classList.add('d-none');
+          return;
+        }
+        
+        // Show spinner and results container
+        searchResults.classList.remove('d-none');
+        searchSpinner.classList.remove('d-none');
+        searchContent.innerHTML = '';
+        
+        // Set a timeout to prevent too many requests
+        searchTimeout = setTimeout(() => {
+          // Check if query is still the same (user hasn't typed more)
+          if (currentSearchQuery !== query) return;
+          
+          fetch(`/api/products/search?q=${encodeURIComponent(query)}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Hide spinner
+              searchSpinner.classList.add('d-none');
+              
+              // Check if query is still the same (user hasn't typed more)
+              if (currentSearchQuery !== query) return;
+              
+              if (data.success && data.data && data.data.length > 0) {
+                searchContent.innerHTML = '';
+                data.data.forEach(product => {
+                  // Format price
+                  const price = product.discountPrice && product.discountPrice < product.price 
+                    ? `<p class="mb-0 text-danger">${product.discountPrice.toLocaleString('vi-VN')} ₫ <span class="text-decoration-line-through text-muted fs-7">${product.price.toLocaleString('vi-VN')} ₫</span></p>`
+                    : `<p class="mb-0 text-danger">${product.price.toLocaleString('vi-VN')} ₫</p>`;
+                  
+                  // Set image URL with fallback
+                  const imageUrl = product.images && product.images.length > 0 
+                    ? `/uploads/${product.images[0]}` 
+                    : 'https://via.placeholder.com/50?text=No+Image';
+                  
+                  // Rating stars
+                  let ratingHtml = '';
+                  if (product.rating !== undefined) {
+                    ratingHtml = '<div class="product-rating">';
+                    for (let i = 1; i <= 5; i++) {
+                      if (i <= product.rating) {
+                        ratingHtml += '<i class="fas fa-star text-warning"></i>';
+                      } else if (i <= product.rating + 0.5) {
+                        ratingHtml += '<i class="fas fa-star-half-alt text-warning"></i>';
+                      } else {
+                        ratingHtml += '<i class="far fa-star text-warning"></i>';
+                      }
+                    }
+                    ratingHtml += '</div>';
+                  }
+                  
+                  // Add item to search results
+                  searchContent.innerHTML += `
+                    <a href="/products/${product.slug}" class="search-item text-decoration-none text-dark">
+                      <div class="d-flex p-3 border-bottom search-item-inner">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-img me-3 rounded-2">
+                        <div class="flex-grow-1">
+                          <p class="mb-1 fw-medium">${product.name}</p>
+                          ${price}
+                          ${ratingHtml}
+                        </div>
+                      </div>
+                    </a>
+                  `;
+                });
+                
+                // Add view all results link
+                searchContent.innerHTML += `
+                  <div class="p-3 text-center">
+                    <a href="/products?search=${encodeURIComponent(query)}" class="btn btn-sm btn-primary rounded-pill px-4">
+                      Xem tất cả kết quả
+                    </a>
+                  </div>
+                `;
+              } else {
+                searchContent.innerHTML = `
+                  <div class="p-4 text-center text-muted">
+                    <div class="mb-3">
+                      <i class="fas fa-search fa-2x text-muted mb-3 opacity-50"></i>
+                      <p class="mb-1">Không tìm thấy sản phẩm phù hợp</p>
+                      <p class="small text-muted mb-3">Vui lòng thử từ khóa khác</p>
+                    </div>
+                    <a href="/products" class="btn btn-sm btn-outline-primary rounded-pill px-4">
+                      Xem tất cả sản phẩm
+                    </a>
+                  </div>
+                `;
+              }
+            })
+            .catch(error => {
+              console.error('Search error:', error);
+              searchSpinner.classList.add('d-none');
+              searchContent.innerHTML = `
+                <div class="p-4 text-center text-danger">
+                  <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
+                  <p>Đã xảy ra lỗi khi tìm kiếm</p>
+                  <p class="small">Vui lòng thử lại sau</p>
+                </div>
+              `;
+            });
+        }, 300);
+      });
+      
+      // Hide search results when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!searchInput.contains(event.target) && 
+            !searchResults.contains(event.target) && 
+            !clearSearchButton.contains(event.target)) {
+          searchResults.classList.add('d-none');
+        }
+      });
+      
+      // Focus search input on pressing "/"
+      document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          searchInput.focus();
+        }
+        
+        // Close search results on ESC
+        if (e.key === 'Escape' && !searchResults.classList.contains('d-none')) {
+          searchResults.classList.add('d-none');
+          if (document.activeElement === searchInput) {
+            searchInput.blur();
+          }
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Header styles */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    width: 100%;
+    background-color: white;
+  }
+  
+  .header-spacer {
+    height: 130px; /* Điều chỉnh khoảng cách theo độ cao thực tế của header */
+  }
+  
+  /* Main content wrapper */
+  main {
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Search styles */
+  .search-container {
+    min-width: 250px;
+    position: relative;
+    z-index: 1050;
+  }
+  
+  .search-results {
+    width: 350px;
+    top: calc(100% + 10px);
+    left: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg) !important;
+    border-radius: 0.75rem !important;
+    z-index: 1060;
+  }
+  
+  /* Ensure wishlist and cart buttons stay above search results */
+  .wishlist-btn, .cart-btn {
+    position: relative;
+    z-index: 1070;
+  }
+  
+  .search-item-inner {
+    transition: all var(--transition-fast);
+  }
+  
+  .search-item:hover .search-item-inner {
+    background-color: var(--primary-light);
+  }
+  
+  .search-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+  
+  .fs-7 {
+    font-size: 0.8rem;
+  }
+  
+  .btn-clear-search {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: all var(--transition-fast);
+  }
+  
+  .btn-clear-search:hover {
+    background-color: var(--border-color);
+    color: var(--text-color);
+  }
+  
+  .product-rating {
+    font-size: 0.75rem;
+    color: var(--warning-color);
+    margin-top: 0.25rem;
+  }
+  
+  @media (max-width: 576px) {
+    .search-results {
+      width: 100%;
+      left: 0;
+      right: 0;
+    }
+    
+    .header-spacer {
+      height: 110px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar .navbar-collapse {
+      z-index: 1040;
+      background: white;
+    }
+    
+    /* Thêm CSS để đảm bảo giao diện mobile hoạt động tốt */
+    .search-container {
+      width: 100%;
+      order: 3;
+      margin-top: 10px;
+    }
+    
+    .d-flex.align-items-center {
+      flex-wrap: wrap;
+    }
+    
+    .wishlist-btn, .cart-btn {
+      margin-top: 0;
+    }
+  }
+</style> 
