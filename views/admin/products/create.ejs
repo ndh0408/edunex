@@ -1,0 +1,366 @@
+<!-- Page Header -->
+<div class="container-fluid px-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Thêm sản phẩm mới</h1>
+    <a href="/admin/products" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+    </a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form action="/admin/products" method="POST" enctype="multipart/form-data" id="productForm">
+        <% if (typeof csrfToken !== 'undefined') { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } %>
+        <div class="row">
+          <!-- Left Column: Main Info -->
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin cơ bản</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label for="name" class="form-label fw-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="category" class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                      <select class="form-select" id="category" name="category" required>
+                        <option value="">-- Chọn danh mục --</option>
+                        <% categories.forEach(category => { %>
+                          <option value="<%= category._id %>"><%= category.name %></option>
+                        <% }); %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="brand" class="form-label fw-bold">Thương hiệu</label>
+                      <input type="text" class="form-control" id="brand" name="brand">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="price" class="form-label fw-bold">Giá gốc (VNĐ) <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="price" name="price" min="0" required>
+                        <span class="input-group-text">VNĐ</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="discountPrice" class="form-label fw-bold">Giá khuyến mãi (VNĐ)</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="discountPrice" name="discountPrice" min="0">
+                        <span class="input-group-text">VNĐ</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="countInStock" class="form-label fw-bold">Số lượng tồn kho <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control" id="countInStock" name="countInStock" min="0" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="colors" class="form-label fw-bold">Màu sắc</label>
+                      <input type="text" class="form-control" id="colors" name="colors" placeholder="Đen, Trắng, Đỏ,...">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="sizes" class="form-label fw-bold">Kích thước</label>
+                      <input type="text" class="form-control" id="sizes" name="sizes" placeholder="S, M, L, XL,...">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="status" class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
+                      <select class="form-select" id="status" name="status" required>
+                        <option value="published">Đã xuất bản</option>
+                        <option value="draft">Bản nháp</option>
+                        <option value="outOfStock">Hết hàng</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold d-block">Tùy chọn</label>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="featured" name="featured">
+                        <label class="form-check-label" for="featured">Sản phẩm nổi bật</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-align-left me-2"></i>Mô tả sản phẩm</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label for="shortDescription" class="form-label fw-bold">Mô tả ngắn</label>
+                  <textarea class="form-control" id="shortDescription" name="shortDescription" rows="3" placeholder="Nhập mô tả ngắn gọn về sản phẩm..."></textarea>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="description" class="form-label fw-bold">Mô tả chi tiết</label>
+                  <textarea class="form-control" id="description" name="description" rows="6" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-list-alt me-2"></i>Thông số kỹ thuật</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">Thêm thông số kỹ thuật giúp khách hàng hiểu rõ hơn về sản phẩm</p>
+                
+                <div id="specifications-container">
+                  <!-- Initial specification rows with examples -->
+                  <div class="specification-row row g-2 mb-2 align-items-center">
+                    <div class="col-md-5">
+                      <input type="text" class="form-control" name="specifications[0][key]" placeholder="Chất liệu">
+                    </div>
+                    <div class="col-md-5">
+                      <input type="text" class="form-control" name="specifications[0][value]" placeholder="Cotton 100%">
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-specification">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="specification-row row g-2 mb-2 align-items-center">
+                    <div class="col-md-5">
+                      <input type="text" class="form-control" name="specifications[1][key]" placeholder="Xuất xứ">
+                    </div>
+                    <div class="col-md-5">
+                      <input type="text" class="form-control" name="specifications[1][value]" placeholder="Việt Nam">
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-specification">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mt-2">
+                  <button type="button" id="add-specification" class="btn btn-sm btn-success">
+                    <i class="fas fa-plus me-1"></i> Thêm thông số
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column: Images & Actions -->
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-images me-2"></i>Hình ảnh sản phẩm</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Ảnh sản phẩm <span class="text-danger">*</span></label>
+                  <input type="file" class="form-control image-upload" id="images" name="images" multiple accept="image/*" required>
+                  <div class="form-text">Tối đa 5 ảnh, kích thước tối đa 2MB/ảnh</div>
+                </div>
+                
+                <div class="image-preview-container mt-3 d-flex flex-wrap gap-2">
+                  <!-- Image previews will be displayed here -->
+                </div>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-save me-2"></i>Lưu sản phẩm</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Lưu sản phẩm
+                  </button>
+                  <button type="reset" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-2"></i>Làm mới
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Image preview functionality
+  const imageUpload = document.querySelector('.image-upload');
+  const previewContainer = document.querySelector('.image-preview-container');
+  
+  if (imageUpload && previewContainer) {
+    imageUpload.addEventListener('change', function() {
+      previewContainer.innerHTML = '';
+      
+      if (this.files && this.files.length > 0) {
+        Array.from(this.files).forEach((file, index) => {
+          if (!file.type.match('image.*')) return;
+          
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const card = document.createElement('div');
+            card.className = 'card image-preview';
+            card.style.width = '120px';
+            
+            card.innerHTML = `
+              <img src="${e.target.result}" class="card-img-top" alt="Preview" style="height: 120px; object-fit: cover;">
+              <div class="card-img-overlay p-0 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger btn-sm remove-preview" style="width: 25px; height: 25px; padding: 0; border-radius: 50%;">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            `;
+            
+            card.querySelector('.remove-preview').addEventListener('click', function() {
+              card.remove();
+              // Note: This only removes the preview, not the actual file in input
+            });
+            
+            previewContainer.appendChild(card);
+          };
+          
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+  }
+  
+  // Specification Management
+  const specContainer = document.getElementById('specifications-container');
+  const addSpecBtn = document.getElementById('add-specification');
+  
+  if (specContainer && addSpecBtn) {
+    let specCounter = 2; // Start from 2 as we already have 2 example rows
+    
+    // Add new specification row
+    addSpecBtn.addEventListener('click', function() {
+      specCounter++;
+      const newRow = document.createElement('div');
+      newRow.className = 'specification-row row g-2 mb-2 align-items-center';
+      newRow.innerHTML = `
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="specifications[${specCounter}][key]" placeholder="Tên thông số">
+        </div>
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="specifications[${specCounter}][value]" placeholder="Giá trị">
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-specification">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `;
+      
+      specContainer.appendChild(newRow);
+    });
+    
+    // Remove specification row
+    specContainer.addEventListener('click', function(e) {
+      const removeBtn = e.target.closest('.remove-specification');
+      if (removeBtn) {
+        const row = removeBtn.closest('.specification-row');
+        row.remove();
+      }
+    });
+  }
+  
+  // Form validation
+  const productForm = document.getElementById('productForm');
+  if (productForm) {
+    productForm.addEventListener('submit', function(e) {
+      let isValid = true;
+      const errors = [];
+      
+      // Validate required fields
+      const requiredFields = ['name', 'category', 'price', 'countInStock'];
+      requiredFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (!input || !input.value.trim()) {
+          input.classList.add('is-invalid');
+          isValid = false;
+          errors.push(`Vui lòng nhập ${input.previousElementSibling.textContent.replace(' *', '')}`);
+        } else {
+          input.classList.remove('is-invalid');
+        }
+      });
+      
+      // Validate images
+      const images = document.getElementById('images');
+      if (!images.files || images.files.length === 0) {
+        images.classList.add('is-invalid');
+        isValid = false;
+        errors.push('Vui lòng chọn ít nhất 1 hình ảnh cho sản phẩm');
+      } else if (images.files.length > 5) {
+        images.classList.add('is-invalid');
+        isValid = false;
+        errors.push('Chỉ được chọn tối đa 5 hình ảnh');
+      } else {
+        images.classList.remove('is-invalid');
+      }
+      
+      // Validate discount price
+      const price = parseFloat(document.getElementById('price').value) || 0;
+      const discountPrice = parseFloat(document.getElementById('discountPrice').value) || 0;
+      
+      if (discountPrice > 0 && discountPrice >= price) {
+        document.getElementById('discountPrice').classList.add('is-invalid');
+        isValid = false;
+        errors.push('Giá khuyến mãi phải thấp hơn giá gốc');
+      } else {
+        document.getElementById('discountPrice').classList.remove('is-invalid');
+      }
+      
+      if (!isValid) {
+        e.preventDefault();
+        alert('Vui lòng kiểm tra lại biểu mẫu:\n' + errors.join('\n'));
+      }
+    });
+  }
+  
+  // Format price inputs with thousand separators
+  const priceInputs = document.querySelectorAll('input[type="number"]');
+  priceInputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      if (this.value) {
+        // Store the numeric value
+        this.dataset.numericValue = this.value;
+      }
+    });
+  });
+});
+</script> 

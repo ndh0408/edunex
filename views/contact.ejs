@@ -1,0 +1,141 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-7 mb-4 mb-lg-0">
+      <h2 class="fw-bold mb-4 border-bottom pb-3">Liên hệ với chúng tôi</h2>
+      
+      <p class="mb-4">
+        Cảm ơn bạn đã quan tâm đến Fashion Store. Vui lòng điền vào biểu mẫu dưới đây hoặc liên hệ với chúng tôi qua các kênh thông tin được cung cấp. Chúng tôi sẽ phản hồi trong vòng 24 giờ.
+      </p>
+      
+      <form id="contact-form" action="/contact" method="POST">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Họ tên <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input type="tel" class="form-control" id="phone" name="phone">
+          </div>
+          
+          <div class="col-md-6">
+            <label for="subject" class="form-label">Chủ đề <span class="text-danger">*</span></label>
+            <select class="form-select" id="subject" name="subject" required>
+              <option value="" selected disabled>Chọn chủ đề</option>
+              <option value="Thông tin sản phẩm">Thông tin sản phẩm</option>
+              <option value="Đơn hàng & Vận chuyển">Đơn hàng & Vận chuyển</option>
+              <option value="Đổi trả & Hoàn tiền">Đổi trả & Hoàn tiền</option>
+              <option value="Ý kiến & Góp ý">Ý kiến & Góp ý</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          
+          <div class="col-12">
+            <label for="message" class="form-label">Nội dung <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+          </div>
+          
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="privacy" required>
+              <label class="form-check-label" for="privacy">
+                Tôi đồng ý với <a href="#">chính sách bảo mật</a> của Fashion Store
+              </label>
+            </div>
+          </div>
+          
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Gửi thông tin</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <div class="col-lg-5">
+      <div class="bg-light p-4 rounded shadow-sm h-100">
+        <h4 class="mb-4">Thông tin liên hệ</h4>
+        
+        <div class="d-flex mb-4">
+          <div class="flex-shrink-0 me-3">
+            <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5>Địa chỉ</h5>
+            <p class="mb-0">123 Đường ABC, Quận 1, TP. Hồ Chí Minh</p>
+          </div>
+        </div>
+        
+        <div class="d-flex mb-4">
+          <div class="flex-shrink-0 me-3">
+            <i class="fas fa-phone-alt fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5>Hotline</h5>
+            <p class="mb-0">0123 456 789</p>
+          </div>
+        </div>
+        
+        <div class="d-flex mb-4">
+          <div class="flex-shrink-0 me-3">
+            <i class="fas fa-envelope fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5>Email</h5>
+            <p class="mb-0">support@fashionstore.com</p>
+          </div>
+        </div>
+        
+        <div class="d-flex mb-4">
+          <div class="flex-shrink-0 me-3">
+            <i class="fas fa-clock fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5>Giờ làm việc</h5>
+            <p class="mb-0">8:00 - 21:00, Thứ 2 - Chủ nhật</p>
+          </div>
+        </div>
+        
+        <div class="mt-4">
+          <h5>Kết nối với chúng tôi</h5>
+          <div class="d-flex gap-2 mt-3">
+            <a href="#" class="btn btn-outline-primary"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="btn btn-outline-danger"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="btn btn-outline-info"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="btn btn-outline-danger"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row mt-5">
+    <div class="col-12">
+      <h4 class="text-center mb-4">Bản đồ cửa hàng</h4>
+      <div class="ratio ratio-21x9 shadow-sm">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4241674197667!2d106.69977607586901!3d10.77539328931166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4670702e31%3A0xa5777fb3a5bb9e05!2zMTIzIMSQLiBOZ3V54buFbiBDw7RuZyBUcuG7qSwgTmd1eeG7hW4gVGjDoWkgQsOsbmgsIFF14bqtbiAxLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1682517315682!5m2!1svi!2s" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Đây là nơi xử lý gửi form trong thực tế
+      // Trong demo này, chỉ hiển thị thông báo thành công
+      
+      alert('Cảm ơn bạn đã liên hệ với chúng tôi! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.');
+      contactForm.reset();
+    });
+  });
+</script> 

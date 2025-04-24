@@ -1,0 +1,589 @@
+<!-- Breadcrumb và tiêu đề -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h1 class="h3 mb-0 text-gray-800">Chi tiết đơn hàng #<%= order.orderNumber || order._id %></h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/orders">Đơn hàng</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Chi tiết đơn hàng</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-sm btn-primary print-invoice">
+      <i class="fas fa-print me-1"></i> In hóa đơn
+    </button>
+    <a href="/admin/orders" class="btn btn-sm btn-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Quay lại
+    </a>
+  </div>
+</div>
+
+<!-- Thông tin tổng quan -->
+<div class="row mb-4">
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Ngày đặt hàng</div>
+            <div class="h6 mb-0 font-weight-bold text-gray-800"><%= new Date(order.createdAt).toLocaleString('vi-VN') %></div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card border-left-success shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng tiền</div>
+            <div class="h6 mb-0 font-weight-bold text-gray-800"><%= (order.totalAmount || 0).toLocaleString('vi-VN') %> ₫</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card <%= order.isPaid ? 'border-left-success' : 'border-left-warning' %> shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold <%= order.isPaid ? 'text-success' : 'text-warning' %> text-uppercase mb-1">Thanh toán</div>
+            <div class="h6 mb-0 font-weight-bold text-gray-800">
+              <% if (order.isPaid) { %>
+                Đã thanh toán
+              <% } else { %>
+                Chưa thanh toán
+              <% } %>
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas <%= order.isPaid ? 'fa-check-circle' : 'fa-clock' %> fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card border-left-info shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Trạng thái</div>
+            <div class="h6 mb-0 font-weight-bold text-gray-800">
+              <% if (order.status === 'pending') { %>
+                Chờ xử lý
+              <% } else if (order.status === 'processing') { %>
+                Đang xử lý
+              <% } else if (order.status === 'shipped') { %>
+                Đang giao hàng
+              <% } else if (order.status === 'delivered') { %>
+                Đã giao hàng
+              <% } else if (order.status === 'canceled') { %>
+                Đã hủy
+              <% } %>
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-truck fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Thông tin chi tiết -->
+<div class="row">
+  <!-- Thông tin đơn hàng và khách hàng -->
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thông tin đơn hàng</h6>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Trạng thái đơn hàng</label>
+          <select id="order-status" class="form-select" data-order-id="<%= order._id %>" <%= order.status === 'delivered' || order.status === 'canceled' ? 'disabled' : '' %>>
+            <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Chờ xử lý</option>
+            <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>Đang xử lý</option>
+            <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Đang giao hàng</option>
+            <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Đã giao hàng</option>
+            <option value="canceled" <%= order.status === 'canceled' ? 'selected' : '' %>>Đã hủy</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">Phương thức thanh toán</label>
+          <div>
+            <% if (order.paymentMethod === 'cod') { %>
+              <span class="badge bg-secondary">Tiền mặt khi nhận hàng</span>
+            <% } else if (order.paymentMethod === 'paypal') { %>
+              <span class="badge bg-primary">PayPal</span>
+            <% } else if (order.paymentMethod === 'vnpay') { %>
+              <span class="badge bg-info">VNPay</span>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">Trạng thái thanh toán</label>
+          <div class="d-flex align-items-center">
+            <% if (order.isPaid) { %>
+              <span class="badge bg-success me-2">Đã thanh toán</span>
+              <small class="text-muted">
+                <%= new Date(order.paidAt).toLocaleString('vi-VN') %>
+              </small>
+            <% } else { %>
+              <span class="badge bg-warning text-dark me-2">Chưa thanh toán</span>
+              <button id="mark-as-paid" class="btn btn-sm btn-outline-success" <%= order.status === 'canceled' ? 'disabled' : '' %>>
+                <i class="fas fa-check me-1"></i> Đánh dấu đã thanh toán
+              </button>
+            <% } %>
+          </div>
+          <% if (order.paymentResult && order.paymentResult.id) { %>
+            <div class="mt-2">
+              <small class="text-muted">Mã giao dịch: <%= order.paymentResult.id %></small>
+            </div>
+          <% } %>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">Ghi chú đơn hàng</label>
+          <div class="input-group">
+            <textarea id="order-note" class="form-control" rows="3" placeholder="Thêm ghi chú về đơn hàng"><%= order.note || '' %></textarea>
+            <button id="save-note" class="btn btn-outline-primary">Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thông tin khách hàng</h6>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Khách hàng</label>
+          <div>
+            <% if (order.user) { %>
+              <div class="d-flex align-items-center mb-2">
+                <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(order.user.name) %>&background=random" alt="<%= order.user.name %>" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                <div>
+                  <div><%= order.user.name %></div>
+                  <small class="text-muted"><%= order.user.email %></small>
+                </div>
+              </div>
+              <% if (order.user.phone) { %>
+                <div class="mb-2">
+                  <i class="fas fa-phone me-2 text-muted"></i> <%= order.user.phone %>
+                </div>
+              <% } %>
+              <a href="/admin/users/<%= order.user._id %>" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-external-link-alt me-1"></i> Xem hồ sơ
+              </a>
+            <% } else { %>
+              <div>Khách không đăng nhập</div>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="mb-0">
+          <label class="form-label fw-bold">Địa chỉ giao hàng</label>
+          <address class="mb-0">
+            <strong><%= order.shippingAddress.fullName %></strong><br>
+            <%= order.shippingAddress.address %><br>
+            <%= order.shippingAddress.city %>, <%= order.shippingAddress.postalCode %><br>
+            <%= order.shippingAddress.country %><br>
+            <i class="fas fa-phone me-1 text-muted"></i> <%= order.shippingAddress.phone || 'Không có' %>
+          </address>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sản phẩm và lịch sử đơn hàng -->
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Sản phẩm</h6>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 60%">Sản phẩm</th>
+                <th class="text-end">Đơn giá</th>
+                <th class="text-center">SL</th>
+                <th class="text-end">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% order.items.forEach(item => { %>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <% if (item.product && item.product.images && item.product.images.length > 0) { %>
+                        <img src="/uploads/<%= item.product.images[0] %>" alt="<%= item.name %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-3">
+                      <% } else { %>
+                        <div class="bg-light me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                          <i class="fas fa-image text-muted"></i>
+                        </div>
+                      <% } %>
+                      <div>
+                        <h6 class="mb-0">
+                          <% if (item.product) { %>
+                            <a href="/admin/products/<%= item.product._id %>/edit">
+                              <%= item.name %>
+                            </a>
+                          <% } else { %>
+                            <%= item.name %>
+                          <% } %>
+                        </h6>
+                        <% if (item.color || item.size) { %>
+                          <small class="text-muted">
+                            <% if (item.color) { %>Màu: <%= item.color %><% } %>
+                            <% if (item.size) { %><% if (item.color) { %> - <% } %>Size: <%= item.size %><% } %>
+                          </small>
+                        <% } %>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-end"><%= (item.price || 0).toLocaleString('vi-VN') %> ₫</td>
+                  <td class="text-center"><%= item.quantity %></td>
+                  <td class="text-end"><%= ((item.price || 0) * item.quantity).toLocaleString('vi-VN') %> ₫</td>
+                </tr>
+              <% }); %>
+            </tbody>
+            <tfoot class="table-light">
+              <tr>
+                <td colspan="3" class="text-end">Tổng tiền hàng:</td>
+                <td class="text-end"><%= (order.itemsPrice || 0).toLocaleString('vi-VN') %> ₫</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end">Phí vận chuyển:</td>
+                <td class="text-end"><%= (order.shippingPrice || 0).toLocaleString('vi-VN') %> ₫</td>
+              </tr>
+              <% if (order.discountPrice) { %>
+              <tr>
+                <td colspan="3" class="text-end">Giảm giá:</td>
+                <td class="text-end">-<%= (order.discountPrice || 0).toLocaleString('vi-VN') %> ₫</td>
+              </tr>
+              <% } %>
+              <tr class="table-primary">
+                <td colspan="3" class="text-end fw-bold">Tổng thanh toán:</td>
+                <td class="text-end fw-bold"><%= (order.totalAmount || 0).toLocaleString('vi-VN') %> ₫</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lịch sử đơn hàng -->
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lịch sử đơn hàng</h6>
+      </div>
+      <div class="card-body">
+        <% if (order.history && order.history.length > 0) { %>
+          <ul class="timeline">
+            <% order.history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(history => { %>
+              <li class="timeline-item mb-4">
+                <div class="timeline-marker <%= history.type === 'status' ? 'bg-primary' : (history.type === 'payment' ? 'bg-success' : 'bg-info') %>"></div>
+                <div class="timeline-content">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="mb-1"><%= history.message %></h6>
+                    <small class="text-muted"><%= new Date(history.timestamp).toLocaleString('vi-VN') %></small>
+                  </div>
+                  <% if (history.note) { %>
+                    <p class="mb-2"><%= history.note %></p>
+                  <% } %>
+                  <% if (history.user) { %>
+                    <small class="text-muted">
+                      <i class="fas fa-user me-1"></i>
+                      <% if (typeof history.user === 'object' && history.user.name) { %>
+                        <%= history.user.name %> (<%= history.user.role === 'admin' ? 'Quản trị viên' : 'Nhân viên' %>)
+                      <% } else { %>
+                        Admin
+                      <% } %>
+                    </small>
+                  <% } %>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <div class="text-center text-muted py-3">
+            <i class="fas fa-history fa-3x mb-3"></i>
+            <p>Chưa có lịch sử đơn hàng</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xác nhận thanh toán -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">Xác nhận thanh toán</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="transaction-id" class="form-label">Mã giao dịch (tùy chọn)</label>
+          <input type="text" class="form-control" id="transaction-id" placeholder="Nhập mã giao dịch (nếu có)">
+        </div>
+        <div class="mb-3">
+          <label for="payment-note" class="form-label">Ghi chú thanh toán (tùy chọn)</label>
+          <textarea class="form-control" id="payment-note" rows="3" placeholder="Nhập ghi chú về việc thanh toán"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-success" id="confirm-payment">Xác nhận thanh toán</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cập nhật trạng thái -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">Cập nhật trạng thái đơn hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng thành <span id="new-status-text" class="fw-bold"></span>?</p>
+        
+        <div class="mb-3">
+          <label for="status-note" class="form-label">Ghi chú (tùy chọn)</label>
+          <textarea class="form-control" id="status-note" rows="3" placeholder="Nhập ghi chú về việc thay đổi trạng thái"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" id="confirm-status">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .timeline {
+    position: relative;
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .timeline-item {
+    position: relative;
+    padding-left: 30px;
+  }
+  
+  .timeline-marker {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // In hóa đơn
+    const printButton = document.querySelector('.print-invoice');
+    printButton.addEventListener('click', function() {
+      window.open(`/admin/orders/<%= order._id %>/invoice`, '_blank');
+    });
+    
+    // Cập nhật trạng thái đơn hàng
+    const statusSelect = document.getElementById('order-status');
+    const statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+    const newStatusText = document.getElementById('new-status-text');
+    const confirmStatusBtn = document.getElementById('confirm-status');
+    const statusNote = document.getElementById('status-note');
+    
+    let originalStatus = statusSelect.value;
+    
+    statusSelect.addEventListener('change', function() {
+      // Lấy văn bản trạng thái mới
+      const selectedOption = this.options[this.selectedIndex];
+      newStatusText.textContent = selectedOption.text;
+      
+      // Xóa ghi chú trước đó
+      statusNote.value = '';
+      
+      // Hiển thị modal
+      statusModal.show();
+    });
+    
+    confirmStatusBtn.addEventListener('click', function() {
+      // Lấy CSRF token từ thẻ meta
+      const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+      if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
+      
+      // Gửi yêu cầu cập nhật trạng thái đơn hàng
+      fetch(`/admin/orders/<%= order._id %>/status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+        },
+        body: JSON.stringify({
+          status: statusSelect.value,
+          note: statusNote.value
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Có lỗi xảy ra');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data && data.success) {
+          // Đóng modal
+          statusModal.hide();
+          
+          // Tải lại trang để xem thay đổi
+          window.location.reload();
+        } else {
+          alert(data.message || 'Có lỗi xảy ra khi cập nhật trạng thái');
+          
+          // Hoàn tác về giá trị ban đầu
+          statusSelect.value = originalStatus;
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi:', error);
+        alert('Có lỗi xảy ra, vui lòng thử lại sau');
+        
+        // Hoàn tác về giá trị ban đầu
+        statusSelect.value = originalStatus;
+      });
+    });
+    
+    // Khi modal bị ẩn, đặt lại select nếu người dùng hủy
+    document.getElementById('statusModal').addEventListener('hidden.bs.modal', function() {
+      statusSelect.value = originalStatus;
+    });
+    
+    // Đánh dấu đã thanh toán
+    const markAsPaidBtn = document.getElementById('mark-as-paid');
+    if (markAsPaidBtn) {
+      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      const confirmPaymentBtn = document.getElementById('confirm-payment');
+      const transactionIdInput = document.getElementById('transaction-id');
+      const paymentNoteInput = document.getElementById('payment-note');
+      
+      markAsPaidBtn.addEventListener('click', function() {
+        paymentModal.show();
+      });
+      
+      confirmPaymentBtn.addEventListener('click', function() {
+        const transactionId = transactionIdInput.value.trim();
+        const note = paymentNoteInput.value.trim();
+        
+        // Lấy CSRF token từ thẻ meta
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+        if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
+        
+        fetch(`/admin/orders/<%= order._id %>/payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+          },
+          body: JSON.stringify({
+            transactionId,
+            note
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Có lỗi xảy ra');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.success) {
+            paymentModal.hide();
+            window.location.reload();
+          } else {
+            alert(data.message || 'Có lỗi xảy ra khi cập nhật thanh toán');
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi:', error);
+          alert('Có lỗi xảy ra, vui lòng thử lại sau');
+        });
+      });
+    }
+    
+    // Cập nhật ghi chú
+    const orderNoteTextarea = document.getElementById('order-note');
+    const saveNoteBtn = document.getElementById('save-note');
+    
+    saveNoteBtn.addEventListener('click', function() {
+      const note = orderNoteTextarea.value.trim();
+      if (!note) { alert('Vui lòng nhập ghi chú'); return; }
+      
+      // Lấy CSRF token từ thẻ meta
+      const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+      if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
+      
+      fetch(`/admin/orders/<%= order._id %>/note`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+        },
+        body: JSON.stringify({
+          note
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Có lỗi xảy ra');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data && data.success) {
+          alert('Đã lưu ghi chú thành công');
+          window.location.reload();
+        } else {
+          alert(data.message || 'Có lỗi xảy ra khi lưu ghi chú');
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi:', error);
+        alert('Có lỗi xảy ra, vui lòng thử lại sau');
+      });
+    });
+  });
+</script> 

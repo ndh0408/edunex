@@ -1,0 +1,313 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            <i class="fas fa-plus me-1"></i> Thêm sản phẩm
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <table class="table table-bordered" id="productsTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (products && products.length > 0) { %>
+                        <% products.forEach(product => { %>
+                            <tr>
+                                <td>
+                                    <img src="/uploads/<%= product.image || 'default-product.jpg' %>" 
+                                         alt="<%= product.name %>" 
+                                         class="img-thumbnail"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                </td>
+                                <td><%= product.name %></td>
+                                <td><%= product.category ? product.category.name : 'Chưa phân loại' %></td>
+                                <td><%= (product.price || 0).toLocaleString('vi-VN') %> ₫</td>
+                                <td><%= product.stock || 0 %></td>
+                                <td>
+                                    <% if (product.active) { %>
+                                        <span class="badge bg-success">Đang bán</span>
+                                    <% } else { %>
+                                        <span class="badge bg-danger">Ngừng bán</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-info edit-btn"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editProductModal"
+                                                data-id="<%= product._id %>"
+                                                data-name="<%= product.name %>"
+                                                data-category="<%= product.category ? product.category._id : '' %>"
+                                                data-price="<%= product.price || 0 %>"
+                                                data-stock="<%= product.stock || 0 %>"
+                                                data-active="<%= product.active ? 'true' : 'false' %>"
+                                                data-image="<%= product.image || 'default-product.jpg' %>">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger delete-btn"
+                                                data-id="<%= product._id %>"
+                                                data-name="<%= product.name %>">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="7" class="text-center">Không có sản phẩm nào</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation" class="mt-3">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Pagination will be added dynamically -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm sản phẩm -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm sản phẩm mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addProductForm" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên sản phẩm</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục</label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Chọn danh mục</option>
+                            <% if (categories && categories.length > 0) { %>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giá</label>
+                        <input type="number" class="form-control" name="price" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số lượng</label>
+                        <input type="number" class="form-control" name="stock" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh</label>
+                        <input type="file" class="form-control" name="image" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="active" checked>
+                            <label class="form-check-label">Đang bán</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa sản phẩm -->
+<div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editProductForm" enctype="multipart/form-data">
+                <input type="hidden" name="id">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên sản phẩm</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục</label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Chọn danh mục</option>
+                            <% if (categories && categories.length > 0) { %>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giá</label>
+                        <input type="number" class="form-control" name="price" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số lượng</label>
+                        <input type="number" class="form-control" name="stock" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh</label>
+                        <input type="file" class="form-control" name="image" accept="image/*">
+                        <div class="mt-2">
+                            <img src="" alt="" class="img-thumbnail" id="currentImage" style="max-width: 100px;">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="active">
+                            <label class="form-check-label">Đang bán</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Xử lý form thêm sản phẩm
+    $('#addProductForm').on('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        $.ajax({
+            url: '/admin/products',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message || 'Có lỗi xảy ra');
+                }
+            },
+            error: function() {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    });
+
+    // Xử lý form sửa sản phẩm
+    $('#editProductForm').on('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const id = formData.get('id');
+        
+        $.ajax({
+            url: `/admin/products/${id}`,
+            type: 'PUT',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message || 'Có lỗi xảy ra');
+                }
+            },
+            error: function() {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    });
+
+    // Xử lý nút xóa
+    $('.delete-btn').on('click', function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        
+        if (confirm(`Bạn có chắc muốn xóa sản phẩm "${name}"?`)) {
+            $.ajax({
+                url: `/admin/products/${id}`,
+                type: 'DELETE',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Có lỗi xảy ra');
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra');
+                }
+            });
+        }
+    });
+
+    // Xử lý nút sửa
+    $('.edit-btn').on('click', function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const category = $(this).data('category');
+        const price = $(this).data('price');
+        const stock = $(this).data('stock');
+        const active = $(this).data('active') === 'true';
+        const image = $(this).data('image');
+        
+        $('#editProductForm input[name="id"]').val(id);
+        $('#editProductForm input[name="name"]').val(name);
+        $('#editProductForm select[name="category"]').val(category);
+        $('#editProductForm input[name="price"]').val(price);
+        $('#editProductForm input[name="stock"]').val(stock);
+        $('#editProductForm input[name="active"]').prop('checked', active);
+        $('#currentImage').attr('src', `/uploads/${image}`);
+    });
+
+    // Setup search
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    
+    function performSearch() {
+        const searchText = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll('#productsTable tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchText) ? '' : 'none';
+        });
+    }
+    
+    searchInput.addEventListener('keyup', performSearch);
+    searchButton.addEventListener('click', performSearch);
+    
+    // Setup pagination
+    setupPagination(document.querySelectorAll('#productsTable tbody tr'), 10);
+});
+</script> 

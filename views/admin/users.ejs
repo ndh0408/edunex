@@ -1,0 +1,525 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="fas fa-plus fa-sm"></i> Thêm người dùng
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="mb-3">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm người dùng (Tên, Email)...">
+                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <table class="table table-bordered table-hover no-datatable" id="usersTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof users !== 'undefined' && users.length > 0) { %>
+                        <% users.forEach(user => { %>
+                            <tr data-user-id="<%= user._id %>">
+                                <td><%= user._id.toString().substr(-6) %></td>
+                                <td class="user-name"><%= user.name %></td>
+                                <td class="user-email"><%= user.email %></td>
+                                <td class="user-role">
+                                    <span class="badge bg-<%= user.role === 'admin' ? 'danger' : 'primary' %>">
+                                        <%= user.role === 'admin' ? 'Quản trị viên' : 'Người dùng' %>
+                                    </span>
+                                </td>
+                                <td class="user-status">
+                                    <span class="badge bg-<%= user.isActive ? 'success' : 'secondary' %>">
+                                        <%= user.isActive ? 'Hoạt động' : 'Không hoạt động' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-info edit-user" data-id="<%= user._id %>" title="Sửa">
+                                            <i class="fas fa-pencil-alt me-1"></i> Sửa
+                                        </button>
+                                        <button class="btn btn-danger delete-user" data-id="<%= user._id %>" title="Xóa">
+                                            <i class="fas fa-trash me-1"></i> Xóa
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center">Không có người dùng nào.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <!-- Restore Pagination Nav -->
+            <nav aria-label="Page navigation" class="mt-3 pagination-container">
+                <ul class="pagination pagination-sm" id="pagination">
+                    <!-- Pagination links will be inserted here by JS -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Thêm người dùng mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addUserForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <div class="mb-3">
+                        <label for="addUserName" class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="addUserName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="addUserEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserPassword" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="addUserPassword" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserRole" class="form-label">Vai trò</label>
+                        <select class="form-select" id="addUserRole" name="role" required>
+                            <option value="user" selected>Người dùng</option>
+                            <option value="admin">Quản trị viên</option>
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="addUserActive" name="isActive" checked>
+                        <label class="form-check-label" for="addUserActive">Hoạt động</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editUserForm">
+                <div class="modal-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="id" id="editUserId">
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="editUserName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editUserEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserPassword" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="editUserPassword" name="password" placeholder="Để trống nếu không muốn thay đổi">
+                        <div class="form-text">Để trống trường này nếu bạn không muốn thay đổi mật khẩu.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserRole" class="form-label">Vai trò</label>
+                        <select class="form-select" id="editUserRole" name="role" required>
+                            <option value="user">Người dùng</option>
+                            <option value="admin">Quản trị viên</option>
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="editUserActive" name="isActive">
+                        <label class="form-check-label" for="editUserActive">Hoạt động</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Admin Users Script: DOMContentLoaded fired.'); // Log 1: Script start
+
+    const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+    const usersTableBody = document.querySelector('#usersTable tbody');
+    const paginationContainer = document.getElementById('pagination');
+    const addUserModalEl = document.getElementById('addUserModal');
+    const editUserModalEl = document.getElementById('editUserModal');
+    const addUserModal = bootstrap.Modal.getOrCreateInstance(addUserModalEl);
+    const editUserModal = bootstrap.Modal.getOrCreateInstance(editUserModalEl);
+    const editUserForm = document.getElementById('editUserForm');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    console.log('Admin Users Script: Variables initialized.', { csrfToken, usersTableBody, editUserModalEl, editUserModal }); // Log 2: Variables check
+
+    // --- Helper Functions ---
+    function showToast(message, type = 'info') {
+        const toastContainer = document.getElementById('toast-container') || createToastContainer();
+        const toastId = `toast-${Date.now()}`;
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0 mb-2`; // Map error to danger
+        toast.id = toastId;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        toastContainer.appendChild(toast);
+        const bootstrapToast = new bootstrap.Toast(toast, { delay: 3000 });
+        bootstrapToast.show();
+        toast.addEventListener('hidden.bs.toast', () => toast.remove());
+    }
+
+    function createToastContainer() {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container position-fixed top-0 end-0 p-3';
+            container.style.zIndex = 1090; // Ensure it's above modals
+            document.body.appendChild(container);
+        }
+        return container;
+    }
+
+    async function confirmDelete(itemType = 'mục', itemId = '') {
+        // Replace with a more robust confirmation modal if available (e.g., SweetAlert2)
+        return new Promise((resolve) => {
+            const shortId = itemId ? itemId.toString().substr(-6) : '';
+            const result = confirm(`Bạn có chắc chắn muốn xóa ${itemType} này không?${shortId ? ' (ID: ' + shortId + ')' : ''}`);
+            resolve(result);
+        });
+    }
+
+    // --- Event Listeners ---
+
+    // Edit User Button Click (Fetch data and populate modal)
+    if (usersTableBody) {
+        console.log('Admin Users Script: Attaching click listener to usersTableBody.'); // Log 5: Table listener attach
+        usersTableBody.addEventListener('click', async function(e) {
+            console.log('Admin Users Script: Click detected inside table body. Target:', e.target); // Log 6: Click detected
+            
+            // Handle Edit Button Click
+            const editButton = e.target.closest('.edit-user');
+            if (editButton) {
+                console.log('Admin Users Script: Edit button clicked.', editButton); // Log 7: Edit button identified
+                const userId = editButton.dataset.id;
+                console.log('Admin Users Script: User ID for edit:', userId); // Log 8: User ID fetched
+                editButton.disabled = true; 
+                try {
+                    console.log('Admin Users Script: Fetching user data for edit...'); // Log 9: Fetching data
+                    const response = await fetch(`/admin/users/${userId}/json`);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: `HTTP error! status: ${response.status}` }));
+                        throw new Error(errorData.message);
+                    }
+                    const user = await response.json();
+
+                    document.getElementById('editUserId').value = user._id;
+                    document.getElementById('editUserName').value = user.name;
+                    document.getElementById('editUserEmail').value = user.email;
+                    document.getElementById('editUserRole').value = user.role;
+                    document.getElementById('editUserActive').checked = user.isActive;
+                    document.getElementById('editUserPassword').value = '';
+
+                    console.log('Admin Users Script: Showing edit modal...'); // Log 10: Showing modal
+                    editUserModal.show();
+                 } catch (error) {
+                     console.error('Admin Users Script: Fetch user data error:', error);
+                     showToast(`Lỗi khi tải dữ liệu người dùng: ${error.message}`, 'error');
+                 } finally {
+                      editButton.disabled = false;
+                 }
+                 return; // Prevent delete logic from running if edit was clicked
+            }
+
+            // Handle Delete Button Click
+            const deleteButton = e.target.closest('.delete-user');
+            if (deleteButton) {
+                console.log('Admin Users Script: Delete button clicked.', deleteButton); // Log 11: Delete button identified
+                const userId = deleteButton.dataset.id;
+                console.log('Admin Users Script: User ID for delete:', userId); // Log 12: User ID fetched
+                
+                console.log('Admin Users Script: Calling confirmDelete...'); // Log 13: Calling confirm
+                if (await confirmDelete('người dùng', userId)) {
+                    console.log('Admin Users Script: Deletion confirmed. Sending request...'); // Log 14: Deleting
+                    deleteButton.disabled = true;
+                    try {
+                        const response = await fetch(`/admin/users/${userId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-Token': csrfToken
+                            }
+                        });
+
+                        const result = await response.json(); // Expect JSON response
+
+                        if (response.ok && result.success) { // Check success property
+                            showToast(result.message || 'Xóa người dùng thành công', 'success');
+                             const row = deleteButton.closest('tr');
+                             if (row) {
+                                row.style.opacity = 0;
+                                setTimeout(() => {
+                                    row.remove();
+                                    // Optional: Re-setup pagination if needed after deletion
+                                    const currentRows = Array.from(usersTableBody.querySelectorAll('tr')).filter(r => !r.querySelector('td[colspan="6"]'));
+                                    setupPagination(currentRows, rowsPerPage);
+                                }, 300); // Fade out effect
+                             }
+                        } else {
+                            showToast(result.message || 'Lỗi khi xóa người dùng', 'error');
+                             deleteButton.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Admin Users Script: Delete user error:', error);
+                        showToast('Lỗi kết nối hoặc lỗi máy chủ khi xóa người dùng', 'error');
+                         deleteButton.disabled = false;
+                    }
+                } else {
+                    console.log('Admin Users Script: Deletion cancelled.'); // Log 15: Delete cancelled
+                }
+                return; // Prevent further processing if delete was clicked
+            }
+        });
+    } else {
+        console.error('Admin Users Script: usersTableBody not found!');
+    }
+
+    // Edit User Form Submission
+    if (editUserForm) {
+        console.log('Admin Users Script: Attaching listener to editUserForm.'); // Log 3: Edit form listener attach
+        editUserForm.addEventListener('submit', async function(e) {
+             console.log('Admin Users Script: Edit form submitted.'); // Log 4: Edit form submit triggered
+             e.preventDefault();
+             const formData = new FormData(this);
+             const userId = formData.get('id');
+             const data = Object.fromEntries(formData.entries()); // Get data as object
+             data.isActive = document.getElementById('editUserActive').checked; // Ensure boolean
+             
+             // Delete password field if it's empty
+             if (!data.password) {
+                 delete data.password;
+             }
+             delete data.id; // Don't send id in body
+
+             const submitButton = this.querySelector('button[type="submit"]');
+             submitButton.disabled = true;
+
+             try {
+                 const response = await fetch(`/admin/users/${userId}`, {
+                     method: 'PUT',
+                     headers: {
+                         'X-CSRF-Token': csrfToken,
+                         'Content-Type': 'application/json' // Use JSON
+                     },
+                     body: JSON.stringify(data) // Send data as JSON
+                 });
+
+                 const result = await response.json();
+
+                 if (response.ok && result.success) { // Check success property
+                     showToast(result.message || 'Cập nhật người dùng thành công', 'success');
+                     editUserModal.hide();
+                     // Update table row dynamically
+                     const row = usersTableBody.querySelector(`tr[data-user-id="${userId}"]`);
+                     if (row && result.user) { // Check if row and updated user data exist
+                         row.querySelector('.user-name').textContent = result.user.name;
+                         row.querySelector('.user-email').textContent = result.user.email;
+                         const roleBadge = row.querySelector('.user-role span');
+                         roleBadge.textContent = result.user.role === 'admin' ? 'Quản trị viên' : 'Người dùng';
+                         roleBadge.className = `badge bg-${result.user.role === 'admin' ? 'danger' : 'primary'}`;
+                         const statusBadge = row.querySelector('.user-status span');
+                         statusBadge.textContent = result.user.isActive ? 'Hoạt động' : 'Không hoạt động';
+                         statusBadge.className = `badge bg-${result.user.isActive ? 'success' : 'secondary'}`;
+                     }
+                     // location.reload(); // Alternative: simple refresh
+                 } else {
+                     showToast(result.message || 'Lỗi khi cập nhật người dùng', 'error');
+                 }
+             } catch (error) {
+                 console.error('Admin Users Script: Update user error:', error);
+                 showToast('Lỗi kết nối hoặc lỗi máy chủ khi cập nhật người dùng', 'error');
+             } finally {
+                  submitButton.disabled = false;
+             }
+        });
+    } else {
+        console.error('Admin Users Script: editUserForm not found!');
+    }
+
+    // Search Functionality
+    function performSearch() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        const rows = usersTableBody.querySelectorAll('tr');
+        // Restore pagination update after search
+        setupPagination(Array.from(rows).filter(row => row.style.display !== 'none'), 5);
+    }
+
+    searchInput?.addEventListener('input', performSearch); 
+    searchButton?.addEventListener('click', performSearch);
+
+    // --- PAGINATION CODE RESTORED --- 
+    
+    let currentPage = 1;
+    let currentRows = [];
+    const rowsPerPage = 5;
+
+    function setupPagination(rows, rowsPerPageOpt = 5) {
+        currentRows = rows;
+        if (!paginationContainer) return; 
+        paginationContainer.innerHTML = '';
+        const pageCount = Math.ceil(currentRows.length / rowsPerPageOpt);
+        if (pageCount <= 1) {
+             paginationContainer.innerHTML = ''; // Ensure it's cleared if only one page
+             // Display all rows if only one page
+             currentRows.forEach(row => row.style.display = '');
+             return;
+        }
+
+        currentPage = 1; // Always reset to page 1 on setup
+
+        function displayPage(page) {
+            currentPage = page;
+            const start = (page - 1) * rowsPerPageOpt;
+            const end = start + rowsPerPageOpt;
+
+            // Hide all rows first (within the current set being paginated)
+            currentRows.forEach(row => row.style.display = 'none');
+            // Show only rows for the current page
+            const rowsToShow = currentRows.slice(start, end);
+            rowsToShow.forEach(row => row.style.display = '');
+            
+            updatePaginationUI(page, pageCount);
+        }
+
+        function updatePaginationUI(currentPage, pageCount) {
+            paginationContainer.innerHTML = ''; 
+
+            // Previous Button (Translated)
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item${currentPage === 1 ? ' disabled' : ''}`;
+            const prevA = document.createElement('a');
+            prevA.className = 'page-link';
+            prevA.href = '#';
+            prevA.textContent = 'Trước'; // Vietnamese
+            prevA.addEventListener('click', (e) => { e.preventDefault(); if (currentPage > 1) displayPage(currentPage - 1); });
+            prevLi.appendChild(prevA);
+            paginationContainer.appendChild(prevLi);
+
+            // Page Number Buttons
+            for (let i = 1; i <= pageCount; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item${i === currentPage ? ' active' : ''}`;
+                const pageA = document.createElement('a');
+                pageA.className = 'page-link';
+                pageA.href = '#';
+                pageA.textContent = i;
+                pageA.addEventListener('click', (e) => { e.preventDefault(); displayPage(i); });
+                pageLi.appendChild(pageA);
+                paginationContainer.appendChild(pageLi);
+            }
+
+            // Next Button (Translated)
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item${currentPage === pageCount ? ' disabled' : ''}`;
+            const nextA = document.createElement('a');
+            nextA.className = 'page-link';
+            nextA.href = '#';
+            nextA.textContent = 'Sau'; // Vietnamese
+            nextA.addEventListener('click', (e) => { e.preventDefault(); if (currentPage < pageCount) displayPage(currentPage + 1); });
+            nextLi.appendChild(nextA);
+            paginationContainer.appendChild(nextLi);
+        }
+
+        displayPage(1); 
+    }
+
+    // Initial setup for pagination
+    const initialRows = usersTableBody ? Array.from(usersTableBody.querySelectorAll('tr')).filter(row => !row.querySelector('td[colspan="6"]')) : [];
+    if (initialRows.length > 0) {
+        setupPagination(initialRows, rowsPerPage);
+    } else if (paginationContainer) {
+        paginationContainer.innerHTML = '';
+    }
+    
+
+    console.log('Admin Users Script: Script finished loading.'); // Log 16: Script end
+});
+</script>
+
+<style>
+/* CSS cho pagination cố định */
+.pagination-container {
+    text-align: center; /* Canh giữa nội dung bên trong */
+}
+
+.pagination-container .pagination {
+    display: inline-block; /* Để ul căn giữa theo text-align */
+    padding-left: 0; /* Reset padding mặc định của ul */
+    margin-top: 1rem; 
+    margin-bottom: 1rem;
+    border-radius: .25rem;
+}
+
+/* Đảm bảo các li nằm trên một hàng */
+.pagination-container .page-item {
+    display: inline;
+}
+
+.pagination-container .page-link {
+    position: relative;
+    display: block;
+    padding: .375rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #0d6efd;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    float: left; /* Float để các item nằm cạnh nhau */
+}
+
+/* CSS cũ ẩn nút Previous/Next (có thể xóa nếu muốn)*/
+/* Tạm thời ẩn pagination nếu có chữ tiếng Anh */
+#pagination .page-link:contains('Previous'),
+#pagination .page-link:contains('Next') {
+    display: none !important;
+}
+/* Hoặc ẩn cả li chứa nó nếu cần */
+#pagination .page-item:has(.page-link:contains('Previous')),
+#pagination .page-item:has(.page-link:contains('Next')) {
+     /* display: none !important; */ 
+}
+</style> 

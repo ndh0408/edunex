@@ -1,0 +1,71 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Báo cáo đơn hàng</h6>
+    </div>
+    <div class="card-body">
+        <!-- Filter Form -->
+        <form method="GET" action="/admin/reports" class="row g-3 mb-4">
+            <div class="col-md-5">
+                <label for="startDate" class="form-label">Từ ngày</label>
+                <input type="date" class="form-control form-control-sm" id="startDate" name="startDate" value="<%= req.query.startDate || '' %>">
+            </div>
+            <div class="col-md-5">
+                <label for="endDate" class="form-label">Đến ngày</label>
+                <input type="date" class="form-control form-control-sm" id="endDate" name="endDate" value="<%= req.query.endDate || '' %>">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary btn-sm w-100">Lọc</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="reportsTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Khách hàng</th>
+                        <th>Email</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái TT</th>
+                        <th>Trạng thái ĐH</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders && orders.length > 0) { %>
+                        <% orders.forEach(order => { %>
+                            <tr>
+                                <td><%= order.orderNumber || order._id.toString().substr(-6) %></td>
+                                <td><%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></td>
+                                <td><%= order.user ? order.user.name : (order.shippingAddress ? order.shippingAddress.name : 'Khách vãng lai') %></td>
+                                <td><%= order.user ? order.user.email : (order.shippingAddress ? order.shippingAddress.email : 'N/A') %></td>
+                                <td><%= (order.totalAmount || 0).toLocaleString('vi-VN') %> ₫</td>
+                                <td>
+                                    <span class="badge bg-<%= order.isPaid ? 'success' : 'warning' %>">
+                                        <%= order.isPaid ? 'Đã thanh toán' : 'Chưa TT' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<%= order.status === 'completed' || order.status === 'delivered' ? 'success' : (order.status === 'canceled' ? 'danger' : 'info') %>">
+                                        <%= order.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8" class="text-center">Không có đơn hàng nào phù hợp.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+         <!-- Add export buttons or further actions here -->
+    </div>
+</div> 

@@ -1,0 +1,475 @@
+<!-- Page Header -->
+<!-- Check for success_msg directly -->
+<% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= success_msg %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<!-- Check for error_msg directly -->
+<% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= error_msg %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Quản lý danh mục</h1>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+    <i class="fas fa-plus me-1"></i> Thêm danh mục mới
+  </button>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+  <div class="col-12">
+    <!-- Category List -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách danh mục</h6>
+        
+        <!-- Search -->
+        <form action="/admin/categories" method="GET" class="d-flex">
+          <input type="text" name="search" class="form-control form-control-sm me-2" placeholder="Tìm kiếm..." value="<%= search || '' %>">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+      
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered no-datatable" id="categoriesTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th style="width: 80px">Hình ảnh</th>
+                <th>Tên danh mục</th>
+                <th>Slug</th>
+                <th>Số sản phẩm</th>
+                <th>Thứ tự hiển thị</th>
+                <th>Nổi bật</th>
+                <th>Ngày tạo</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (categories && categories.length > 0) { %>
+                <% categories.forEach(category => { %>
+                  <tr>
+                    <td class="text-center">
+                      <img src="/uploads/<%= category.image || 'default-category.jpg' %>" 
+                           alt="<%= category.name %>" 
+                           class="img-thumbnail category-thumbnail"
+                           style="width: 60px; height: 60px; object-fit: cover;">
+                    </td>
+                    <td><%= category.name %></td>
+                    <td><%= category.slug %></td>
+                    <td><%= category.productCount || 0 %></td>
+                    <td><%= category.order || 0 %></td>
+                    <td>
+                      <% if (category.featured) { %>
+                        <span class="badge bg-success">Có</span>
+                      <% } else { %>
+                        <span class="badge bg-secondary">Không</span>
+                      <% } %>
+                    </td>
+                    <td><%= new Date(category.createdAt).toLocaleDateString('vi-VN') %></td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info edit-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editCategoryModal"
+                          data-id="<%= category._id %>"
+                          data-name="<%= category.name %>"
+                          data-slug="<%= category.slug %>"
+                          data-order="<%= category.order || 0 %>"
+                          data-description="<%= category.description || '' %>"
+                          data-featured="<%= category.featured ? 'true' : 'false' %>"
+                          data-image="<%= category.image || 'default-category.jpg' %>">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <a href="/admin/categories/delete/<%= category._id %>"
+                           class="btn btn-sm btn-danger delete-confirm-link"
+                           data-name="<%= category.name %>"
+                           title="Xóa danh mục <%= category.name %>">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" class="text-center">Không có danh mục nào</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+              <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="<%= paginationUrl(currentPage - 1) %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              
+              <% for(let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a class="page-link" href="<%= paginationUrl(i) %>"><%= i %></a>
+                </li>
+              <% } %>
+              
+              <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                <a class="page-link" href="<%= paginationUrl(currentPage + 1) %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCategoryModalLabel">Thêm danh mục mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/admin/categories/store" method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
+          <% if (typeof csrfToken !== 'undefined') { %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <% } %>
+          <div class="mb-3">
+            <label for="categoryName" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="categoryName" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="categorySlug" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="categorySlug" name="slug">
+            <small class="text-muted">Để trống để tự động tạo từ tên danh mục</small>
+          </div>
+          <div class="mb-3">
+            <label for="categoryDescription" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="categoryDescription" name="description" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="categoryImage" class="form-label">Hình ảnh</label>
+            <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+            <small class="text-muted">Hình ảnh đại diện cho danh mục (khuyến nghị tỷ lệ 1:1)</small>
+            <div class="mt-2 d-none" id="imagePreviewContainer">
+              <img id="imagePreview" src="#" alt="Preview" class="img-thumbnail" style="max-height: 150px">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="categoryOrder" class="form-label">Thứ tự hiển thị</label>
+            <input type="number" class="form-control" id="categoryOrder" name="order" value="0" min="0">
+            <small class="text-muted">Số thấp hơn sẽ hiển thị trước</small>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="categoryFeatured" name="featured">
+            <label class="form-check-label" for="categoryFeatured">Danh mục nổi bật</label>
+            <small class="d-block text-muted">Danh mục nổi bật sẽ được hiển thị ở trang chủ</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Thêm danh mục</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh sửa danh mục</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/admin/categories/update" method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
+          <input type="hidden" id="edit-category-id" name="categoryId">
+          <% if (typeof csrfToken !== 'undefined') { %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <% } %>
+          <div class="mb-3">
+            <label for="editCategoryName" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="editCategoryName" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="editCategorySlug" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="editCategorySlug" name="slug">
+          </div>
+          <div class="mb-3">
+            <label for="editCategoryDescription" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="editCategoryDescription" name="description" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="editCategoryImage" class="form-label">Hình ảnh</label>
+            <div class="mb-2" id="currentImageContainer">
+              <img id="currentImage" src="" alt="Current image" class="img-thumbnail" style="max-height: 150px">
+              <p class="small text-muted mt-1">Hình ảnh hiện tại</p>
+            </div>
+            <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
+            <small class="text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
+            <div class="mt-2 d-none" id="editImagePreviewContainer">
+              <img id="editImagePreview" src="#" alt="Preview" class="img-thumbnail" style="max-height: 150px">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="editCategoryOrder" class="form-label">Thứ tự hiển thị</label>
+            <input type="number" class="form-control" id="editCategoryOrder" name="order" min="0">
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="editCategoryFeatured" name="featured">
+            <label class="form-check-label" for="editCategoryFeatured">Danh mục nổi bật</label>
+            <small class="d-block text-muted">Danh mục nổi bật sẽ được hiển thị ở trang chủ</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  console.log("Admin Categories Script: Loading (Simple Delete Version with Notifications)...");
+
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("Admin Categories Script: DOMContentLoaded fired.");
+
+    // Show temporary notification if URL has success or error parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const message = urlParams.get('message');
+    
+    if (status && message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${status === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+      alertDiv.role = 'alert';
+      alertDiv.innerHTML = `
+        ${decodeURIComponent(message)}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      
+      // Insert at the top of the page
+      document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.container-fluid').firstChild);
+      
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alertDiv);
+        bsAlert.close();
+      }, 5000);
+    }
+
+    const categoriesTable = document.getElementById('categoriesTable');
+    if (!categoriesTable) {
+      console.error("Admin Categories Script: ERROR - Table #categoriesTable not found!");
+      return;
+    }
+    console.log("Admin Categories Script: Table #categoriesTable found, attaching delete confirmation listener.");
+
+    // Event delegation for delete confirmation links
+    categoriesTable.addEventListener('click', async function(event) {
+      console.log("Admin Categories Script: Click detected on table.");
+      const deleteLink = event.target.closest('.delete-confirm-link');
+
+      if (deleteLink) {
+        console.log("Admin Categories Script: Delete link clicked:", deleteLink);
+        event.preventDefault(); // VERY IMPORTANT: Prevent the link from navigating immediately
+
+        const categoryName = deleteLink.getAttribute('data-name');
+        const deleteUrl = deleteLink.getAttribute('href');
+
+        console.log(`Admin Categories Script: Data - Name: ${categoryName}, URL: ${deleteUrl}`);
+
+        if (!categoryName || !deleteUrl) {
+          console.error("Admin Categories Script: ERROR - Missing data-name or href attribute on delete link.");
+          
+          // Show error notification
+          const alertDiv = document.createElement('div');
+          alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+          alertDiv.role = 'alert';
+          alertDiv.innerHTML = `
+            Lỗi: Không thể lấy thông tin để xóa danh mục.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+          document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.container-fluid').firstChild);
+          return;
+        }
+
+        const confirmationMessage = `Bạn có chắc chắn muốn xóa danh mục "${categoryName}"? Hành động này không thể hoàn tác.`;
+        console.log("Admin Categories Script: Showing confirmation:", confirmationMessage);
+
+        if (confirm(confirmationMessage)) {
+          console.log(`Admin Categories Script: User confirmed. Navigating to: ${deleteUrl}`);
+          try {
+            // Thêm timestamp vào URL để tránh cache
+            const timestamp = new Date().getTime();
+            const urlWithTimestamp = `${deleteUrl}?t=${timestamp}`;
+            window.location.href = urlWithTimestamp;
+          } catch (error) {
+            console.error('Lỗi khi xóa danh mục:', error);
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+              Có lỗi xảy ra khi xóa danh mục
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.container-fluid').firstChild);
+          }
+        } else {
+          console.log("Admin Categories Script: User cancelled deletion.");
+        }
+      } else {
+         console.log("Admin Categories Script: Clicked element was not a delete link.");
+      }
+    });
+    console.log("Admin Categories Script: Delete confirmation listener attached.");
+
+    // --- Existing Edit Modal Logic ---
+    const editModalEl = document.getElementById('editCategoryModal');
+     if (editModalEl) {
+       console.log("Admin Categories Script: Edit modal found, attaching listener.");
+       editModalEl.addEventListener('show.bs.modal', function (event) {
+         try { // Add try-catch for robustness
+           const button = event.relatedTarget;
+           const id = button.getAttribute('data-id');
+           const name = button.getAttribute('data-name');
+           const slug = button.getAttribute('data-slug');
+           const order = button.getAttribute('data-order');
+           const description = button.getAttribute('data-description');
+           const featured = button.getAttribute('data-featured') === 'true';
+           const image = button.getAttribute('data-image');
+
+           console.log("Admin Categories Script: Edit modal data:", { id, name, slug, order, description, featured, image });
+
+           document.getElementById('edit-category-id').value = id;
+           document.getElementById('editCategoryName').value = name;
+           document.getElementById('editCategorySlug').value = slug;
+           document.getElementById('editCategoryOrder').value = order;
+           document.getElementById('editCategoryDescription').value = description;
+           document.getElementById('editCategoryFeatured').checked = featured;
+
+           const currentImage = document.getElementById('currentImage');
+           currentImage.src = `/uploads/${image}`;
+
+           document.getElementById('editCategoryImage').value = '';
+           document.getElementById('editImagePreviewContainer').classList.add('d-none');
+         } catch (error) {
+            console.error("Admin Categories Script: ERROR in edit modal handler - ", error);
+            alert("Đã xảy ra lỗi khi mở cửa sổ chỉnh sửa.");
+         }
+       });
+       console.log("Admin Categories Script: Edit modal listener attached.");
+     } else {
+        console.error("Admin Categories Script: ERROR - Edit modal element not found!");
+     }
+     // --- End of Edit Modal Logic ---
+
+    // --- Existing Add Modal Slug Generation Logic ---
+    const categoryNameInput = document.getElementById('categoryName');
+    const categorySlugInput = document.getElementById('categorySlug');
+    if (categoryNameInput && categorySlugInput) {
+      console.log("Admin Categories Script: Attaching slug generation listener.");
+      categoryNameInput.addEventListener('blur', function() {
+        try { // Add try-catch
+          if (categorySlugInput.value === '') {
+            categorySlugInput.value = this.value
+              .toLowerCase()
+              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+              .replace(/[^\w\s-]/g, '')
+              .replace(/\s+/g, '-');
+            console.log("Admin Categories Script: Generated slug:", categorySlugInput.value);
+          }
+        } catch (error) {
+           console.error("Admin Categories Script: ERROR during slug generation - ", error);
+        }
+      });
+      console.log("Admin Categories Script: Slug listener attached.");
+    } else {
+       console.warn("Admin Categories Script: Add category name or slug input not found.");
+    }
+    // --- End of Add Modal Slug Logic ---
+
+
+    // --- Existing Image Preview Logic ---
+    function setupImagePreview(inputId, previewId, containerId) {
+      const fileInput = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      const container = document.getElementById(containerId);
+
+      if (fileInput && preview && container) {
+        console.log(`Admin Categories Script: Setting up image preview for #${inputId}`);
+        fileInput.addEventListener('change', function() {
+           try { // Add try-catch
+             if (this.files && this.files[0]) {
+               const reader = new FileReader();
+               reader.onload = function(e) {
+                 preview.src = e.target.result;
+                 container.classList.remove('d-none');
+                 console.log(`Admin Categories Script: Image preview updated for #${inputId}`);
+               }
+               reader.readAsDataURL(this.files[0]);
+             } else {
+               preview.src = '#'; // Clear preview if no file selected
+               container.classList.add('d-none');
+               console.log(`Admin Categories Script: No file selected for #${inputId}, hiding preview.`);
+             }
+           } catch (error) {
+              console.error(`Admin Categories Script: ERROR during image preview for #${inputId} - `, error);
+           }
+        });
+      } else {
+         console.warn(`Admin Categories Script: Missing elements for image preview setup: Input: ${!!fileInput}, Preview: ${!!preview}, Container: ${!!container}`);
+      }
+    }
+    setupImagePreview('categoryImage', 'imagePreview', 'imagePreviewContainer'); // Add form
+    setupImagePreview('editCategoryImage', 'editImagePreview', 'editImagePreviewContainer'); // Edit form
+    // --- End of Image Preview Logic ---
+
+
+    // --- Existing Zebra Striping Logic ---
+    const tableRows = document.querySelectorAll('#categoriesTable tbody tr');
+    if (tableRows.length > 0) {
+      console.log("Admin Categories Script: Applying zebra striping.");
+      tableRows.forEach((row, index) => {
+        try { // Add try-catch
+          if (index % 2 === 0) {
+            row.classList.add('table-light');
+          } else {
+             row.classList.remove('table-light'); // Ensure odd rows are not light
+          }
+        } catch(error) {
+           console.error("Admin Categories Script: ERROR during zebra striping - ", error);
+        }
+      });
+      console.log("Admin Categories Script: Zebra striping applied.");
+    } else {
+       console.warn("Admin Categories Script: No table rows found for zebra striping.");
+    }
+    // --- End of Zebra Striping Logic ---
+
+    console.log("Admin Categories Script: DOMContentLoaded handler finished.");
+  });
+
+  console.log("Admin Categories Script: Script loaded completely.");
+</script> 

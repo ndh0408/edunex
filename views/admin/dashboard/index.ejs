@@ -1,0 +1,299 @@
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    <a href="/admin/reports/export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      <i class="fas fa-download fa-sm text-white-50 me-2"></i>Xuất báo cáo
+    </a>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Earnings (Monthly) Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Doanh thu (Tháng)
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.monthlyRevenue.toLocaleString('vi-VN') %> ₫</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earnings (Annual) Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Doanh thu (Năm)
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.annualRevenue.toLocaleString('vi-VN') %> ₫</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Đơn hàng chưa xử lý
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.pendingOrders %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Tổng số người dùng
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalUsers %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Revenue Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Đơn hàng theo trạng thái</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-pie">
+            <canvas id="orderStatusChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Recent Orders -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Đơn hàng gần đây</h6>
+        </div>
+        <div class="card-body">
+          <% if (recentOrders && recentOrders.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Khách hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% recentOrders.forEach(order => { %>
+                    <tr>
+                      <td>
+                        <a href="/admin/orders/<%= order._id %>">#<%= order.orderNumber %></a>
+                      </td>
+                      <td><%= order.user ? order.user.name : 'Khách vãng lai' %></td>
+                      <td><%= order.totalAmount ? order.totalAmount.toLocaleString('vi-VN') : '0' %> ₫</td>
+                      <td>
+                        <% if (order.status === 'pending') { %>
+                          <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                        <% } else if (order.status === 'processing') { %>
+                          <span class="badge bg-info">Đang xử lý</span>
+                        <% } else if (order.status === 'shipped') { %>
+                          <span class="badge bg-primary">Đang giao</span>
+                        <% } else if (order.status === 'delivered') { %>
+                          <span class="badge bg-success">Đã giao</span>
+                        <% } else if (order.status === 'canceled') { %>
+                          <span class="badge bg-danger">Đã hủy</span>
+                        <% } %>
+                      </td>
+                      <td><%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-3 text-center">
+              <a href="/admin/orders" class="btn btn-sm btn-primary">Xem tất cả đơn hàng</a>
+            </div>
+          <% } else { %>
+            <p class="text-center">Không có đơn hàng nào gần đây.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Sản phẩm bán chạy</h6>
+        </div>
+        <div class="card-body">
+          <% if (topProducts && topProducts.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Đã bán</th>
+                    <th>Tồn kho</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% topProducts.forEach(product => { %>
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="/uploads/<%= product.images[0] %>" alt="<%= product.name %>" width="40" height="40" class="me-2" style="object-fit: cover;">
+                          <a href="/admin/products/<%= product._id %>"><%= product.name %></a>
+                        </div>
+                      </td>
+                      <td><%= product.price.toLocaleString('vi-VN') %> ₫</td>
+                      <td><%= product.sold %></td>
+                      <td><%= product.countInStock %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-3 text-center">
+              <a href="/admin/products" class="btn btn-sm btn-primary">Xem tất cả sản phẩm</a>
+            </div>
+          <% } else { %>
+            <p class="text-center">Không có dữ liệu sản phẩm.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Revenue Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(revenueCtx, {
+      type: 'line',
+      data: {
+        labels: <%- JSON.stringify(chartData.months) %>,
+        datasets: [{
+          label: 'Doanh thu',
+          lineTension: 0.3,
+          backgroundColor: 'rgba(78, 115, 223, 0.05)',
+          borderColor: 'rgba(78, 115, 223, 1)',
+          pointRadius: 3,
+          pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+          pointBorderColor: 'rgba(78, 115, 223, 1)',
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+          pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: <%- JSON.stringify(chartData.revenue) %>
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString('vi-VN') + ' ₫';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Order Status Chart
+    const statusCtx = document.getElementById('orderStatusChart').getContext('2d');
+    const statusChart = new Chart(statusCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Chờ xử lý', 'Đang xử lý', 'Đang giao', 'Đã giao', 'Đã hủy'],
+        datasets: [{
+          data: [
+            <%= orderStatusCounts.pending %>, 
+            <%= orderStatusCounts.processing %>, 
+            <%= orderStatusCounts.shipped %>, 
+            <%= orderStatusCounts.delivered %>,
+            <%= orderStatusCounts.canceled %>
+          ],
+          backgroundColor: ['#f6c23e', '#36b9cc', '#4e73df', '#1cc88a', '#e74a3b'],
+          hoverBackgroundColor: ['#f4b619', '#2c9faf', '#2e59d9', '#17a673', '#e02d1b'],
+          hoverBorderColor: 'rgba(234, 236, 244, 1)'
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        },
+        cutout: '70%'
+      }
+    });
+  });
+</script> 
