@@ -11,7 +11,6 @@ const morgan = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
-const auth = require('./middlewares/auth');
 
 // Initialize app
 const app = express();
@@ -34,7 +33,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // EJS Layouts
 app.use(expressLayouts);
-app.set('layout', 'layout');
+// Đặt layout mặc định cho các route client
+app.set('layout', 'layouts/main');
 app.set("layout extractScripts", true);
 app.set("layout extractStyles", true);
 
@@ -70,11 +70,6 @@ app.use(passport.session());
 // Flash messages
 app.use(flash());
 
-// Initialize CSRF protection
-// Switch to cookie-based storage
-const csrfProtection = csrf({ cookie: true }); 
-app.use(csrfProtection);
-
 // CSRF Error Handler (Keep this, place it after session/passport but before routes)
 app.use(function (err, req, res, next) {
   if (err.code === 'EBADCSRFTOKEN') {
@@ -103,7 +98,6 @@ app.use(function (err, req, res, next) {
 
 // Global variables
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken(); // Add CSRF token to locals
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
@@ -134,7 +128,7 @@ app.use('/products', require('./routes/products'));
 app.use('/cart', require('./routes/cart'));
 app.use('/orders', require('./routes/orders'));
 app.use('/payment', require('./routes/payment'));
-app.use('/admin', auth.ensureAuthenticated, auth.ensureAdmin, require('./routes/admin'));
+app.use('/admin', require('./routes/admin'));
 app.use('/api', require('./routes/api'));
 
 // 404 page

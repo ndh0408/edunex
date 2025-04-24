@@ -42,24 +42,11 @@
                                     <%= coupon.usageCount %> / <%= coupon.usageLimit === null ? '∞' : coupon.usageLimit %>
                                 </td>
                                 <td class="coupon-owner">
-                                    <% if (coupon.owner && coupon.owner.length > 0) { %>
-                                        <% 
-                                        const maxDisplay = 2;
-                                        coupon.owner.slice(0, maxDisplay).forEach((own, index) => {
-                                            // Ensure 'own' is populated or handle potential errors
-                                            const name = own.name || 'N/A';
-                                            const email = own.email || '';
-                                            const id = own._id || '#';
-                                        %>
-                                            <a href="/admin/users/<%= id %>" title="<%= email %>"><%= name %></a><%= (index < coupon.owner.length - 1 && index < maxDisplay - 1) ? ',' : '' %>
-                                        <% }); %>
-                                        <% if (coupon.owner.length > maxDisplay) { %>
-                                            <% const remainingNames = coupon.owner.slice(maxDisplay).map(o => o.name || 'N/A').join(', '); %>
-                                            <span class="text-muted" title="<%= remainingNames %>">+<%= coupon.owner.length - maxDisplay %></span>
-                                        <% } %>
-                                    <% } else { %>
-                                        <span class="text-muted">Tất cả</span>
-                                    <% } %>
+                                     <% if (coupon.owner) { %>
+                                         <a href="/admin/users/<%= coupon.owner._id %>" title="<%= coupon.owner.email %>"><%= coupon.owner.name %></a>
+                                     <% } else { %>
+                                         <span class="text-muted">Tất cả</span>
+                                     <% } %>
                                 </td>
                                 <td class="coupon-status">
                                     <span class="badge bg-<%= coupon.isActive ? 'success' : 'secondary' %>">
@@ -80,7 +67,7 @@
                         <% }); %>
                     <% } else { %>
                         <tr>
-                            <td colspan="8" class="text-center">Chưa có coupon nào.</td>
+                            <td colspan="9" class="text-center">Chưa có coupon nào.</td> <%# Updated colspan %>
                         </tr>
                     <% } %>
                 </tbody>
@@ -98,11 +85,16 @@
                 <h5 class="modal-title">Thêm Coupon Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+             <%# Use standard form post for add, not AJAX yet %>
             <form action="/admin/coupons" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                         <div class="col-md-6 mb-3">
+                            <label for="addCode" class="form-label">Mã Coupon <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control text-uppercase" id="addCode" name="code" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="addExpiryDate" class="form-label">Ngày hết hạn <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="addExpiryDate" name="expiryDate" required>
                         </div>
@@ -137,17 +129,16 @@
                         </div>
                    </div>
                    <div class="mb-3">
-                       <label class="form-label">Người sở hữu</label>
-                       <div>
-                           <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#ownerSelectionModal" data-form-type="add">
-                               Chọn người sở hữu
-                           </button>
-                       </div>
-                       <div id="addSelectedOwnersDisplay" class="mt-2" style="min-height: 30px; border: 1px solid #ced4da; padding: 6px 12px; border-radius: .25rem; background-color: #e9ecef;">
-                           <span class="text-muted">Chưa chọn ai (áp dụng cho tất cả)</span>
-                       </div>
-                       <input type="hidden" id="addOwnerIds" name="owner">
-                       <small>Nếu không chọn ai, coupon sẽ áp dụng cho tất cả.</small>
+                        <label for="addOwner" class="form-label">Người sở hữu</label>
+                        <select class="form-select" id="addOwner" name="owner">
+                            <option value="">-- Tất cả người dùng --</option>
+                            <% if (users && users.length > 0) { %>
+                                <% users.forEach(user => { %>
+                                    <option value="<%= user._id %>"><%= user.name %> (<%= user.email %>)</option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                        <small>Nếu chọn, coupon chỉ áp dụng cho người dùng này.</small>
                    </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="addIsActive" name="isActive" checked value="on">
@@ -171,10 +162,11 @@
                 <h5 class="modal-title">Chỉnh Sửa Coupon</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="editCouponForm"> 
+             <%# AJAX form for edit %>
+            <form id="editCouponForm">
                 <div class="modal-body">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <input type="hidden" id="editCouponId" name="couponId"> 
+                    <input type="hidden" id="editCouponId" name="couponId">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="editCode" class="form-label">Mã Coupon <span class="text-danger">*</span></label>
@@ -214,17 +206,16 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Người sở hữu</label>
-                        <div>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#ownerSelectionModal" data-form-type="edit">
-                                Chọn người sở hữu
-                            </button>
-                        </div>
-                        <div id="editSelectedOwnersDisplay" class="mt-2" style="min-height: 30px; border: 1px solid #ced4da; padding: 6px 12px; border-radius: .25rem; background-color: #e9ecef;">
-                             <span class="text-muted">Chưa chọn ai (áp dụng cho tất cả)</span>
-                        </div>
-                         <input type="hidden" id="editOwnerIds" name="owner">
-                        <small>Nếu không chọn ai, coupon sẽ áp dụng cho tất cả.</small>
+                         <label for="editOwner" class="form-label">Người sở hữu</label>
+                         <select class="form-select" id="editOwner" name="owner">
+                             <option value="">-- Tất cả người dùng --</option>
+                             <% if (users && users.length > 0) { %>
+                                <% users.forEach(user => { %>
+                                    <option value="<%= user._id %>"><%= user.name %> (<%= user.email %>)</option>
+                                <% }); %>
+                            <% } %>
+                         </select>
+                         <small>Nếu chọn, coupon chỉ áp dụng cho người dùng này.</small>
                      </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="editIsActive" name="isActive" value="on">
@@ -240,43 +231,7 @@
     </div>
 </div>
 
-<!-- Add Owner Selection Modal -->
-<div class="modal fade" id="ownerSelectionModal" tabindex="-1" aria-labelledby="ownerSelectionModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ownerSelectionModalLabel">Chọn Người Sở Hữu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <input type="text" id="ownerSearchInput" class="form-control" placeholder="Tìm kiếm theo tên hoặc email...">
-                </div>
-                <table class="table table-hover" id="ownerSelectionTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">Chọn</th>
-                            <th>Tên</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- User rows will be populated by JavaScript -->
-                    </tbody>
-                </table>
-                <div id="ownerSelectionPagination">
-                    <!-- Pagination controls can be added here if needed -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <span id="selectedOwnerCount" class="me-auto text-muted">Đã chọn: 0</span>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="confirmOwnerSelectionBtn">Xác nhận</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Owner Selection Modal -->
+<%# Removed Owner Selection Modal %>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -286,29 +241,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const editCouponModal = bootstrap.Modal.getOrCreateInstance(editCouponModalEl);
     const editCouponForm = document.getElementById('editCouponForm');
 
-    // Define allUsers here, will be populated if users data is available
-    let allUsers = []; 
-    try {
-        // Safely parse the users data passed from EJS using backticks
-        // Ensure the controller passes 'users' to the view
-        allUsers = JSON.parse(`<%- JSON.stringify(typeof users !== "undefined" ? users : []) %>`);
-    } catch (e) {
-        console.error("Error parsing users data from EJS:", e);
-        // Handle error, maybe show a message to the user
-    }
-
-    // --- Helper Functions (Reuse from users.ejs if possible, or define here) ---
-    function showToast(message, type = 'info') { /* ... implementation ... */ }
-    function createToastContainer() { /* ... implementation ... */ }
-    async function confirmDelete(itemType = 'mục', itemId = '') { /* ... implementation ... */ }
-    // Add implementations for helpers if not globally available
-    if (typeof showToast === 'undefined') {
-         // Define showToast, createToastContainer, confirmDelete here if needed
-         console.warn("Helper functions (showToast, etc.) not found, defining locally.");
-        // Basic alert fallback:
-        window.showToast = function(msg, type){ alert(`${type}: ${msg}`); }; 
-        window.confirmDelete = async function(itemType, itemId) { return confirm(`Xóa ${itemType} ${itemId}?`); };
-    }
+    // --- Helper Functions (Assume these exist globally or define them) ---
+    // function showToast(message, type = 'info') { ... }
+    // function confirmDelete(itemType = 'mục', itemId = '') { ... }
+    // Basic alert fallback if helpers are missing:
+    if (typeof showToast === 'undefined') { window.showToast = function(msg, type){ alert(`${type}: ${msg}`); }; }
+    if (typeof confirmDelete === 'undefined') { window.confirmDelete = async function(itemType, itemId) { return confirm(`Xóa ${itemType} ${itemId}?`); }; }
 
     // --- Event Listeners ---
 
@@ -325,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(result.message || 'Không thể lấy dữ liệu coupon');
                 }
                 const coupon = result.coupon;
-                
+
                 // Populate Edit Modal
                 document.getElementById('editCouponId').value = coupon._id;
                 document.getElementById('editCode').value = coupon.code;
@@ -336,28 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('editMinAmount').value = coupon.minAmount || 0;
                 document.getElementById('editUsageLimit').value = coupon.usageLimit === null ? '' : coupon.usageLimit; // Handle null
                 document.getElementById('editIsActive').checked = coupon.isActive;
-                // Set multiple selections for owner
-                const editOwnerSelect = document.getElementById('editOwner');
-                const ownerIds = coupon.owner && Array.isArray(coupon.owner) ? coupon.owner.map(o => o._id.toString()) : [];
-                Array.from(editOwnerSelect.options).forEach(option => {
-                    option.selected = ownerIds.includes(option.value);
-                });
-
-                // Populate Owner Selection for Edit Form
-                document.getElementById('editOwnerIds').value = ownerIds.join(',');
-
-                const displayArea = document.getElementById('editSelectedOwnersDisplay');
-                 if (ownerIds.length > 0) {
-                    const selectedNames = coupon.owner.map(o => o.name); // Assuming owner objects have name
-                     const maxDisplay = 3;
-                     let displayText = selectedNames.slice(0, maxDisplay).join(', ');
-                     if (selectedNames.length > maxDisplay) {
-                         displayText += ` và ${selectedNames.length - maxDisplay} người khác`;
-                     }
-                     displayArea.innerHTML = `<span title="${selectedNames.join(', ')}">${displayText}</span>`;
-                 } else {
-                     displayArea.innerHTML = '<span class="text-muted">Chưa chọn ai (áp dụng cho tất cả)</span>';
-                 }
+                document.getElementById('editOwner').value = coupon.owner ? coupon.owner._id : ''; // Set single owner
 
                 editCouponModal.show();
             } catch (error) {
@@ -373,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (deleteButton) {
             const couponId = deleteButton.dataset.id;
             const couponCode = deleteButton.closest('tr')?.querySelector('.coupon-code')?.textContent || couponId;
-            
+
             if (await confirmDelete('coupon', couponCode)) {
                 deleteButton.disabled = true;
                 try {
@@ -387,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         const row = deleteButton.closest('tr');
                         row?.style.opacity = 0;
                         setTimeout(() => row?.remove(), 300);
-                        // Add pagination update here if pagination is implemented
                     } else {
                         showToast(result.message || 'Lỗi khi xóa coupon', 'error');
                         deleteButton.disabled = false;
@@ -401,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Edit Coupon Form Submission
+    // Edit Coupon Form Submission (AJAX)
     editCouponForm?.addEventListener('submit', async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -414,8 +330,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             data.usageLimit = parseInt(data.usageLimit, 10) || null;
         }
+        // Ensure owner is sent correctly (it's directly from the select value)
+        if(data.owner === '') { // If "Tất cả người dùng" is selected
+            data.owner = null; 
+        }
         delete data.couponId; // Remove hidden input from data sent
-        
+
         const submitButton = this.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
@@ -443,8 +363,13 @@ document.addEventListener('DOMContentLoaded', function() {
                      row.querySelector('.coupon-value').textContent = updatedCoupon.discountType === 'percentage' ? updatedCoupon.discountValue + '%' : updatedCoupon.discountValue.toLocaleString('vi-VN') + ' ₫';
                      row.querySelector('.coupon-expiry').textContent = new Date(updatedCoupon.expiryDate).toLocaleDateString('vi-VN');
                      row.querySelector('.coupon-usage').textContent = `${updatedCoupon.usageCount} / ${updatedCoupon.usageLimit === null ? '∞' : updatedCoupon.usageLimit}`;
-                     // Update Owner Display
-                     row.querySelector('.coupon-owner').innerHTML = renderOwnerCellContent(updatedCoupon.owner);
+                     // Update Owner Display (single owner)
+                     const ownerCell = row.querySelector('.coupon-owner');
+                     if (updatedCoupon.owner) {
+                         ownerCell.innerHTML = `<a href="/admin/users/${updatedCoupon.owner._id}" title="${updatedCoupon.owner.email}">${updatedCoupon.owner.name}</a>`;
+                     } else {
+                         ownerCell.innerHTML = `<span class="text-muted">Tất cả</span>`;
+                     }
                      const statusBadge = row.querySelector('.coupon-status span');
                      statusBadge.textContent = updatedCoupon.isActive ? 'Hoạt động' : 'Không HĐ';
                      statusBadge.className = `badge bg-${updatedCoupon.isActive ? 'success' : 'secondary'}`;
@@ -460,138 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- Owner Selection Modal Logic ---
-    const ownerSelectionModalEl = document.getElementById('ownerSelectionModal');
-    const ownerSelectionModal = new bootstrap.Modal(ownerSelectionModalEl);
-    const ownerSearchInput = document.getElementById('ownerSearchInput');
-    const ownerSelectionTableBody = ownerSelectionModalEl.querySelector('#ownerSelectionTable tbody');
-    const confirmOwnerSelectionBtn = document.getElementById('confirmOwnerSelectionBtn');
-    const selectedOwnerCountEl = document.getElementById('selectedOwnerCount');
+    // Add Coupon form uses standard POST, no specific JS needed here unless you want AJAX later
 
-    let currentFormType = 'add'; // 'add' or 'edit'
-    let selectedOwnerIds = new Set(); // Use a Set for efficient add/delete/check
-
-    // Function to render the user table in the modal
-    function renderOwnerSelectionTable(usersToRender) {
-        ownerSelectionTableBody.innerHTML = ''; // Clear existing rows
-        if (!usersToRender || usersToRender.length === 0) {
-            ownerSelectionTableBody.innerHTML = '<tr><td colspan="3" class="text-center">Không tìm thấy người dùng.</td></tr>';
-            return;
-        }
-        usersToRender.forEach(user => {
-            const isSelected = selectedOwnerIds.has(user._id.toString());
-            const row = `
-                <tr>
-                    <td>
-                        <input class="form-check-input owner-select-checkbox" type="checkbox" value="${user._id}" ${isSelected ? 'checked' : ''} data-user-name="${user.name}">
-                    </td>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                </tr>
-            `;
-            ownerSelectionTableBody.insertAdjacentHTML('beforeend', row);
-        });
-        updateSelectedCount();
-    }
-
-    // Function to update the selected count display
-    function updateSelectedCount() {
-        selectedOwnerCountEl.textContent = `Đã chọn: ${selectedOwnerIds.size}`;
-    }
-
-     // Event listener for opening the owner selection modal
-    ownerSelectionModalEl.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // Button that triggered the modal
-        currentFormType = button.getAttribute('data-form-type'); // 'add' or 'edit'
-
-        // Reset search
-        ownerSearchInput.value = '';
-
-        // Get currently selected IDs from the hidden input of the corresponding form
-        const hiddenInputId = currentFormType === 'add' ? 'addOwnerIds' : 'editOwnerIds';
-        const currentIdsString = document.getElementById(hiddenInputId).value;
-        const currentIds = currentIdsString ? currentIdsString.split(',') : [];
-        selectedOwnerIds = new Set(currentIds); // Initialize selection based on the form
-
-        // Render the table with all users initially
-        renderOwnerSelectionTable(allUsers);
-    });
-
-    // Event listener for checkbox changes within the modal
-    ownerSelectionTableBody.addEventListener('change', function(event) {
-        if (event.target.classList.contains('owner-select-checkbox')) {
-            const checkbox = event.target;
-            const userId = checkbox.value;
-            if (checkbox.checked) {
-                selectedOwnerIds.add(userId);
-            } else {
-                selectedOwnerIds.delete(userId);
-            }
-            updateSelectedCount();
-        }
-    });
-
-    // Event listener for search input
-    ownerSearchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        const filteredUsers = allUsers.filter(user =>
-            user.name.toLowerCase().includes(searchTerm) ||
-            user.email.toLowerCase().includes(searchTerm)
-        );
-        renderOwnerSelectionTable(filteredUsers);
-    });
-
-    // Event listener for confirm button
-    confirmOwnerSelectionBtn.addEventListener('click', function() {
-        const selectedIdsArray = Array.from(selectedOwnerIds);
-        const hiddenInputId = currentFormType === 'add' ? 'addOwnerIds' : 'editOwnerIds';
-        const displayAreaId = currentFormType === 'add' ? 'addSelectedOwnersDisplay' : 'editSelectedOwnersDisplay';
-
-        document.getElementById(hiddenInputId).value = selectedIdsArray.join(',');
-
-        // Update the display area
-        const displayArea = document.getElementById(displayAreaId);
-        if (selectedIdsArray.length > 0) {
-            const selectedNames = [];
-            selectedIdsArray.forEach(id => {
-                const user = allUsers.find(u => u._id.toString() === id);
-                if (user) {
-                    selectedNames.push(user.name);
-                }
-            });
-            // Display first few names and add "+ N more" if needed
-            const maxDisplay = 3;
-            let displayText = selectedNames.slice(0, maxDisplay).join(', ');
-            if (selectedNames.length > maxDisplay) {
-                displayText += ` và ${selectedNames.length - maxDisplay} người khác`;
-            }
-             displayArea.innerHTML = `<span title="${selectedNames.join(', ')}">${displayText}</span>`;
-        } else {
-            displayArea.innerHTML = '<span class="text-muted">Chưa chọn ai (áp dụng cho tất cả)</span>';
-        }
-
-        ownerSelectionModal.hide();
-    });
-
-    // --- End Owner Selection Modal Logic ---
-
-    // Helper function to render owner cell content (used in initial load, add, edit)
-    function renderOwnerCellContent(owners) {
-        if (owners && owners.length > 0) {
-            let ownerHtml = '';
-            const maxDisplay = 2;
-            owners.slice(0, maxDisplay).forEach((own, index) => {
-               // Assuming 'own' is an object with _id, name, email after population
-               ownerHtml += `<a href="/admin/users/${own._id}" title="${own.email || ''}">${own.name}</a>${ (index < owners.length - 1 && index < maxDisplay - 1) ? ',' : '' }`;
-            });
-            if (owners.length > maxDisplay) {
-                const remainingNames = owners.slice(maxDisplay).map(o => o.name).join(', ');
-                ownerHtml += ` <span class="text-muted" title="${remainingNames}">+${owners.length - maxDisplay}</span>`;
-            }
-            return ownerHtml;
-        } else {
-            return `<span class="text-muted">Tất cả</span>`;
-        }
-    }
 });
 </script> 

@@ -84,7 +84,7 @@ exports.createUser = async (req, res) => {
         }
 
         user = new User({
-            name,
+      name,
             email,
             password,
             role: role || 'user',
@@ -111,7 +111,7 @@ exports.updateUser = async (req, res) => {
 
     const { name, email, password, role, isActive } = req.body;
     const updateData = {
-        name,
+      name,
         email,
         role,
         isActive: isActive === 'on' || isActive === true || isActive === 'true' // Ensure boolean
@@ -201,7 +201,7 @@ exports.createProduct = async (req, res) => {
         }
 
         const product = new Product(req.body);
-        await product.save();
+    await product.save();
         res.status(201).json({ message: 'Product created successfully', product });
     } catch (error) {
         console.error('Create product error:', error);
@@ -289,7 +289,7 @@ exports.getOrders = async (req, res) => {
          allMatchingOrders.forEach(order => {
              if (order.isPaid) {
                  stats.totalPaid++;
-             } else {
+        } else {
                  stats.totalUnpaid++;
              }
              if (stats.hasOwnProperty(order.status)) {
@@ -299,9 +299,9 @@ exports.getOrders = async (req, res) => {
         // stats.total = totalOrders; // Already set
 
         res.locals.layout = 'admin/layout';
-        res.render('admin/orders/index', { 
-            orders, 
-            stats, 
+      res.render('admin/orders/index', {
+        orders,
+        stats,
             filter: req.query, 
             search: searchQuery, 
             title: 'Quản lý đơn hàng', 
@@ -677,7 +677,7 @@ exports.getReports = async (req, res) => {
         // Add layout and title
         res.locals.layout = 'admin/layout'; 
         res.render('admin/reports', { 
-            orders, 
+      orders,
             title: 'Báo cáo', // Add title
             req: req // Pass req object to access query params in view
         });

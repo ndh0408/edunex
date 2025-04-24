@@ -3,7 +3,7 @@
  */
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+
 
 // Ensure user is authenticated
 const ensureAuthenticated = (req, res, next) => {

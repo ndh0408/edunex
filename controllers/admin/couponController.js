@@ -31,14 +31,8 @@ exports.createCoupon = async (req, res) => {
     try {
         const { code, description, discountType, discountValue, minAmount, expiryDate, usageLimit, owner, isActive } = req.body;
 
-        // Generate a unique code if not provided (or handle as needed)
-        // For now, assuming code is provided or generated elsewhere if needed
-
-        // Process owner IDs from comma-separated string
-        let ownerIds = [];
-        if (owner && typeof owner === 'string' && owner.trim() !== '') {
-            ownerIds = owner.split(',').map(id => id.trim()).filter(id => mongoose.Types.ObjectId.isValid(id));
-        }
+        // Process owner ID (single or null)
+        const ownerId = (owner && mongoose.Types.ObjectId.isValid(owner)) ? owner : null;
 
         const newCoupon = new Coupon({
             code: code.toUpperCase(),
@@ -48,8 +42,8 @@ exports.createCoupon = async (req, res) => {
             minAmount: minAmount ? parseFloat(minAmount) : 0,
             expiryDate,
             usageLimit: (usageLimit && parseInt(usageLimit, 10) > 0) ? parseInt(usageLimit, 10) : null,
-            owner: ownerIds, // Use the processed array of IDs
-            isActive: isActive === 'on' // Convert checkbox value
+            owner: ownerId, // Use the single processed ID or null
+            isActive: isActive === 'on'
         });
 
         await newCoupon.save();
@@ -58,22 +52,22 @@ exports.createCoupon = async (req, res) => {
 
     } catch (error) {
         console.error('Error creating coupon:', error);
-         let errorMsg = 'Đã xảy ra lỗi khi tạo coupon.';
-         if (error.code === 11000) { // Handle duplicate code error
+        let errorMsg = 'Đã xảy ra lỗi khi tạo coupon.';
+        if (error.code === 11000) { // Handle duplicate code error
             errorMsg = `Mã coupon '${req.body.code}' đã tồn tại. Vui lòng sử dụng mã khác.`;
-         } else if (error.message) {
-             errorMsg = error.message;
-         }
-         req.flash('error_msg', errorMsg);
-         // Try to send users back again on error
-         try {
+        } else if (error.message) {
+            errorMsg = error.message;
+        }
+        req.flash('error_msg', errorMsg);
+        try {
             const users = await User.find({ role: { $ne: 'admin' } }).select('name email').lean();
-            res.render('admin/coupons', { 
-                layout: 'admin/layout', 
+            const coupons = await Coupon.find().populate('owner', 'name email').sort({ createdAt: -1 }).lean(); // Keep populate
+            res.render('admin/coupons', {
+                layout: 'admin/layout',
                 csrfToken: req.csrfToken(),
                 messages: req.flash(),
-                formData: req.body, // Send back form data
-                coupons: await Coupon.find().populate('owner', 'name email').sort({ createdAt: -1 }).lean(),
+                formData: req.body,
+                coupons: coupons,
                 users: users
             });
         } catch (err) {
@@ -93,11 +87,8 @@ exports.updateCoupon = async (req, res) => {
         const { couponId } = req.params;
         const { code, description, discountType, discountValue, minAmount, expiryDate, usageLimit, owner, isActive } = req.body;
 
-        // Process owner IDs from comma-separated string
-        let ownerIds = [];
-        if (owner && typeof owner === 'string' && owner.trim() !== '') {
-            ownerIds = owner.split(',').map(id => id.trim()).filter(id => mongoose.Types.ObjectId.isValid(id));
-        }
+        // Process owner ID (single or null)
+        const ownerId = (owner && mongoose.Types.ObjectId.isValid(owner)) ? owner : null;
 
         const updateData = {
             code: code.toUpperCase(),
@@ -106,8 +97,8 @@ exports.updateCoupon = async (req, res) => {
             discountValue: parseFloat(discountValue),
             minAmount: minAmount ? parseFloat(minAmount) : 0,
             expiryDate,
-            usageLimit: (usageLimit && parseInt(usageLimit, 10) >= 0) ? (parseInt(usageLimit, 10) === 0 ? null : parseInt(usageLimit, 10)) : null, // Treat 0 as null (unlimited)
-            owner: ownerIds, // Use the processed array of IDs
+            usageLimit: (usageLimit && parseInt(usageLimit, 10) >= 0) ? (parseInt(usageLimit, 10) === 0 ? null : parseInt(usageLimit, 10)) : null,
+            owner: ownerId, // Use the single processed ID or null
             isActive: typeof isActive === 'boolean' ? isActive : (isActive === 'on' || isActive === true)
         };
 
@@ -119,7 +110,7 @@ exports.updateCoupon = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Giá trị giảm giá cố định phải lớn hơn 0' });
         }
 
-        const updatedCoupon = await Coupon.findByIdAndUpdate(couponId, updateData, { new: true, runValidators: false }).populate('owner', 'name email'); // runValidators: false because we do custom validation
+        const updatedCoupon = await Coupon.findByIdAndUpdate(couponId, updateData, { new: true, runValidators: false }).populate('owner', 'name email'); // Keep populate
 
         if (!updatedCoupon) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy coupon.' });
@@ -130,9 +121,9 @@ exports.updateCoupon = async (req, res) => {
     } catch (error) {
         console.error('Error updating coupon:', error);
         let errorMsg = 'Đã xảy ra lỗi khi cập nhật coupon.';
-         if (error.code === 11000) { // Handle duplicate code error
+        if (error.code === 11000) { // Handle duplicate code error
             errorMsg = `Mã coupon '${req.body.code}' đã tồn tại. Vui lòng sử dụng mã khác.`;
-         }
+        }
         res.status(500).json({ success: false, message: errorMsg });
     }
 };
@@ -143,8 +134,8 @@ exports.getCouponById = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(couponId)) {
              return res.status(400).json({ success: false, message: 'ID coupon không hợp lệ.' });
         }
-        // Ensure owner is populated when fetching for edit
-        const coupon = await Coupon.findById(couponId).populate('owner', 'name email _id'); 
+        // Keep populate here for edit modal
+        const coupon = await Coupon.findById(couponId).populate('owner', 'name email _id');
 
         if (!coupon) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy coupon.' });
