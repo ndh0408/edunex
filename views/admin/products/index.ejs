@@ -161,11 +161,58 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-        <form id="delete-product-form" action="/admin/products/delete" method="POST">
-          <input type="hidden" name="productId" id="product-id-to-delete">
-          <button type="submit" class="btn btn-danger">Xóa</button>
-        </form>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn">Xóa</button>
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const deleteButtons = document.querySelectorAll('.delete-product-btn');
+  const deleteModal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
+  const productNameToDelete = document.getElementById('product-name-to-delete');
+  const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+  let productIdToDelete = null;
+
+  // ✅ Lấy CSRF token từ <meta>
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      productIdToDelete = this.getAttribute('data-id');
+      const productName = this.getAttribute('data-name');
+      productNameToDelete.textContent = productName;
+      deleteModal.show();
+    });
+  });
+
+  confirmDeleteBtn.addEventListener('click', function() {
+    if (!productIdToDelete) return;
+
+    fetch(`/admin/products/${productIdToDelete}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-Token': csrfToken,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.reload();
+      } else {
+        alert(data.message || 'Có lỗi xảy ra khi xóa sản phẩm');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Có lỗi xảy ra khi xóa sản phẩm');
+    })
+    .finally(() => {
+      deleteModal.hide();
+    });
+  });
+});
+</script> 

@@ -4,6 +4,8 @@ const Order = require('../models/Order');
 const Category = require('../models/Category');
 const Coupon = require('../models/Coupon');
 const { validationResult } = require('express-validator');
+const path = require('path');
+const fs = require('fs');
 
 // Dashboard
 exports.getDashboard = async (req, res) => {
@@ -191,11 +193,25 @@ exports.getUserJSON = async (req, res) => {
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find().populate('category');
+        const categories = await Category.find(); // Get categories for filter
+
         res.locals.layout = 'admin/layout';
-        res.render('admin/products', { products, title: 'Quản lý sản phẩm' });
+        res.render('admin/products', { 
+            products,
+            categories, 
+            title: 'Quản lý sản phẩm',
+            csrfToken: req.csrfToken(),
+            filter: req.query,
+            search: req.query.search || '',
+            currentPage: 1,
+            totalPages: 1
+        });
     } catch (error) {
         console.error('Get products error:', error);
-        res.status(500).render('error', { message: 'Error fetching products' });
+        res.status(500).render('error', { 
+            message: 'Error fetching products',
+            csrfToken: req.csrfToken()
+        });
     }
 };
 
@@ -206,8 +222,7 @@ exports.getCreateProductPage = async (req, res) => {
         res.locals.layout = 'admin/layout'; // Ensure layout is set
         res.render('admin/products/create', {
             title: 'Thêm sản phẩm mới',
-            categories: categories,
-            csrfToken: req.csrfToken() // Pass CSRF token for the form
+            categories: categories
         });
     } catch (error) {
         console.error('Error getting create product page:', error);
@@ -399,15 +414,60 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
-  try {
-        const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Không tìm thấy sản phẩm'
+            });
         }
-        res.json({ message: 'Product deleted successfully' });
+
+        // Xóa hình ảnh của sản phẩm
+        if (product.images && product.images.length > 0) {
+            console.log(`Bắt đầu xóa ${product.images.length} ảnh của sản phẩm ${product._id}`);
+            
+            for (const image of product.images) {
+                // Đường dẫn chính
+                const imagePath = path.join(__dirname, '../public/uploads/products', image);
+                
+                try {
+                    // Kiểm tra và xóa file từ đường dẫn chính
+                    if (fs.existsSync(imagePath)) {
+                        fs.unlinkSync(imagePath);
+                        console.log(`Đã xóa ảnh: ${imagePath}`);
+                    } else {
+                        console.log(`Không tìm thấy ảnh: ${imagePath}`);
+                        
+                        // Thử tìm trong thư mục uploads (không có thư mục con)
+                        const alternativePath = path.join(__dirname, '../public/uploads', image);
+                        if (fs.existsSync(alternativePath)) {
+                            fs.unlinkSync(alternativePath);
+                            console.log(`Đã xóa ảnh từ thư mục uploads: ${alternativePath}`);
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Lỗi khi xóa ảnh ${image}:`, err);
+                    // Tiếp tục quá trình xóa ngay cả khi xóa ảnh thất bại
+                }
+            }
+        }
+
+        // Xóa sản phẩm
+        await product.deleteOne();
+        
+        console.log(`Đã xóa sản phẩm ${product._id} thành công`);
+
+        res.json({ 
+            success: true,
+            message: 'Xóa sản phẩm thành công'
+        });
     } catch (error) {
         console.error('Delete product error:', error);
-        res.status(500).json({ message: 'Error deleting product' });
+        res.status(500).json({ 
+            success: false,
+            message: error.message || 'Lỗi khi xóa sản phẩm'
+        });
     }
 };
 
@@ -466,40 +526,97 @@ exports.getOrders = async (req, res) => {
   try {
         // Pagination parameters
         const currentPage = parseInt(req.query.page) || 1;
-        const ordersPerPage = 10; // Or get from config/query
+        const ordersPerPage = 10;
 
-        // Filter for search query
+        // Status filter
+        const statusFilter = req.query.status;
         const searchQuery = req.query.search || '';
         const filter = {};
+
+        // Add status filter if provided
+        if (statusFilter && statusFilter !== 'all') {
+            filter.status = statusFilter;
+        }
+
+        // Add search filter if provided
         if (searchQuery) {
-            // Simple search on orderNumber or user name/email (adjust as needed)
-            // This requires user to be populated or separate queries
-            const userSearch = User.find({ $or: [{name: new RegExp(searchQuery, 'i')}, {email: new RegExp(searchQuery, 'i')}] }).select('_id');
-            const userIds = (await userSearch).map(u => u._id);
+            const userSearch = await User.find({
+                $or: [
+                    {name: new RegExp(searchQuery, 'i')},
+                    {email: new RegExp(searchQuery, 'i')}
+                ]
+            }).select('_id');
+            const userIds = userSearch.map(u => u._id);
+            
             filter.$or = [
-                { orderNumber: new RegExp(searchQuery, 'i') }, // Search by order number (if you have one)
-                { 'shippingAddress.name': new RegExp(searchQuery, 'i') }, // Search by shipping name
-                { user: { $in: userIds } } // Search by user ID found from name/email
-                // Add other fields to search if needed
+                { orderNumber: new RegExp(searchQuery, 'i') },
+                { 'shippingAddress.name': new RegExp(searchQuery, 'i') },
+                { 'shippingAddress.phone': new RegExp(searchQuery, 'i') },
+                { user: { $in: userIds } }
             ];
         }
 
-        // Get total count for pagination before applying skip/limit
+        // Get total count for pagination
         const totalOrders = await Order.countDocuments(filter);
         const totalPages = Math.ceil(totalOrders / ordersPerPage);
 
-        // Fetch orders for the current page
+        // Validate current page
+        if (currentPage < 1) {
+            return res.redirect('/admin/orders?page=1');
+        }
+        if (totalPages > 0 && currentPage > totalPages) {
+            return res.redirect(`/admin/orders?page=${totalPages}`);
+        }
+
+        // Fetch orders for current page
         const orders = await Order.find(filter)
-            .populate('user', 'name email') 
+            .populate('user', 'name email')
             .sort({ createdAt: -1 })
             .skip((currentPage - 1) * ordersPerPage)
             .limit(ordersPerPage);
 
-        // Calculate order statistics (based on *all* orders or just the current page? 
-        // Let's calculate based on *all* matching orders for accuracy)
-        const allMatchingOrders = await Order.find(filter); // Query again for stats might be inefficient, consider aggregation
-        let stats = {
-            total: totalOrders, // Use total count
+        // Calculate order statistics using aggregation
+        const stats = await Order.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: 1 },
+                    totalPaid: {
+                        $sum: { $cond: ["$isPaid", 1, 0] }
+                    },
+                    totalUnpaid: {
+                        $sum: { $cond: ["$isPaid", 0, 1] }
+                    },
+                    pending: {
+                        $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+                    },
+                    processing: {
+                        $sum: { $cond: [{ $eq: ["$status", "processing"] }, 1, 0] }
+                    },
+                    shipped: {
+                        $sum: { $cond: [{ $eq: ["$status", "shipped"] }, 1, 0] }
+                    },
+                    delivered: {
+                        $sum: { $cond: [{ $eq: ["$status", "delivered"] }, 1, 0] }
+                    },
+                    canceled: {
+                        $sum: { $cond: [{ $eq: ["$status", "canceled"] }, 1, 0] }
+                    }
+                }
+            }
+        ]);
+
+        // Create pagination URL helper
+        const paginationUrl = (page) => {
+            const url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+            url.searchParams.set('page', page);
+            return url.pathname + url.search;
+        };
+
+        // Format statistics
+        const orderStats = stats.length > 0 ? stats[0] : {
+            total: 0,
             totalPaid: 0,
             totalUnpaid: 0,
             pending: 0,
@@ -508,31 +625,49 @@ exports.getOrders = async (req, res) => {
             delivered: 0,
             canceled: 0
         };
-         allMatchingOrders.forEach(order => {
-             if (order.isPaid) {
-                 stats.totalPaid++;
-        } else {
-                 stats.totalUnpaid++;
-             }
-             if (stats.hasOwnProperty(order.status)) {
-                 stats[order.status]++;
-             }
-         });
-        // stats.total = totalOrders; // Already set
+
+        // Delete _id from stats
+        delete orderStats._id;
 
         res.locals.layout = 'admin/layout';
-      res.render('admin/orders/index', {
-        orders,
-        stats,
-            filter: req.query, 
-            search: searchQuery, 
-            title: 'Quản lý đơn hàng', 
-            currentPage: currentPage, // Pass currentPage
-            totalPages: totalPages      // Pass totalPages
+        res.render('admin/orders/index', {
+            title: 'Quản lý đơn hàng',
+            orders,
+            stats: orderStats,
+            filter: req.query,
+            search: searchQuery,
+            currentStatus: statusFilter || 'all',
+            currentPage,
+            totalPages,
+            paginationUrl,
+            moment: require('moment')
         });
+
     } catch (error) {
         console.error('Get orders error:', error);
-        res.status(500).render('error', { message: 'Error fetching orders' });
+        req.flash('error_msg', 'Có lỗi xảy ra khi tải danh sách đơn hàng');
+        res.locals.layout = 'admin/layout';
+        res.status(500).render('admin/orders/index', {
+            title: 'Quản lý đơn hàng',
+            orders: [],
+            stats: {
+                total: 0,
+                totalPaid: 0,
+                totalUnpaid: 0,
+                pending: 0,
+                processing: 0,
+                shipped: 0,
+                delivered: 0,
+                canceled: 0
+            },
+            filter: req.query,
+            search: '',
+            currentStatus: 'all',
+            currentPage: 1,
+            totalPages: 1,
+            paginationUrl: () => '#',
+            moment: require('moment')
+        });
     }
 };
 
@@ -545,7 +680,7 @@ exports.getOrderDetails = async (req, res) => {
             return res.status(404).render('error', { message: 'Order not found' });
         }
         res.locals.layout = 'admin/layout';
-        res.render('admin/order-details', { order, title: 'Chi tiết đơn hàng' });
+        res.render('admin/orders/details', { order, title: 'Chi tiết đơn hàng' });
     } catch (error) {
         console.error('Get order details error:', error);
         res.status(500).render('error', { message: 'Error fetching order details' });
@@ -554,20 +689,132 @@ exports.getOrderDetails = async (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
   try {
-        const { status } = req.body;
-        const order = await Order.findByIdAndUpdate(
-            req.params.id,
-            { status },
-            { new: true }
-        );
+    const { status, note } = req.body;
+    const order = await Order.findById(req.params.id);
+    
     if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-        res.json({ message: 'Order status updated successfully', order });
-    } catch (error) {
-        console.error('Update order status error:', error);
-        res.status(500).json({ message: 'Error updating order status' });
+      return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
     }
+
+    // Cập nhật trạng thái
+    const previousStatus = order.status;
+    order.status = status;
+
+    // Nếu đơn hàng được đánh dấu là đã giao
+    if (status === 'delivered' && previousStatus !== 'delivered') {
+      // Cập nhật số lượng tồn kho và số lượng đã bán
+      for (const item of order.items) {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { 
+            countInStock: -item.quantity,
+            sold: item.quantity
+          }
+        });
+      }
+      
+      // Cập nhật trạng thái giao hàng
+      order.isDelivered = true;
+      order.deliveredAt = new Date();
+    }
+    
+    // Nếu đơn hàng bị hủy sau khi đã giao (hiếm khi xảy ra)
+    if (status === 'canceled' && previousStatus === 'delivered') {
+      // Hoàn lại số lượng vào kho
+      for (const item of order.items) {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { 
+            countInStock: item.quantity,
+            sold: -item.quantity
+          }
+        });
+      }
+      
+      order.isDelivered = false;
+      order.deliveredAt = null;
+    }
+
+    // Thêm vào lịch sử
+    order.history.push({
+      status: status,
+      timestamp: new Date(),
+      note: note,
+      type: 'status',
+      user: req.user._id
+    });
+
+    await order.save();
+    res.json({ success: true, message: 'Cập nhật trạng thái thành công', order });
+  } catch (error) {
+    console.error('Update order status error:', error);
+    res.status(500).json({ success: false, message: 'Lỗi khi cập nhật trạng thái đơn hàng' });
+  }
+};
+
+exports.updateOrderPayment = async (req, res) => {
+  try {
+    const { transactionId, note } = req.body;
+    const order = await Order.findById(req.params.id);
+    
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+    }
+
+    // Cập nhật thông tin thanh toán
+    order.isPaid = true;
+    order.paidAt = new Date();
+    if (transactionId) {
+      order.paymentResult = {
+        id: transactionId,
+        status: 'completed',
+        update_time: new Date(),
+        email_address: order.user ? order.user.email : order.shippingAddress.email
+      };
+    }
+
+    // Thêm vào lịch sử
+    order.history.push({
+      type: 'payment',
+      timestamp: new Date(),
+      message: 'Đã thanh toán đơn hàng',
+      note: note,
+      user: req.user._id
+    });
+
+    await order.save();
+    res.json({ success: true, message: 'Cập nhật thanh toán thành công', order });
+  } catch (error) {
+    console.error('Update order payment error:', error);
+    res.status(500).json({ success: false, message: 'Lỗi khi cập nhật thanh toán' });
+  }
+};
+
+exports.updateOrderNote = async (req, res) => {
+  try {
+    const { note } = req.body;
+    const order = await Order.findById(req.params.id);
+    
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+    }
+
+    // Cập nhật ghi chú
+    order.note = note;
+
+    // Thêm vào lịch sử
+    order.history.push({
+      type: 'note',
+      timestamp: new Date(),
+      message: 'Đã cập nhật ghi chú',
+      note: note,
+      user: req.user._id
+    });
+
+    await order.save();
+    res.json({ success: true, message: 'Cập nhật ghi chú thành công', order });
+  } catch (error) {
+    console.error('Update order note error:', error);
+    res.status(500).json({ success: false, message: 'Lỗi khi cập nhật ghi chú' });
+  }
 };
 
 // Category Management
@@ -668,18 +915,59 @@ exports.createCategory = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
+        // Lấy dữ liệu từ form
+        const { name, slug, description, order, featured, categoryId } = req.body;
+        
+        // Tìm danh mục cần cập nhật - dùng params.id thay vì categoryId
+        const category = await Category.findById(req.params.id);
         if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
+            req.flash('error_msg', 'Không tìm thấy danh mục');
+            return res.redirect('/admin/categories');
         }
-        res.json({ message: 'Category updated successfully', category });
+        
+        // Kiểm tra tên trùng
+        if (name !== category.name) {
+            const existingCategory = await Category.findOne({ name, _id: { $ne: category._id } });
+            if (existingCategory) {
+                req.flash('error_msg', 'Danh mục với tên này đã tồn tại');
+                return res.redirect('/admin/categories');
+            }
+        }
+        
+        // Xử lý upload ảnh
+        if (req.file) {
+            // Xóa ảnh cũ nếu không phải ảnh mặc định
+            if (category.image && category.image !== 'default-category.jpg') {
+                try {
+                    const oldImagePath = path.join(__dirname, '../public/uploads/categories', category.image);
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
+                    }
+                } catch (err) {
+                    console.error('Error deleting old image:', err);
+                }
+            }
+            // Cập nhật ảnh mới
+            category.image = req.file.filename;
+        }
+
+        // Cập nhật thông tin danh mục
+        category.name = name;
+        if (slug) category.slug = slug;
+        category.description = description;
+        category.order = parseInt(order) || 0;
+        category.featured = featured === 'on' || featured === true || featured === 'true';
+        
+        // Lưu thay đổi
+        await category.save();
+        
+        // Thông báo thành công và chuyển hướng
+        req.flash('success_msg', 'Cập nhật danh mục thành công');
+        return res.redirect('/admin/categories');
     } catch (error) {
         console.error('Update category error:', error);
-        res.status(500).json({ message: 'Error updating category' });
+        req.flash('error_msg', error.message || 'Lỗi khi cập nhật danh mục');
+        return res.redirect('/admin/categories');
     }
 };
 
@@ -693,6 +981,49 @@ exports.deleteCategory = async (req, res) => {
     } catch (error) {
         console.error('Delete category error:', error);
         res.status(500).json({ message: 'Error deleting category' });
+    }
+};
+
+// Function to handle category deletion via GET request
+exports.deleteCategoryByGet = async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        
+        // Check if category exists
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            req.flash('error_msg', 'Không tìm thấy danh mục');
+            return res.redirect('/admin/categories');
+        }
+        
+        // Check if category has products
+        const productsCount = await Product.countDocuments({ category: categoryId });
+        if (productsCount > 0) {
+            req.flash('error_msg', `Không thể xóa danh mục này vì có ${productsCount} sản phẩm đang sử dụng`);
+            return res.redirect('/admin/categories');
+        }
+        
+        // Delete image if not default
+        if (category.image && category.image !== 'default-category.jpg') {
+            try {
+                const imagePath = path.join(__dirname, '../public/uploads/categories', category.image);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            } catch (err) {
+                console.error('Error deleting category image:', err);
+            }
+        }
+        
+        // Delete category
+        await category.deleteOne();
+        
+        req.flash('success_msg', 'Danh mục đã được xóa thành công');
+        res.redirect('/admin/categories');
+    } catch (error) {
+        console.error('Delete category by GET error:', error);
+        req.flash('error_msg', 'Có lỗi xảy ra khi xóa danh mục');
+        res.redirect('/admin/categories');
     }
 };
 
@@ -852,25 +1183,73 @@ exports.deleteCoupon = async (req, res) => {
 // Statistics and Reports
 exports.getStatistics = async (req, res) => {
     try {
-        const [
-            totalSales,
-            monthlySales,
-            topCategories,
-            userGrowth
-        ] = await Promise.all([
-            Order.aggregate([
-                { $match: { status: 'completed' } },
-                { $group: { _id: null, total: { $sum: '$total' } } }
-            ]),
-            Order.aggregate([
-                { $match: { status: 'completed' } },
-                {
-                    $group: {
-                        _id: { $month: '$createdAt' },
-                        total: { $sum: '$total' }
-                    }
+        // Lấy ngày hiện tại
+        const now = new Date();
+        const currentMonth = now.getMonth(); // 0-11
+        const currentYear = now.getFullYear();
+        
+        // Lấy ngày đầu tiên của tháng hiện tại
+        const startOfCurrentMonth = new Date(currentYear, currentMonth, 1);
+        
+        // Lấy ngày đầu tiên của 11 tháng trước
+        const startOfPeriod = new Date(currentYear, currentMonth - 11, 1);
+
+        // Lấy doanh thu theo tháng
+        const monthlyRevenue = await Order.aggregate([
+            { 
+                $match: { 
+                    status: 'delivered',
+                    createdAt: { $gte: startOfPeriod }
                 }
+            },
+            {
+                $group: {
+                    _id: { 
+                        year: { $year: '$createdAt' },
+                        month: { $month: '$createdAt' }
+                    },
+                    revenue: { $sum: '$totalAmount' }
+                }
+            }
+        ]);
+
+        console.log('Raw monthly revenue:', monthlyRevenue); // For debugging
+
+        // Tạo mảng 12 tháng từ quá khứ đến hiện tại
+        const monthlyData = [];
+        for (let i = 11; i >= 0; i--) {
+            const date = new Date(currentYear, currentMonth - i, 1);
+            const monthNum = date.getMonth() + 1; // 1-12
+            
+            // Tìm doanh thu cho tháng này
+            const monthRevenue = monthlyRevenue.find(
+                item => item._id.year === date.getFullYear() && item._id.month === monthNum
+            );
+            
+            monthlyData.push({
+                year: date.getFullYear(),
+                month: monthNum,
+                monthLabel: `T${monthNum}/${date.getFullYear()}`,
+                revenue: monthRevenue ? monthRevenue.revenue : 0
+            });
+        }
+
+        console.log('Formatted monthly data:', monthlyData); // For debugging
+
+        // Tính các thống kê khác
+        const [
+            totalRevenue,
+            topCategories,
+            userGrowth,
+            currentMonthRevenue,
+            yearlyRevenue
+        ] = await Promise.all([
+            // Tổng doanh thu
+            Order.aggregate([
+                { $match: { status: 'delivered' } },
+                { $group: { _id: null, total: { $sum: '$totalAmount' } } }
             ]),
+            // Top danh mục
             Category.aggregate([
                 {
                     $lookup: {
@@ -889,24 +1268,68 @@ exports.getStatistics = async (req, res) => {
                 { $sort: { productCount: -1 } },
                 { $limit: 5 }
             ]),
+            // Tăng trưởng người dùng
             User.aggregate([
                 {
                     $group: {
-                        _id: { $month: '$createdAt' },
+                        _id: { 
+                            year: { $year: '$createdAt' },
+                            month: { $month: '$createdAt' }
+                        },
                         count: { $sum: 1 }
+                    }
+                },
+                { $sort: { '_id.year': -1, '_id.month': -1 } },
+                { $limit: 12 }
+            ]),
+            // Doanh thu tháng hiện tại
+            Order.aggregate([
+                {
+                    $match: {
+                        status: 'delivered',
+                        createdAt: { $gte: startOfCurrentMonth }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: '$totalAmount' }
+                    }
+                }
+            ]),
+            // Doanh thu năm hiện tại
+            Order.aggregate([
+                {
+                    $match: {
+                        status: 'delivered',
+                        createdAt: { 
+                            $gte: new Date(currentYear, 0, 1) 
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: '$totalAmount' }
                     }
                 }
             ])
         ]);
 
-        // Set the admin layout and title for this page
+        // Tính tăng trưởng người dùng
+        const currentMonthUsers = userGrowth[0]?.count || 0;
+        const lastMonthUsers = userGrowth[1]?.count || 0;
+        const growthPercentage = lastMonthUsers ? ((currentMonthUsers - lastMonthUsers) / lastMonthUsers * 100).toFixed(1) : 0;
+
         res.locals.layout = 'admin/layout';
         res.render('admin/statistics', {
-            title: 'Thống kê', // Add title
-            totalSales: totalSales[0]?.total || 0,
-            monthlySales,
+            title: 'Thống kê',
+            totalRevenue: totalRevenue[0]?.total || 0,
+            monthlyRevenue: monthlyData,
+            currentMonthRevenue: currentMonthRevenue[0]?.total || 0,
+            yearlyRevenue: yearlyRevenue[0]?.total || 0,
             topCategories,
-            userGrowth
+            userGrowth: growthPercentage
         });
     } catch (error) {
         console.error('Get statistics error:', error);

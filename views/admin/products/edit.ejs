@@ -9,7 +9,7 @@
   <div class="card shadow-sm mb-4">
     <div class="card-body">
       <!-- Form submits to PUT route -->
-      <form action="/admin/products/<%= product._id %>?_method=PUT" method="POST" enctype="multipart/form-data" id="productForm">
+      <form action="/admin/products/<%= product._id %>?_method=PUT&_csrf=<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>" method="POST" enctype="multipart/form-data" id="productForm">
         <!-- CSRF Token -->
         <% if (typeof csrfToken !== 'undefined') { %>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -306,5 +306,66 @@ document.addEventListener('DOMContentLoaded', function() {
      });
    }
 
+  // Chủ động làm mới CSRF token khi trang đã tải
+  window.addEventListener('load', function() {
+    const csrfInput = document.querySelector('input[name="_csrf"]');
+    if (csrfInput) {
+      try {
+        // Thực hiện request để lấy CSRF token mới
+        fetch('/users/refresh-csrf', {
+          method: 'GET',
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Không thể làm mới token');
+        })
+        .then(data => {
+          if (data.csrfToken) {
+            // Cập nhật CSRF token trong form
+            csrfInput.value = data.csrfToken;
+            console.log('Đã làm mới CSRF token');
+            
+            // Cập nhật token trong URL form action
+            const form = document.getElementById('productForm');
+            if (form) {
+              const currentAction = form.getAttribute('action');
+              // Xử lý URL để thay thế hoặc thêm token CSRF
+              const url = new URL(currentAction, window.location.origin);
+              url.searchParams.set('_csrf', data.csrfToken);
+              form.setAttribute('action', url.pathname + url.search);
+              console.log('Đã cập nhật CSRF token trong action URL');
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi làm mới CSRF token:', error);
+        });
+      } catch (error) {
+        console.error('Lỗi xử lý CSRF token:', error);
+      }
+    }
+  });
+  
+  // Thêm xử lý form trước khi submit
+  const productForm = document.getElementById('productForm');
+  if (productForm) {
+    productForm.addEventListener('submit', function(e) {
+      // Đảm bảo CSRF token được cập nhật trong URL
+      const csrfInput = document.querySelector('input[name="_csrf"]');
+      if (csrfInput) {
+        const currentAction = this.getAttribute('action');
+        const url = new URL(currentAction, window.location.origin);
+        url.searchParams.set('_csrf', csrfInput.value);
+        this.setAttribute('action', url.pathname + url.search);
+        console.log('CSRF token được cập nhật trước khi gửi form');
+      }
+    });
+  }
 });
 </script> 

@@ -39,4 +39,9 @@ router.put('/:id/cancel', ensureAuthenticated, orderController.cancelOrder);
 // @access  Private
 router.post('/:id/cancel', ensureAuthenticated, orderController.cancelOrder);
 
+// @route   POST /orders/apply-coupon
+// @desc    Apply coupon in checkout page
+// @access  Private
+router.post('/apply-coupon', ensureAuthenticated, orderController.applyCoupon);
+
 module.exports = router; 

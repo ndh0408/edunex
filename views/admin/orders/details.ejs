@@ -1,3 +1,6 @@
+<!-- CSRF Token -->
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
 <!-- Breadcrumb và tiêu đề -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <div>
@@ -237,7 +240,7 @@
                   <td>
                     <div class="d-flex align-items-center">
                       <% if (item.product && item.product.images && item.product.images.length > 0) { %>
-                        <img src="/uploads/<%= item.product.images[0] %>" alt="<%= item.name %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-3">
+                        <img src="/uploads/products/<%= item.product.images[0] %>" alt="<%= item.name %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-3">
                       <% } else { %>
                         <div class="bg-light me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
                           <i class="fas fa-image text-muted"></i>
@@ -411,6 +414,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Lấy CSRF token
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
+    
     // In hóa đơn
     const printButton = document.querySelector('.print-invoice');
     printButton.addEventListener('click', function() {
@@ -439,21 +445,17 @@
     });
     
     confirmStatusBtn.addEventListener('click', function() {
-      // Lấy CSRF token từ thẻ meta
-      const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-      const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-      if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
-      
       // Gửi yêu cầu cập nhật trạng thái đơn hàng
-      fetch(`/admin/orders/<%= order._id %>/status`, {
-        method: 'POST',
+      fetch(`/admin/orders/<%= order._id %>`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({
           status: statusSelect.value,
-          note: statusNote.value
+          note: statusNote.value,
+          _csrf: csrfToken
         })
       })
       .then(response => {
@@ -506,16 +508,12 @@
         const transactionId = transactionIdInput.value.trim();
         const note = paymentNoteInput.value.trim();
         
-        // Lấy CSRF token từ thẻ meta
-        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-        const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-        if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
-        
+        // Gửi yêu cầu cập nhật thanh toán
         fetch(`/admin/orders/<%= order._id %>/payment`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+            'X-CSRF-Token': csrfToken
           },
           body: JSON.stringify({
             transactionId,
@@ -551,16 +549,12 @@
       const note = orderNoteTextarea.value.trim();
       if (!note) { alert('Vui lòng nhập ghi chú'); return; }
       
-      // Lấy CSRF token từ thẻ meta
-      const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-      const csrfTokenHeader = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-      if (!csrfTokenHeader) { alert('Lỗi bảo mật CSRF!'); return; }
-      
+      // Gửi yêu cầu cập nhật ghi chú
       fetch(`/admin/orders/<%= order._id %>/note`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfTokenHeader // Sử dụng token từ meta
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({
           note

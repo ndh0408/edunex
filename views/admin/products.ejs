@@ -90,6 +90,12 @@
 
 <script>
 $(document).ready(function() {
+    // Get CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    // Log token for debugging
+    console.log('CSRF Token:', csrfToken);
+    
     // Xử lý nút xóa
     $('.delete-btn').on('click', function() {
         const id = $(this).data('id');
@@ -99,6 +105,9 @@ $(document).ready(function() {
             $.ajax({
                 url: `/admin/products/${id}`,
                 type: 'DELETE',
+                headers: {
+                    'X-CSRF-Token': csrfToken
+                },
                 success: function(response) {
                     if (response.success) {
                         location.reload();
@@ -106,8 +115,9 @@ $(document).ready(function() {
                         alert(response.message || 'Có lỗi xảy ra');
                     }
                 },
-                error: function() {
-                    alert('Có lỗi xảy ra');
+                error: function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    alert(xhr.responseJSON?.message || 'Có lỗi xảy ra khi xóa sản phẩm');
                 }
             });
         }

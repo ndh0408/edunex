@@ -6,71 +6,137 @@ const Coupon = require('../models/Coupon');
 // @route   GET /cart
 exports.showCart = async (req, res) => {
   try {
+    // Sửa để xem cart như một mảng thay vì object với thuộc tính items
     let cart = req.session.cart || [];
-    let totalPrice = 0;
-    let totalQuantity = 0;
-    let coupon = null;
-    let discount = 0;
     
-    // Calculate totals
-    cart.forEach(item => {
-      totalPrice += item.price * item.quantity;
-      totalQuantity += item.quantity;
-    });
+    // Thêm dữ liệu sản phẩm chi tiết từ database
+    const cartItemsWithDetails = [];
     
-    // Check if coupon is applied
-    if (req.session.couponId) {
-      coupon = await Coupon.findById(req.session.couponId);
-      
-      if (coupon) {
-        // Validate coupon again
-        const userId = req.user ? req.user._id : null;
-        const validationResult = coupon.isValid(userId, totalPrice);
-        
-        if (validationResult.valid) {
-          discount = coupon.calculateDiscount(totalPrice);
-          
-          // Ensure discount doesn't exceed total price
-          if (discount > totalPrice) {
-            discount = totalPrice;
+    for (const item of cart) {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        // Kiểm tra xem product có thuộc tính variants không và item có variantId không
+        if (product.variants && Array.isArray(product.variants) && item.variantId) {
+          const variant = product.variants.find(v => v._id.toString() === item.variantId);
+          if (variant) {
+            cartItemsWithDetails.push({
+              ...item,
+              product: {
+                _id: product._id,
+                name: product.name,
+                slug: product.slug,
+                images: product.images,
+                description: product.description
+              },
+              variant: variant
+            });
+          } else {
+            // Nếu không tìm thấy variant phù hợp, thêm sản phẩm với thông tin mặc định
+            cartItemsWithDetails.push({
+              ...item,
+              product: {
+                _id: product._id,
+                name: product.name,
+                slug: product.slug,
+                images: product.images,
+                description: product.description
+              },
+              variant: {
+                price: product.price || 0,
+                discountPrice: product.discountPrice || 0
+              }
+            });
           }
         } else {
-          // Remove invalid coupon
-          req.session.couponId = null;
-          req.flash('error_msg', validationResult.message);
+          // Nếu sản phẩm không có variants, thêm thông tin mặc định
+          cartItemsWithDetails.push({
+            ...item,
+            product: {
+              _id: product._id,
+              name: product.name,
+              slug: product.slug,
+              images: product.images,
+              description: product.description
+            },
+            variant: {
+              price: product.price || 0,
+              discountPrice: product.discountPrice || 0
+            }
+          });
         }
-      } else {
-        // Coupon no longer exists
-        req.session.couponId = null;
       }
     }
+
+    // Lấy thông tin về mã giảm giá đã áp dụng (nếu có)
+    const couponCode = req.session.couponCode || '';
+    const couponDiscount = req.session.couponDiscount || 0;
     
-    // Update session
-    req.session.totalPrice = totalPrice;
-    req.session.discount = discount;
-    req.session.finalPrice = totalPrice - discount;
-    req.session.totalQty = totalQuantity;
+    // Lấy thông tin lỗi hoặc thành công từ flash message (nếu có)
+    const couponError = req.flash('couponError')[0] || '';
+    const couponSuccess = req.flash('couponSuccess')[0] || '';
+
+    // Lấy thông tin người dùng nếu đã đăng nhập
+    const user = req.user;
+    
+    console.log(`Người dùng đăng nhập: ${user ? 'Có - ' + user.name + ' (ID: ' + user._id + ')' : 'Không'}`);
+    
+    // Khởi tạo biến lưu danh sách mã giảm giá của người dùng
+    let userCoupons = [];
+    
+    // Fetch user's coupons if logged in
+    if (user) {
+      // Tìm các mã giảm giá thuộc về người dùng này (owner là userId)
+      userCoupons = await Coupon.find({
+        owner: user._id,
+        isActive: true,
+        expiryDate: { $gt: new Date() }
+      }).sort({ expiryDate: 1 });
+      
+      console.log(`Tìm thấy ${userCoupons.length} mã giảm giá của người dùng ID ${user._id}`);
+      
+      // Debug: In ra thông tin của mỗi mã giảm giá tìm thấy
+      userCoupons.forEach((coupon, index) => {
+        console.log(`Coupon ${index+1}: ${coupon.code} - ${coupon.discountType} - ${coupon.discountValue}`);
+      });
+      
+      // Nếu không tìm thấy coupon nào của user, kiểm tra các coupon chung (không có owner)
+      if (userCoupons.length === 0) {
+        console.log("Không tìm thấy mã giảm giá riêng của người dùng, tìm mã giảm giá chung...");
+        
+        userCoupons = await Coupon.find({
+          owner: null, // Coupon không có owner
+          isActive: true,
+          expiryDate: { $gt: new Date() }
+        }).sort({ expiryDate: 1 });
+        
+        console.log(`Tìm thấy ${userCoupons.length} mã giảm giá chung`);
+      }
+    } else {
+      console.log("Không có người dùng đăng nhập, không thể hiển thị mã giảm giá");
+    }
+    
+    // Tính tổng số lượng và tổng giá trị
+    const totalQty = cart.reduce((total, item) => total + item.quantity, 0);
+    const totalPrice = cart.reduce((total, item) => {
+      // Tính giá của mỗi sản phẩm (dùng giá từ variant nếu có) và nhân với số lượng
+      const itemPrice = item.price || 0;
+      return total + (itemPrice * item.quantity);
+    }, 0);
     
     res.render('cart/index', {
-      title: 'Giỏ hàng',
-      cart: {
-        items: cart,
-        total: totalPrice,
-        discount: discount,
-        totalWithShipping: totalPrice - discount,
-        shippingFee: 0
-      },
-      totalPrice,
-      discount,
-      finalPrice: totalPrice - discount,
-      coupon,
-      couponCode: req.session.couponCode || '',
-      couponError: req.flash('coupon_error') || null,
-      couponSuccess: req.flash('coupon_success') || null
+      cartItems: cartItemsWithDetails,
+      totalQty: totalQty,
+      totalPrice: totalPrice,
+      couponCode,
+      couponDiscount,
+      couponError,
+      couponSuccess,
+      userCoupons, // Truyền danh sách mã giảm giá của người dùng vào view
+      user // Truyền thông tin người dùng vào view
     });
-  } catch (err) {
-    console.error(err);
-    req.flash('error_msg', 'Có lỗi xảy ra khi tải giỏ hàng');
+  } catch (error) {
+    console.error('Error showing cart:', error);
+    req.flash('error', 'Có lỗi xảy ra khi hiển thị giỏ hàng');
     res.redirect('/');
   }
 };
@@ -80,7 +146,7 @@ exports.showCart = async (req, res) => {
 exports.addToCart = async (req, res) => {
   try {
     const productId = req.params.id;
-    const { quantity = 1, size = '', color = '' } = req.body;
+    const { quantity = 1, variantId = '', size = '', color = '' } = req.body;
     
     // Get product
     const product = await Product.findById(productId);
@@ -88,6 +154,19 @@ exports.addToCart = async (req, res) => {
     if (!product) {
       req.flash('error_msg', 'Không tìm thấy sản phẩm');
       return res.redirect('/products');
+    }
+    
+    // Tìm variant nếu có
+    let variant = null;
+    let price = product.price;
+    let discountPrice = product.discountPrice;
+    
+    if (variantId && product.variants && Array.isArray(product.variants)) {
+      variant = product.variants.find(v => v._id.toString() === variantId);
+      if (variant) {
+        price = variant.price || product.price;
+        discountPrice = variant.discountPrice || product.discountPrice;
+      }
     }
     
     // Check if product is in stock
@@ -104,8 +183,7 @@ exports.addToCart = async (req, res) => {
     // Check if product already in cart
     const existingItemIndex = req.session.cart.findIndex(item => 
       item.productId === productId && 
-      item.size === size && 
-      item.color === color
+      item.variantId === variantId
     );
     
     if (existingItemIndex > -1) {
@@ -115,10 +193,11 @@ exports.addToCart = async (req, res) => {
       // Add new product to cart
       req.session.cart.push({
         productId,
+        variantId: variantId || null,
         name: product.name,
         slug: product.slug,
-        price: product.discountPrice > 0 ? product.discountPrice : product.price,
-        image: product.images[0],
+        price: discountPrice > 0 ? discountPrice : price,
+        image: product.images && product.images.length > 0 ? product.images[0] : null,
         size,
         color,
         quantity: parseInt(quantity),
@@ -211,6 +290,9 @@ exports.clearCart = (req, res) => {
     req.session.totalQty = 0;
     req.session.couponId = null;
     req.session.discount = 0;
+    req.session.couponCode = null;
+    req.session.couponDiscount = 0;
+    req.session.couponApplied = false;
     
     req.flash('success_msg', 'Đã xóa tất cả sản phẩm khỏi giỏ hàng');
     res.redirect('/cart');
@@ -225,48 +307,57 @@ exports.clearCart = (req, res) => {
 // @route   POST /cart/coupon
 exports.applyCoupon = async (req, res) => {
   try {
-    const { code } = req.body;
+    const { couponCode } = req.body;
     
-    if (!code) {
-      req.flash('error_msg', 'Vui lòng nhập mã giảm giá');
+    if (!couponCode) {
+      req.flash('couponError', 'Vui lòng nhập mã giảm giá');
       return res.redirect('/cart');
     }
     
     // Find coupon
     const coupon = await Coupon.findOne({ 
-      code: code.toUpperCase(),
+      code: couponCode.toUpperCase(),
       isActive: true,
-      startDate: { $lte: new Date() },
-      endDate: { $gte: new Date() }
+      expiryDate: { $gt: new Date() }
     });
     
     if (!coupon) {
-      req.flash('error_msg', 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
+      req.flash('couponError', 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
       return res.redirect('/cart');
     }
     
     // Calculate total price
-    const totalPrice = req.session.cart.reduce(
+    const totalPrice = req.session.cart ? req.session.cart.reduce(
       (total, item) => total + (item.price * item.quantity), 
       0
-    );
+    ) : 0;
     
-    // Validate coupon
-    const userId = req.user ? req.user._id : null;
-    const validationResult = coupon.isValid(userId, totalPrice);
-    
-    if (!validationResult.valid) {
-      req.flash('error_msg', validationResult.message);
+    // Kiểm tra điều kiện áp dụng mã giảm giá
+    if (coupon.minAmount > 0 && totalPrice < coupon.minAmount) {
+      req.flash('couponError', `Giá trị đơn hàng tối thiểu để sử dụng mã giảm giá này là ${coupon.minAmount.toLocaleString('vi-VN')}₫`);
       return res.redirect('/cart');
     }
     
-    // Apply coupon
-    req.session.couponId = coupon._id;
-    req.flash('success_msg', 'Đã áp dụng mã giảm giá');
+    // Tính giá trị giảm giá
+    let discountAmount = 0;
+    if (coupon.discountType === 'percentage') {
+      discountAmount = Math.round(totalPrice * coupon.discountValue / 100);
+    } else {
+      discountAmount = coupon.discountValue;
+    }
+    
+    // Không để giảm giá vượt quá tổng giá trị đơn hàng
+    discountAmount = Math.min(discountAmount, totalPrice);
+    
+    // Lưu mã giảm giá vào session
+    req.session.couponCode = coupon.code;
+    req.session.couponDiscount = discountAmount;
+    
+    req.flash('couponSuccess', `Đã áp dụng mã giảm giá: ${coupon.code}`);
     res.redirect('/cart');
   } catch (err) {
     console.error(err);
-    req.flash('error_msg', 'Có lỗi xảy ra khi áp dụng mã giảm giá');
+    req.flash('couponError', 'Có lỗi xảy ra khi áp dụng mã giảm giá');
     res.redirect('/cart');
   }
 };
@@ -276,8 +367,8 @@ exports.applyCoupon = async (req, res) => {
 exports.removeCoupon = (req, res) => {
   try {
     // Remove coupon
-    req.session.couponId = null;
-    req.session.discount = 0;
+    req.session.couponCode = null;
+    req.session.couponDiscount = 0;
     
     req.flash('success_msg', 'Đã xóa mã giảm giá');
     res.redirect('/cart');

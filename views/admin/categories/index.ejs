@@ -1,19 +1,5 @@
 <!-- Page Header -->
-<!-- Check for success_msg directly -->
-<% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= success_msg %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } %>
-
-<!-- Check for error_msg directly -->
-<% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <%= error_msg %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } %>
+<!-- Đã loại bỏ thông báo trùng lặp để tránh hiển thị 2 lần -->
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0 text-gray-800">Quản lý danh mục</h1>
@@ -146,11 +132,9 @@
         <h5 class="modal-title" id="addCategoryModalLabel">Thêm danh mục mới</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/admin/categories" method="POST" enctype="multipart/form-data">
+      <form action="/admin/categories?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
-          <% if (typeof csrfToken !== 'undefined') { %>
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <% } %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="mb-3">
             <label for="categoryName" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="categoryName" name="name" required>
@@ -200,12 +184,10 @@
         <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh sửa danh mục</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/admin/categories/update" method="POST" enctype="multipart/form-data">
+      <form action="/admin/categories/id?_method=PUT" method="POST" enctype="multipart/form-data" id="editCategoryForm">
         <div class="modal-body">
           <input type="hidden" id="edit-category-id" name="categoryId">
-          <% if (typeof csrfToken !== 'undefined') { %>
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <% } %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="mb-3">
             <label for="editCategoryName" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="editCategoryName" name="name" required>
@@ -255,29 +237,20 @@
   document.addEventListener('DOMContentLoaded', function() {
     console.log("Admin Categories Script: DOMContentLoaded fired.");
 
-    // Show temporary notification if URL has success or error parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get('status');
-    const message = urlParams.get('message');
-    
-    if (status && message) {
-      const alertDiv = document.createElement('div');
-      alertDiv.className = `alert alert-${status === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
-      alertDiv.role = 'alert';
-      alertDiv.innerHTML = `
-        ${decodeURIComponent(message)}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      `;
-      
-      // Insert at the top of the page
-      document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.container-fluid').firstChild);
-      
-      // Auto-dismiss after 5 seconds
+    // Auto-close alerts after 2 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
       setTimeout(() => {
-        const bsAlert = new bootstrap.Alert(alertDiv);
-        bsAlert.close();
-      }, 5000);
-    }
+        const closeBtn = alert.querySelector('.btn-close');
+        if (closeBtn) {
+          closeBtn.click();
+        } else {
+          // Alternative method if button not found
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        }
+      }, 2000); // 2 seconds
+    });
 
     const categoriesTable = document.getElementById('categoriesTable');
     if (!categoriesTable) {
@@ -370,7 +343,7 @@
            document.getElementById('editCategoryFeatured').checked = featured;
 
            const currentImage = document.getElementById('currentImage');
-           currentImage.src = `/uploads/${image}`;
+           currentImage.src = `/uploads/categories/${image}`;
 
            document.getElementById('editCategoryImage').value = '';
            document.getElementById('editImagePreviewContainer').classList.add('d-none');
@@ -395,21 +368,44 @@
           if (categorySlugInput.value === '') {
             categorySlugInput.value = this.value
               .toLowerCase()
-              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-              .replace(/[^\w\s-]/g, '')
-              .replace(/\s+/g, '-');
-            console.log("Admin Categories Script: Generated slug:", categorySlugInput.value);
+              .replace(/[^\w\s-]/g, '') // Remove special chars except dash, underscore
+              .replace(/\s+/g, '-') // Replace spaces with dash
+              .replace(/-+/g, '-'); // Replace multiple dashes with single dash
           }
         } catch (error) {
-           console.error("Admin Categories Script: ERROR during slug generation - ", error);
+          console.error("Admin Categories Script: ERROR generating slug - ", error);
         }
       });
-      console.log("Admin Categories Script: Slug listener attached.");
-    } else {
-       console.warn("Admin Categories Script: Add category name or slug input not found.");
     }
-    // --- End of Add Modal Slug Logic ---
-
+    
+    // --- Edit Category Form Submission ---
+    const editCategoryForm = document.getElementById('editCategoryForm');
+    if (editCategoryForm) {
+      console.log("Admin Categories Script: Attaching edit form submit handler");
+      editCategoryForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        try {
+          const categoryId = document.getElementById('edit-category-id').value;
+          if (!categoryId) {
+            alert('Không tìm thấy ID danh mục');
+            return;
+          }
+          
+          // Cập nhật action URL với ID danh mục
+          const csrfToken = this.querySelector('input[name="_csrf"]').value;
+          this.action = `/admin/categories/${categoryId}?_method=PUT&_csrf=${encodeURIComponent(csrfToken)}`;
+          console.log("Admin Categories Script: Submitting to URL:", this.action);
+          
+          // Submit form
+          this.submit();
+        } catch (error) {
+          console.error("Admin Categories Script: ERROR submitting edit form - ", error);
+          alert('Có lỗi xảy ra khi gửi biểu mẫu');
+        }
+      });
+    } else {
+      console.error("Admin Categories Script: ERROR - Edit form not found!");
+    }
 
     // --- Existing Image Preview Logic ---
     function setupImagePreview(inputId, previewId, containerId) {

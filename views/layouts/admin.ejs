@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
-    <meta name="csrf-token" content="<%= csrfToken %>">
-  <% } %>
+  <meta name="csrf-token" content="<%= csrfToken %>">
   <title><%= typeof title !== 'undefined' ? title + ' - Admin' : 'Admin Dashboard' %></title>
   <!-- Favicon -->
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">

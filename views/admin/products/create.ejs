@@ -7,6 +7,8 @@
     </a>
   </div>
 
+  <!-- Thẻ div thông báo phiên làm việc hết hạn đã bị xóa -->
+  
   <div class="card shadow-sm mb-4">
     <div class="card-body">
       <form action="/admin/products" method="POST" enctype="multipart/form-data" id="productForm">
@@ -219,34 +221,60 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Đã xóa JavaScript xử lý thông báo phiên hết hạn
+
   // Image preview functionality
   const imageUpload = document.querySelector('.image-upload');
   const previewContainer = document.querySelector('.image-preview-container');
   let selectedFiles = []; // Array to store selected file objects
 
   if (imageUpload && previewContainer) {
-    imageUpload.addEventListener('change', function(event) {
-      previewContainer.innerHTML = ''; // Clear previous previews
-      selectedFiles = []; // Reset the selected files array
+    // Clear existing event listeners for fileInput
+    const newImageUpload = imageUpload.cloneNode(true);
+    imageUpload.parentNode.replaceChild(newImageUpload, imageUpload);
+    const fileInput = newImageUpload;
 
+    // Helper function to update the file input's FileList
+    function updateFileInput() {
+      const dataTransfer = new DataTransfer();
+      selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+      });
+      fileInput.files = dataTransfer.files;
+      
+      // Remove required attribute if files are selected
+      if (fileInput.files.length > 0) {
+        fileInput.removeAttribute('required');
+      } else {
+        fileInput.setAttribute('required', 'required');
+      }
+    }
+
+    // Handle file selection event
+    fileInput.addEventListener('change', function(event) {
       const files = event.target.files;
       if (files && files.length > 0) {
         // Limit to 5 files for selection
         const filesToProcess = Array.from(files).slice(0, 5);
-
-        filesToProcess.forEach((file, index) => {
-          if (!file.type.match('image.*')) return;
-
-          // Store the file object
-          selectedFiles.push(file);
-
+        
+        // Filter for only image files and add them to selectedFiles
+        filesToProcess.forEach(file => {
+          if (file.type.match('image.*')) {
+            selectedFiles.push(file);
+          }
+        });
+        
+        // Clear the preview container
+        previewContainer.innerHTML = '';
+        
+        // Create preview cards for each file
+        selectedFiles.forEach((file, index) => {
           const reader = new FileReader();
           reader.onload = function(e) {
             const card = document.createElement('div');
             card.className = 'card image-preview';
             card.style.width = '120px';
-            // Add a data attribute to link preview to the file object (using index for simplicity)
-            card.dataset.fileIndex = selectedFiles.length - 1; 
+            card.dataset.fileIndex = index;
 
             card.innerHTML = `
               <img src="${e.target.result}" class="card-img-top" alt="Preview" style="height: 120px; object-fit: cover;">
@@ -258,49 +286,33 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
 
             card.querySelector('.remove-preview').addEventListener('click', function() {
-              const indexToRemove = parseInt(card.dataset.fileIndex);
-              // Remove file from our array (mark as null or splice)
-              // Splicing might mess up indices, so marking as null is safer if indices are important elsewhere
-              // Or better, find by name/reference if possible. Here we use index.
-              if (!isNaN(indexToRemove) && indexToRemove < selectedFiles.length) {
-                  // Find the actual file object to remove based on preview properties or index
-                  // This simple index removal might be fragile if previews are added/removed dynamically in other ways
-                  // A more robust way would be to assign a unique ID to each file/preview
-                  
-                  // For simplicity, let's find the corresponding file and remove it
-                  // We need a reliable way to link the card back to the file. Let's refine this.
-                  // Find the file object linked to this preview card
-                  const fileToRemove = selectedFiles[indexToRemove]; // Get the file reference
-                  selectedFiles = selectedFiles.filter((f, i) => i !== indexToRemove);
-                  
-                  card.remove(); // Remove the preview card
-                  
-                  // Update the file input to reflect the change (required for FormData submission)
-                  updateFileInput(); 
-              }
+              // Find the index from dataset
+              const removeIndex = parseInt(card.dataset.fileIndex);
+              
+              // Remove the file from selectedFiles array
+              selectedFiles = selectedFiles.filter((_, i) => i !== removeIndex);
+              
+              // Remove the card
+              card.remove();
+              
+              // Re-index remaining cards
+              document.querySelectorAll('.image-preview').forEach((card, newIndex) => {
+                card.dataset.fileIndex = newIndex;
+              });
+              
+              // Update the file input
+              updateFileInput();
             });
 
             previewContainer.appendChild(card);
           };
-
           reader.readAsDataURL(file);
         });
         
-        // Update the file input to reflect the filtered list (e.g., only 5 files)
+        // Update the file input
         updateFileInput();
       }
     });
-  }
-
-  // Helper function to update the actual file input's FileList
-  function updateFileInput() {
-      const dataTransfer = new DataTransfer();
-      selectedFiles.forEach(file => {
-          if (file) { // Ensure file wasn't marked as null
-              dataTransfer.items.add(file);
-          }
-      });
-      imageUpload.files = dataTransfer.files;
   }
 
   // Specification Management
@@ -346,9 +358,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const productForm = document.getElementById('productForm');
   if (productForm) {
     productForm.addEventListener('submit', function(e) {
-      // Update the file input just before submitting to ensure it has the correct files
-      updateFileInput();
-
+      // Không ngăn chặn form submit mặc định ở đây
+      
       let isValid = true;
       const errors = [];
       
@@ -365,13 +376,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       
-      // Validate images (using the updated imageUpload.files)
-      const images = imageUpload; // Use the updated input
-      if (!images.files || images.files.length === 0) {
+      // Validate images (check if selectedFiles has items instead of the input)
+      const images = document.querySelector('.image-upload');
+      if (!selectedFiles || selectedFiles.length === 0) {
         images.classList.add('is-invalid');
         isValid = false;
         errors.push('Vui lòng chọn ít nhất 1 hình ảnh cho sản phẩm');
-      } else if (images.files.length > 5) { // Should not happen if selection logic is correct
+      } else if (selectedFiles.length > 5) {
         images.classList.add('is-invalid');
         isValid = false;
         errors.push('Chỉ được chọn tối đa 5 hình ảnh');
@@ -391,13 +402,55 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('discountPrice').classList.remove('is-invalid');
       }
       
+      // Ngăn submit chỉ khi có lỗi validation
       if (!isValid) {
-        e.preventDefault();
+        e.preventDefault(); // Chỉ ngăn submit khi form không hợp lệ
         alert('Vui lòng kiểm tra lại biểu mẫu:\n' + errors.join('\n'));
       }
-      // No need for custom FormData handling here anymore if updateFileInput works correctly
+    });
+    
+    // Xử lý lỗi CSRF khi form submit
+    productForm.addEventListener('submit', function() {
+      // Lưu thời điểm gửi form
+      sessionStorage.setItem('lastFormSubmit', Date.now());
     });
   }
+  
+  // Chủ động làm mới CSRF token khi trang đã tải
+  window.addEventListener('load', function() {
+    // Chủ động làm mới CSRF token khi trang đã tải
+    const csrfInput = document.querySelector('input[name="_csrf"]');
+    if (csrfInput) {
+      try {
+        // Thực hiện request để lấy CSRF token mới
+        fetch('/users/refresh-csrf', {
+          method: 'GET',
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Không thể làm mới token');
+        })
+        .then(data => {
+          if (data.csrfToken) {
+            // Cập nhật CSRF token trong form
+            csrfInput.value = data.csrfToken;
+            console.log('Đã làm mới CSRF token');
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi làm mới CSRF token:', error);
+        });
+      } catch (error) {
+        console.error('Lỗi xử lý CSRF token:', error);
+      }
+    }
+  });
   
   // Format price inputs with thousand separators
   const priceInputs = document.querySelectorAll('input[type="number"]');

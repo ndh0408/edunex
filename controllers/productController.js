@@ -319,4 +319,193 @@ exports.getProductById = async (req, res) => {
       message: 'Có lỗi xảy ra'
     });
   }
+};
+
+// @desc    Show create product form
+// @route   GET /products/create
+exports.showCreateForm = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.render('products/create', {
+      title: 'Thêm sản phẩm mới',
+      categories
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi tải form thêm sản phẩm');
+    res.redirect('/admin/products');
+  }
+};
+
+// @desc    Create new product
+// @route   POST /products
+exports.createProduct = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      stock,
+      specifications
+    } = req.body;
+
+    // Handle image upload
+    let images = [];
+    if (req.files && req.files.length > 0) {
+      images = req.files.map(file => file.filename);
+    }
+
+    // Parse specifications if it's a string
+    let parsedSpecifications = [];
+    if (specifications) {
+      try {
+        parsedSpecifications = typeof specifications === 'string' 
+          ? JSON.parse(specifications) 
+          : specifications;
+      } catch (err) {
+        console.error('Error parsing specifications:', err);
+        parsedSpecifications = [];
+      }
+    }
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      stock,
+      specifications: parsedSpecifications,
+      images,
+      createdBy: req.user._id
+    });
+
+    await product.save();
+    req.flash('success_msg', 'Thêm sản phẩm thành công');
+    res.redirect(`/products/${product.slug}`);
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi thêm sản phẩm');
+    res.redirect('/products/create');
+  }
+};
+
+// @desc    Show edit product form
+// @route   GET /products/:id/edit
+exports.showEditForm = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    const categories = await Category.find();
+
+    if (!product) {
+      req.flash('error_msg', 'Không tìm thấy sản phẩm');
+      return res.redirect('/admin/products');
+    }
+
+    res.render('products/edit', {
+      title: 'Chỉnh sửa sản phẩm',
+      product,
+      categories
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi tải form chỉnh sửa');
+    res.redirect('/admin/products');
+  }
+};
+
+// @desc    Update product
+// @route   PUT /products/:id
+exports.updateProduct = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      stock,
+      specifications
+    } = req.body;
+
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      req.flash('error_msg', 'Không tìm thấy sản phẩm');
+      return res.redirect('/admin/products');
+    }
+
+    // Handle image upload
+    if (req.files && req.files.length > 0) {
+      // Remove old images
+      product.images.forEach(image => {
+        const imagePath = path.join(__dirname, '../public/uploads/products', image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      });
+      // Add new images
+      product.images = req.files.map(file => file.filename);
+    }
+
+    // Parse specifications if it's a string
+    let parsedSpecifications = [];
+    if (specifications) {
+      try {
+        parsedSpecifications = typeof specifications === 'string' 
+          ? JSON.parse(specifications) 
+          : specifications;
+      } catch (err) {
+        console.error('Error parsing specifications:', err);
+        parsedSpecifications = [];
+      }
+    }
+
+    // Update product fields
+    product.name = name;
+    product.description = description;
+    product.price = price;
+    product.discountPrice = discountPrice;
+    product.category = category;
+    product.stock = stock;
+    product.specifications = parsedSpecifications;
+    product.updatedBy = req.user._id;
+
+    await product.save();
+    req.flash('success_msg', 'Cập nhật sản phẩm thành công');
+    res.redirect(`/products/${product.slug}`);
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi cập nhật sản phẩm');
+    res.redirect(`/products/${req.params.id}/edit`);
+  }
+};
+
+// @desc    Delete product
+// @route   DELETE /products/:id
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      req.flash('error_msg', 'Không tìm thấy sản phẩm');
+      return res.redirect('/admin/products');
+    }
+
+    // Remove product images
+    product.images.forEach(image => {
+      const imagePath = path.join(__dirname, '../public/uploads/products', image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    });
+
+    await product.remove();
+    req.flash('success_msg', 'Xóa sản phẩm thành công');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi xóa sản phẩm');
+    res.redirect('/admin/products');
+  }
 }; 

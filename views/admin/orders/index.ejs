@@ -611,5 +611,117 @@
     // Gắn sự kiện ban đầu
     attachEventListenersToNewRows();
 
+    // Xử lý bộ lọc trạng thái
+    const statusFilter = document.getElementById('status-filter');
+    statusFilter.addEventListener('change', function() {
+        const url = new URL(window.location.href);
+        if (this.value) {
+            url.searchParams.set('status', this.value);
+        } else {
+            url.searchParams.delete('status');
+        }
+        url.searchParams.delete('page'); // Reset page when filter changes
+        window.location.href = url.toString();
+    });
+
+    // Xử lý bộ lọc phương thức thanh toán
+    const paymentFilter = document.getElementById('payment-filter');
+    paymentFilter.addEventListener('change', function() {
+        const url = new URL(window.location.href);
+        if (this.value) {
+            url.searchParams.set('paymentMethod', this.value);
+        } else {
+            url.searchParams.delete('paymentMethod');
+        }
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    });
+
+    // Xử lý daterangepicker
+    $('#date-range').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Xóa',
+            applyLabel: 'Áp dụng',
+            fromLabel: 'Từ',
+            toLabel: 'Đến',
+            customRangeLabel: 'Tùy chọn',
+            daysOfWeek: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+            monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+                'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            firstDay: 1
+        }
+    });
+
+    $('#date-range').on('apply.daterangepicker', function(ev, picker) {
+        const dateRange = picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY');
+        $(this).val(dateRange);
+        $('#date-range-hidden').val(dateRange);
+        
+        const url = new URL(window.location.href);
+        url.searchParams.set('dateRange', dateRange);
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    });
+
+    $('#date-range').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        $('#date-range-hidden').val('');
+        
+        const url = new URL(window.location.href);
+        url.searchParams.delete('dateRange');
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    });
+
+    // Xử lý nút reset bộ lọc
+    document.getElementById('reset-filter').addEventListener('click', function() {
+        window.location.href = '/admin/orders';
+    });
+
+    // Xử lý xuất CSV
+    document.getElementById('export-csv-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        const url = new URL(this.href);
+        
+        // Thêm các bộ lọc hiện tại vào URL xuất CSV
+        const currentUrl = new URL(window.location.href);
+        for (const [key, value] of currentUrl.searchParams.entries()) {
+            url.searchParams.append(key, value);
+        }
+        
+        window.location.href = url.toString();
+    });
+
+    // Xử lý cập nhật trạng thái đơn hàng
+    const statusButtons = document.querySelectorAll('.update-status');
+    statusButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const orderId = this.dataset.orderId;
+            const newStatus = this.dataset.status;
+            
+            try {
+                const response = await fetch(`/admin/orders/${orderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': '<%= csrfToken %>'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    // Reload trang sau khi cập nhật thành công
+                    window.location.reload();
+                } else {
+                    alert('Có lỗi xảy ra khi cập nhật trạng thái đơn hàng');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi cập nhật trạng thái đơn hàng');
+            }
+        });
+    });
   });
 </script> 

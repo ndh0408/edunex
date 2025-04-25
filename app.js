@@ -45,8 +45,8 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
-// Cookie parser
-app.use(cookieParser());
+// Cookie parser - ĐẾN TRƯỚC session
+app.use(cookieParser(process.env.SESSION_SECRET || 'fashionstore_secret'));
 
 // Session configuration should be before CSRF
 app.use(session({
@@ -59,7 +59,9 @@ app.use(session({
   }),
   cookie: {
     maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
-    httpOnly: true
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
   }
 }));
 
@@ -70,36 +72,49 @@ app.use(passport.session());
 // Flash messages
 app.use(flash());
 
-// Initialize CSRF protection AFTER session and cookie parser
-// app.use(csrf());
-
-// CSRF Error Handler (Keep this, place it after session/passport but before routes)
-app.use(function (err, req, res, next) {
-  if (err.code === 'EBADCSRFTOKEN') {
-    // CSRF token invalid
-    console.log('CSRF attack detected - bad token');
-    console.log('Request path:', req.path);
-    console.log('Request method:', req.method);
-    console.log('Session ID:', req.sessionID);
-    let expectedToken = '';
-    try {
-      // Attempt to get token if available (might fail if middleware didn't run)
-      if (req.csrfToken) expectedToken = req.csrfToken(); 
-    } catch (e) { /* ignore */ }
-    console.log('Received CSRF token:', req.body?._csrf || req.query?._csrf || 'none in body/query');
-    
-    // Handle CSRF error specifically
-    res.status(403).render('error', { 
-      message: 'Invalid form submission - token mismatch. Please try again.', 
-      error: {} 
-    });
-  } else {
-    // Pass on other errors
-    next(err);
+// Cấu hình CSRF riêng cho các route cần bảo vệ
+const csrfProtection = csrf({
+  cookie: {
+    key: '_csrf', // Tên cookie
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/'
   }
 });
 
-// Global variables (Add csrfToken here)
+// KHÔNG khởi tạo CSRF protection toàn cục
+// app.use(csrf());
+
+// CSRF Error Handler - đặt trước các route
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  
+  // Handle CSRF token errors here
+  console.log('CSRF error detected:', err.message);
+  
+  // Clear CSRF cookie to force regeneration
+  res.clearCookie('_csrf');
+  
+  // If it's an API request, send JSON response
+  if (req.xhr || req.path.startsWith('/api/')) {
+    return res.status(403).json({ error: 'Session expired. Please refresh and try again.', success: false });
+  } 
+  
+  // For login/register forms
+  if (req.path === '/users/login' || req.path === '/users/register') {
+    req.flash('error', 'Phiên làm việc đã hết hạn. Vui lòng thử lại.');
+    // Redirect to the same page using a safer approach
+    return res.redirect(req.path);
+  }
+  
+  // For regular requests
+  req.flash('error_msg', 'Phiên làm việc đã hết hạn. Vui lòng thử lại.');
+  // Redirect to a safe location instead of 'back'
+  return res.redirect(req.get('Referrer') || '/');
+});
+
+// Global variables
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -107,6 +122,7 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   res.locals.cart = req.session.cart || [];
   res.locals.totalQty = req.session.totalQty || 0;
+  // KHÔNG add CSRF token to all views, chỉ add khi cần
   next();
 });
 

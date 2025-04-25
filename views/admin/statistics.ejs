@@ -7,13 +7,12 @@
       </div>
       <div class="card-body">
         <div class="chart-area">
-          <canvas id="salesChart" data-revenue="<%= JSON.stringify(monthlySales.map(s => s.total)) %>"></canvas>
+          <canvas id="salesChart"></canvas>
         </div>
         <hr>
         Biểu đồ thể hiện tổng doanh thu theo từng tháng.
       </div>
     </div>
-
   </div>
 
   <!-- Pie Chart -->
@@ -24,9 +23,7 @@
       </div>
       <div class="card-body">
         <div class="chart-pie pt-4">
-          <canvas id="productChart" 
-                  data-categories="<%= JSON.stringify(topCategories.map(c => c.name)) %>" 
-                  data-counts="<%= JSON.stringify(topCategories.map(c => c.productCount)) %>"></canvas>
+          <canvas id="productChart"></canvas>
         </div>
         <hr>
         Biểu đồ thể hiện tỷ lệ sản phẩm theo danh mục phổ biến nhất.
@@ -36,14 +33,14 @@
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-6 mb-4">
+    <div class="col-md-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Tổng doanh thu (Đã hoàn thành)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= totalSales.toLocaleString('vi-VN') %> ₫</div>
+                            Tổng doanh thu</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= totalRevenue.toLocaleString('vi-VN') %> ₫</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -52,14 +49,46 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-4">
+    <div class="col-md-3 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Doanh thu tháng này</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= currentMonthRevenue.toLocaleString('vi-VN') %> ₫</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Doanh thu năm nay</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= yearlyRevenue.toLocaleString('vi-VN') %> ₫</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tăng trưởng người dùng (Tháng này)</div>
-                        <!-- Note: userGrowth data needs proper processing to show current month -->
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">N/A</div> 
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Tăng trưởng người dùng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= userGrowth %>%</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -70,4 +99,141 @@
     </div>
 </div>
 
-<!-- Scripts for charts are typically included in the main admin.js or layout --> 
+<script>
+function initializeCharts() {
+    // Clean up existing charts
+    const salesChart = Chart.getChart('salesChart');
+    if (salesChart) {
+        salesChart.destroy();
+    }
+    const productChart = Chart.getChart('productChart');
+    if (productChart) {
+        productChart.destroy();
+    }
+
+    // Parse data
+    const monthlyRevenue = JSON.parse('<%- JSON.stringify(monthlyRevenue) %>');
+    const categories = JSON.parse('<%- JSON.stringify(topCategories.map(c => c.name)) %>');
+    const counts = JSON.parse('<%- JSON.stringify(topCategories.map(c => c.productCount)) %>');
+
+    console.log('Monthly Revenue Data:', monthlyRevenue);
+
+    // Initialize Sales Chart
+    const salesCtx = document.getElementById('salesChart');
+    if (salesCtx) {
+        // Sort data chronologically
+        const sortedMonthlyData = monthlyRevenue.sort((a, b) => {
+            if (a.year !== b.year) {
+                return a.year - b.year;
+            }
+            return a.month - b.month;
+        });
+
+        new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: sortedMonthlyData.map(m => m.monthLabel),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: sortedMonthlyData.map(m => m.revenue),
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        titleColor: '#6e707e',
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyColor: '#858796',
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        padding: 15,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Doanh thu: ' + context.raw.toLocaleString('vi-VN') + ' ₫';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgb(234, 236, 244)',
+                            zeroLineColor: 'rgb(234, 236, 244)',
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        },
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' ₫';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 12,
+                            padding: 10
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize Product Chart
+    const pieCtx = document.getElementById('productChart');
+    if (pieCtx) {
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: categories,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                cutout: '80%'
+            }
+        });
+    }
+}
+
+// Initialize charts when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCharts);
+} else {
+    initializeCharts();
+}
+</script> 

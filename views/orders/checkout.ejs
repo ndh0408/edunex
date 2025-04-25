@@ -141,7 +141,7 @@
             </span>
           </div>
           
-          <% if (discount && discount > 0) { %>
+          <% if (hasDiscount) { %>
             <div class="d-flex justify-content-between mb-3">
               <span>Giảm giá:</span>
               <span class="fw-medium text-danger">
@@ -161,6 +161,65 @@
         </div>
       </div>
       
+      <!-- Coupon Code -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">Mã giảm giá</h5>
+        </div>
+        <div class="card-body">
+          <form action="/orders/apply-coupon" method="POST" id="coupon-form">
+            <div class="input-group">
+              <input type="text" class="form-control" name="couponCode" placeholder="Nhập mã giảm giá" value="<%= couponCode || '' %>">
+              <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+            </div>
+            <% if (couponError) { %>
+              <div class="text-danger small mt-2"><%= couponError %></div>
+            <% } %>
+            <% if (couponSuccess) { %>
+              <div class="text-success small mt-2"><%= couponSuccess %></div>
+            <% } %>
+          </form>
+          
+          <% if (userCoupons && userCoupons.length > 0) { %>
+            <hr>
+            <div class="accordion mt-3" id="accordionCoupons">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingCoupons">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCoupons" aria-expanded="false" aria-controls="collapseCoupons">
+                    Mã giảm giá của bạn (<%= userCoupons.length %>)
+                  </button>
+                </h2>
+                <div id="collapseCoupons" class="accordion-collapse collapse" aria-labelledby="headingCoupons" data-bs-parent="#accordionCoupons">
+                  <div class="accordion-body p-2">
+                    <div class="coupon-list">
+                      <% userCoupons.forEach(coupon => { %>
+                        <div class="border rounded p-2 mb-2 coupon-item">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-primary"><%= coupon.code %></span>
+                            <button type="button" class="btn btn-sm btn-outline-primary apply-coupon" data-code="<%= coupon.code %>">Áp dụng</button>
+                          </div>
+                          <div class="small text-muted">
+                            <% if (coupon.discountType === 'percentage') { %>
+                              Giảm <%= coupon.discountValue %>%
+                            <% } else { %>
+                              Giảm <%= coupon.discountValue.toLocaleString('vi-VN') %>₫
+                            <% } %>
+                            <% if (coupon.minAmount > 0) { %>
+                              cho đơn từ <%= coupon.minAmount.toLocaleString('vi-VN') %>₫
+                            <% } %>
+                          </div>
+                          <div class="small text-muted">Hết hạn: <%= new Date(coupon.expiryDate).toLocaleDateString('vi-VN') %></div>
+                        </div>
+                      <% }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+      
       <!-- Order Items -->
       <div class="card shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -173,7 +232,7 @@
               <li class="list-group-item py-3">
                 <div class="d-flex">
                   <% if (item.image) { %>
-                    <img src="/uploads/<%= item.image %>" alt="<%= item.name %>" class="me-3" style="width: 64px; height: 64px; object-fit: cover;">
+                    <img src="/uploads/products/<%= item.image %>" alt="<%= item.name %>" class="me-3" style="width: 64px; height: 64px; object-fit: cover;">
                   <% } else { %>
                     <div class="bg-light d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
                       <i class="fas fa-image text-muted"></i>
@@ -200,4 +259,29 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý áp dụng mã giảm giá
+    const applyBtns = document.querySelectorAll('.apply-coupon');
+    applyBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const couponCode = this.getAttribute('data-code');
+        const couponInput = document.querySelector('input[name="couponCode"]');
+        const couponForm = document.getElementById('coupon-form');
+        
+        couponInput.value = couponCode;
+        couponForm.submit();
+      });
+    });
+    
+    // Xử lý khi thay đổi phương thức vận chuyển
+    const shippingInputs = document.querySelectorAll('input[name="shippingMethod"]');
+    shippingInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        // Có thể thêm Ajax để cập nhật giá ngay lập tức nếu cần
+      });
+    });
+  });
+</script>
 

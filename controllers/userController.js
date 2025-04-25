@@ -92,11 +92,52 @@ exports.register = async (req, res) => {
 // @desc    Login user
 // @route   POST /users/login
 exports.login = (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/users/login',
-    failureFlash: true
-  })(req, res, next);
+  try {
+    // Kiểm tra CSRF token trước khi xác thực
+    if (!req.body._csrf) {
+      req.flash('error', 'Phiên làm việc không hợp lệ. Vui lòng thử lại.');
+      return res.redirect('/users/login');
+    }
+    
+    // Sử dụng custom callback thay vì options object
+    passport.authenticate('local', function(err, user, info) {
+      if (err) {
+        console.error('Login error:', err);
+        req.flash('error', 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại sau.');
+        return res.redirect('/users/login');
+      }
+      
+      if (!user) {
+        // Thông báo lỗi từ passport strategy
+        req.flash('error', info.message || 'Email hoặc mật khẩu không chính xác.');
+        return res.redirect('/users/login');
+      }
+      
+      // Đăng nhập thành công
+      req.logIn(user, function(err) {
+        if (err) {
+          console.error('Login session error:', err);
+          req.flash('error', 'Có lỗi xảy ra khi tạo phiên đăng nhập.');
+          return res.redirect('/users/login');
+        }
+        
+        // Lưu thông tin ghi nhớ đăng nhập nếu có
+        if (req.body.remember) {
+          // Kéo dài thời gian sống của cookie session
+          req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 ngày
+        } else {
+          // Sử dụng cookie session mặc định
+          req.session.cookie.expires = false;
+        }
+        
+        return res.redirect('/');
+      });
+    })(req, res, next);
+  } catch (error) {
+    console.error('Unexpected login error:', error);
+    req.flash('error', 'Lỗi đăng nhập không xác định. Vui lòng thử lại.');
+    return res.redirect('/users/login');
+  }
 };
 
 // @desc    Logout user

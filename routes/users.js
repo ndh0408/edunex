@@ -5,13 +5,28 @@ const { ensureAuthenticated, ensureGuest } = require('../middlewares/auth');
 const csrf = require('csurf');
 
 // Initialize CSRF protection
-const csrfProtection = csrf({ cookie: { httpOnly: true } });
+const csrfProtection = csrf({ 
+  cookie: {
+    key: '_csrf',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/'
+  }
+});
 
 // Middleware to add CSRF token to locals for GET requests rendering forms
 const addCsrfToken = (req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 };
+
+// @route   GET /users/refresh-csrf
+// @desc    Get a fresh CSRF token for AJAX requests
+// @access  Public
+router.get('/refresh-csrf', csrfProtection, (req, res) => {
+  return res.json({ csrfToken: req.csrfToken() });
+});
 
 // @route   GET /users/register
 // @desc    Show register page
