@@ -108,4 +108,39 @@ router.put('/addresses/:id', ensureAuthenticated, csrfProtection, userController
 // @access  Private
 router.delete('/addresses/:id', ensureAuthenticated, csrfProtection, userController.deleteAddress);
 
+// @route   GET /users/forgot-password
+// @desc    Show forgot password page
+// @access  Public
+router.get('/forgot-password', csrfProtection, addCsrfToken, userController.showForgotPasswordPage);
+
+// @route   POST /users/forgot-password
+// @desc    Process forgot password request
+// @access  Public
+router.post('/forgot-password', csrfProtection, userController.forgotPassword);
+
+// @route   GET /users/reset-password/:token
+// @desc    Show reset password page
+// @access  Public
+router.get('/reset-password/:token', csrfProtection, addCsrfToken, userController.showResetPasswordPage);
+
+// @route   POST /users/reset-password/:token
+// @desc    Process reset password
+// @access  Public
+router.post('/reset-password/:token', csrfProtection, userController.resetPassword);
+
+// @route   GET /users/verify/:token
+// @desc    Verify user email
+// @access  Public
+router.get('/verify/:token', userController.verifyEmail);
+
+// @route   GET /users/resend-verification
+// @desc    Show resend verification email page
+// @access  Public
+router.get('/resend-verification', csrfProtection, addCsrfToken, userController.showResendVerificationPage);
+
+// @route   POST /users/resend-verification
+// @desc    Resend verification email
+// @access  Public
+router.post('/resend-verification', csrfProtection, userController.resendVerification);
+
 module.exports = router;

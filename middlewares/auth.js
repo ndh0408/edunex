@@ -8,9 +8,18 @@ const jwt = require('jsonwebtoken');
 // Ensure user is authenticated
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
+    // Check if user's email is verified
+    if (!req.user.isVerified) {
+      req.flash('error', 'Tài khoản chưa được xác thực. Vui lòng kiểm tra email của bạn.');
+      req.logout(function(err) {
+        if (err) { console.error(err); }
+        return res.redirect('/users/login');
+      });
+      return;
+    }
     return next();
   }
-  req.flash('error_msg', 'Vui lòng đăng nhập để tiếp tục');
+  req.flash('error', 'Vui lòng đăng nhập để truy cập trang này');
   res.redirect('/users/login');
 };
 

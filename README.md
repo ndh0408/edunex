@@ -1,113 +1,112 @@
-# Fashion Store - Website Thương Mại Điện Tử
+# Fashion Store - Cửa hàng thời trang trực tuyến
 
-Một website bán hàng thời trang hoàn chỉnh được xây dựng bằng Node.js, Express và MongoDB.
+## Giới thiệu
+Fashion Store là một ứng dụng thương mại điện tử (E-commerce) chuyên về thời trang, được xây dựng bằng Node.js và Express.js. Ứng dụng cung cấp một nền tảng mua sắm trực tuyến với đầy đủ các tính năng cần thiết cho cả người dùng và quản trị viên.
 
-## Tính Năng
+## Tính năng chính
 
-- Đăng nhập và phân quyền người dùng
-- Danh mục sản phẩm với chức năng tìm kiếm
-- Giỏ hàng và quy trình thanh toán
-- Hồ sơ người dùng với lịch sử đơn hàng
-- Bảng điều khiển admin để quản lý sản phẩm, đơn hàng, người dùng, v.v.
-- Thiết kế responsive cho mọi thiết bị
-- Chức năng danh sách yêu thích
-- Hệ thống mã giảm giá
+### Cho người dùng
+- Đăng ký và đăng nhập tài khoản
+- Xem danh sách sản phẩm theo danh mục
+- Tìm kiếm sản phẩm
+- Thêm sản phẩm vào giỏ hàng
+- Quản lý giỏ hàng
+- Đặt hàng và thanh toán
+- Xem lịch sử đơn hàng
+- Đánh giá sản phẩm
+- Áp dụng mã giảm giá
 
-## Yêu Cầu Hệ Thống
+### Cho quản trị viên
+- Quản lý sản phẩm (thêm, sửa, xóa)
+- Quản lý danh mục sản phẩm
+- Quản lý đơn hàng
+- Quản lý người dùng
+- Quản lý mã giảm giá
+- Thống kê doanh thu
+- Xuất báo cáo Excel
 
-- Node.js (v14+)
+## Công nghệ sử dụng
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- Passport.js (Xác thực)
+- Express-session (Quản lý phiên)
+- Multer (Xử lý upload file)
+- Nodemailer (Gửi email)
+- Excel4node (Xuất Excel)
+- Json2csv (Xuất CSV)
+
+### Frontend
+- EJS (Template Engine)
+- Express-ejs-layouts
+- Bootstrap
+- JavaScript
+- CSS
+
+## Cài đặt và chạy dự án
+
+### Yêu cầu hệ thống
+- Node.js (phiên bản 14 trở lên)
 - MongoDB
 - NPM hoặc Yarn
 
-## Cài Đặt
+### Các bước cài đặt
 
 1. Clone dự án:
-```
-git clone https://github.com/username/fashion-store.git
-cd fashion-store
+```bash
+git clone [đường dẫn repository]
 ```
 
-2. Cài đặt các thư viện:
-```
+2. Cài đặt dependencies:
+```bash
 npm install
 ```
 
-3. Tạo file `.env` trong thư mục gốc với các biến môi trường sau:
-```
+3. Tạo file .env và cấu hình các biến môi trường:
+```env
+MONGODB_URI=mongodb://localhost:27017/fashionstore
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/edunex
-JWT_SECRET=your_jwt_secret
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
+SESSION_SECRET=your_secret_key
+NODE_ENV=development
 ```
 
-4. Thêm hình ảnh mẫu:
-   - Đặt hình ảnh sản phẩm của bạn vào thư mục `demo-images`
-   - Script seed sẽ tự động sao chép các hình ảnh này vào thư mục public/uploads
-
-5. Khởi tạo dữ liệu mẫu:
-```
-node seed.js
+4. Chạy seed data (tùy chọn):
+```bash
+npm run seed
 ```
 
-6. Khởi động ứng dụng:
-```
+5. Khởi động server:
+```bash
 npm start
 ```
 
-7. Truy cập ứng dụng:
-   - Website: http://localhost:3000
-   - Trang quản trị: http://localhost:3000/admin
-
-## Tài Khoản Mặc Định
-
-Sau khi chạy script seed, các tài khoản sau sẽ được tạo:
-
-- Admin:
-  - Email: admin@example.com
-  - Mật khẩu: admin123
-
-- Người dùng thường:
-  - Email: user@example.com
-  - Mật khẩu: user123
-
-## Công Nghệ Sử Dụng
-
-- Node.js & Express.js
-- MongoDB & Mongoose
-- Template EJS
-- Bootstrap 5
-- Font Awesome
-- Xác thực JWT
-- Chart.js cho phân tích dữ liệu
-
-## Cấu Trúc Dự Án
-
-```
-fashion-store/
-├── config/          # File cấu hình
-├── controllers/     # Controller xử lý route
-├── middlewares/     # Middleware tùy chỉnh
-├── models/          # Mongoose models
-├── public/          # File tĩnh
-│   ├── css/         # File CSS
-│   ├── js/          # File JavaScript
-│   ├── uploads/     # File upload
-├── routes/          # Route Express
-├── views/           # Template EJS
-├── .env             # Biến môi trường
-├── app.js           # Cài đặt Express
-├── seed.js          # Script khởi tạo dữ liệu
-└── package.json
+Hoặc chạy ở chế độ development:
+```bash
+npm run dev
 ```
 
-## Giấy Phép
+### Các lệnh khác
 
-Dự án này được cấp phép theo Giấy phép MIT - xem file LICENSE để biết thêm chi tiết.
+- **Khởi tạo dữ liệu mẫu:**
+```bash
+npm run seed
+```
+Lệnh này sẽ xóa dữ liệu cũ và tạo dữ liệu mẫu cho các collection (users, categories, products, coupons, orders, reviews).
 
-## Công Nhận
+- **Xuất dữ liệu database:**
+```bash
+npm run export
+```
+Lệnh này sẽ kết nối đến MongoDB, đọc dữ liệu từ tất cả các collection và lưu vào các file JSON tương ứng trong thư mục `backup`.
 
-- [Bootstrap](https://getbootstrap.com/)
-- [Font Awesome](https://fontawesome.com/)
-- [Chart.js](https://www.chartjs.org/)
-- [EJS](https://ejs.co/) 
+- **Nhập dữ liệu database:**
+```bash
+npm run import
+```
+Lệnh này sẽ đọc các file `.json` từ thư mục `backup`, xóa dữ liệu cũ trong các collection tương ứng và nhập dữ liệu mới từ file.
+**Lưu ý:** Trước khi chạy lệnh này, đảm bảo bạn đã có thư mục `backup` với các file dữ liệu cần thiết. Thứ tự import phụ thuộc vào tên file.
+
+## Cấu trúc thư mục
+```

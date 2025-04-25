@@ -1,0 +1,55 @@
+[
+  {
+    "_id": "680b30d696e1c0be053467f4",
+    "name": "Admin",
+    "email": "admin@example.com",
+    "password": "$2a$10$I1ZL5o/QHvDXucenxLnB9eyfhVp5ZgmIypbTeyLAMYWgpFwazXHGC",
+    "phone": "0987654321",
+    "defaultAddressId": null,
+    "role": "admin",
+    "wishlist": [],
+    "addresses": [],
+    "createdAt": "2025-04-25T06:51:02.959Z",
+    "__v": 48
+  },
+  {
+    "_id": "680b30d796e1c0be053467f7",
+    "name": "Nguyễn Văn",
+    "email": "usera@example.com",
+    "password": "$2a$10$FCTX0l7EAt1QW.6rnj2hHOgJZHtTnqXN6bsdwGj/QCItOafyjgyOC",
+    "phone": "0912345678",
+    "defaultAddressId": null,
+    "role": "user",
+    "wishlist": [],
+    "addresses": [],
+    "createdAt": "2025-04-25T06:51:03.020Z",
+    "__v": 0
+  },
+  {
+    "_id": "680b95d977ef95472b0d4d64",
+    "name": "Nguyễn Đức Huy",
+    "email": "huy04082000@gmail.com",
+    "password": "$2a$10$rhI5MCdRyIWeJolQz94GTOB.pdDuEcteyA/1I6TcmFrW.P89amGT6",
+    "phone": "0879539804",
+    "defaultAddressId": null,
+    "role": "user",
+    "wishlist": [],
+    "addresses": [],
+    "createdAt": "2025-04-25T14:02:01.358Z",
+    "__v": 0
+  },
+  {
+    "_id": "680b99edc699c886c8d89982",
+    "name": "Nguyễn Đức Huy",
+    "email": "ndh0408@gmail.com",
+    "password": "$2a$10$UBdMe.Wk0nyDS3v/SG2fyuKlTRDA1Gz6q2wgnoK6fTJDIcdnEAf/G",
+    "phone": "0879539804",
+    "defaultAddressId": null,
+    "role": "user",
+    "wishlist": [],
+    "isVerified": true,
+    "addresses": [],
+    "createdAt": "2025-04-25T14:19:25.984Z",
+    "__v": 0
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "_id": "680b30d29d8b00896d1db8cb",
+    "model": "Order",
+    "field": "counter",
+    "count": 3,
+    "__v": 0
+  }
+]

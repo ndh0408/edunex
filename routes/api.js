@@ -6,8 +6,9 @@ const cartController = require('../controllers/cartController');
 const { apiAuth } = require('../middlewares/auth');
 
 // Product routes
-router.get('/products/search', productController.searchProducts);
+router.get('/products', productController.getProducts);
 router.get('/products/:id', productController.getProductById);
+router.post('/products/:id/reviews', productController.addReview);
 
 // User routes
 router.post('/users/wishlist/:productId', apiAuth, userController.addToWishlist);

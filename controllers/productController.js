@@ -508,4 +508,117 @@ exports.deleteProduct = async (req, res) => {
     req.flash('error_msg', 'Có lỗi xảy ra khi xóa sản phẩm');
     res.redirect('/admin/products');
   }
-}; 
+};
+
+// @desc    Add review to product
+// @route   POST /api/products/:id/reviews
+exports.addReview = async (req, res) => {
+  try {
+    console.log('Receiving review submission:', req.body);
+    const { rating, comment } = req.body;
+    
+    // Validate rating
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng chọn số sao đánh giá từ 1-5'
+      });
+    }
+    
+    const productId = req.params.id;
+    
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sản phẩm'
+      });
+    }
+    
+    // Tạm thời bỏ kiểm tra đăng nhập
+    // Dùng ID người dùng cố định cho mục đích test
+    const userId = req.user ? req.user._id : '680b30d696e1c0be05346f4';
+    const userName = req.user ? req.user.name : 'Test User';
+    
+    // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
+    const existingReview = await Review.findOne({ user: userId, product: productId });
+    
+    if (existingReview) {
+      // Cập nhật đánh giá hiện có
+      existingReview.rating = Number(rating);
+      existingReview.comment = comment;
+      existingReview.createdAt = Date.now();
+      await existingReview.save();
+      
+      // Cập nhật rating cho sản phẩm
+      await updateProductRating(productId);
+      
+      return res.status(200).json({
+        success: true,
+        message: 'Đã cập nhật đánh giá của bạn'
+      });
+    } else {
+      // Tạo đối tượng Review mới
+      const reviewData = {
+        user: userId,
+        product: productId,
+        rating: Number(rating),
+        comment: comment,
+        createdAt: Date.now()
+      };
+      
+      // Tạo review qua model Review
+      const newReview = new Review(reviewData);
+      await newReview.save();
+      
+      // Cập nhật rating cho sản phẩm
+      await updateProductRating(productId);
+      
+      return res.status(201).json({
+        success: true,
+        message: 'Đã thêm đánh giá thành công'
+      });
+    }
+  } catch (err) {
+    console.error('Error in adding review:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra, vui lòng thử lại sau: ' + err.message
+    });
+  }
+};
+
+// Helper function to update product rating
+async function updateProductRating(productId) {
+  try {
+    // Lấy tất cả reviews của sản phẩm từ model Review
+    const reviews = await Review.find({ product: productId });
+    
+    // Update product rating
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      console.error('Product not found when updating rating:', productId);
+      return;
+    }
+    
+    if (reviews.length === 0) {
+      product.rating = 0;
+      product.numReviews = 0;
+    } else {
+      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+      product.rating = totalRating / reviews.length;
+      product.numReviews = reviews.length;
+    }
+    
+    await product.save();
+    console.log('Product rating updated successfully:', { 
+      productId, 
+      rating: product.rating, 
+      numReviews: product.numReviews 
+    });
+  } catch (error) {
+    console.error('Error updating product rating:', error);
+  }
+} 

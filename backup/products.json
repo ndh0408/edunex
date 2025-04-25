@@ -1,0 +1,51 @@
+[
+  {
+    "_id": "680b3d311e5b6649cffa6838",
+    "name": "123",
+    "description": "123",
+    "shortDescription": "123",
+    "price": 150,
+    "discountPrice": null,
+    "category": "680b352bd062fdab5761ae14",
+    "brand": "123",
+    "images": [
+      "images-1745567025235-16916983.jpeg",
+      "images-1745567025236-958684764.jpeg",
+      "images-1745567025237-84336864.jpeg",
+      "images-1745567025237-833317901.jpeg",
+      "images-1745567025237-451487386.jpeg"
+    ],
+    "colors": [
+      "Đen",
+      "Trắng",
+      "Đỏ"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Chất liệu",
+        "value": "cotton 100%",
+        "_id": "680b3d311e5b6649cffa6839"
+      },
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "680b3d311e5b6649cffa683a"
+      }
+    ],
+    "countInStock": 150,
+    "sold": 123,
+    "featured": true,
+    "rating": 5,
+    "numReviews": 1,
+    "status": "published",
+    "createdAt": "2025-04-25T07:43:45.248Z",
+    "slug": "123",
+    "__v": 0
+  }
+]
