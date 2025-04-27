@@ -170,31 +170,34 @@
           </div>
           <div class="card-body p-4">
             <!-- Form đăng nhập đơn giản -->
-            <form action="/users/login" method="POST">
+            <form action="/users/login" method="POST" class="needs-validation" novalidate>
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                </div>
               </div>
               
               <div class="mb-3">
                 <label for="password" class="form-label">Mật khẩu</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-              </div>
-              
-              <div class="mb-3 d-flex justify-content-between">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                  <label class="form-check-label" for="remember">
-                    Ghi nhớ đăng nhập
-                  </label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <a href="/users/forgot-password" class="text-decoration-none">Quên mật khẩu?</a>
               </div>
               
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label" for="remember">Ghi nhớ đăng nhập</label>
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100 mb-3">Đăng nhập</button>
+              
+              <div class="text-center">
+                <a href="/users/forgot-password" class="text-decoration-none">Quên mật khẩu?</a>
               </div>
             </form>
             

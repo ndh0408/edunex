@@ -8,10 +8,11 @@ const accounts = [
   {
     name: 'Admin',
     email: 'admin@example.com',
-    password: '123456',
-    phone: '0987654321',
-    address: 'Hà Nội, Việt Nam',
-    role: 'admin'
+    password: 'admin123',
+    phone: '0123456789',
+    address: '123 Đường ABC, Quận 1, TP.HCM',
+    role: 'admin',
+    isVerified: true
   },
   {
     name: 'Nguyễn Văn A',
@@ -19,7 +20,8 @@ const accounts = [
     password: 'userA123',
     phone: '0912345678',
     address: 'TP. Hồ Chí Minh',
-    role: 'user'
+    role: 'user',
+    isVerified: true
   },
   {
     name: 'Trần Thị B',
@@ -27,7 +29,8 @@ const accounts = [
     password: 'userB123',
     phone: '0923456789',
     address: 'Đà Nẵng',
-    role: 'user'
+    role: 'user',
+    isVerified: true
   },
   {
     name: 'Lê Văn C',
@@ -35,7 +38,8 @@ const accounts = [
     password: 'userC123',
     phone: '0934567890',
     address: 'Cần Thơ',
-    role: 'user'
+    role: 'user',
+    isVerified: true
   }
 ];
 
