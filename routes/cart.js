@@ -27,15 +27,15 @@ router.post('/update/:id', cartController.updateCartItem);
 // @access  Public
 router.get('/update/:id', cartController.updateCartItem);
 
-// @route   DELETE /cart/remove/:id
+// @route   DELETE /cart/remove/:productId/:variantId
 // @desc    Remove item from cart
 // @access  Public
-router.delete('/remove/:id', cartController.removeCartItem);
+router.delete('/remove/:productId/:variantId', cartController.removeCartItem);
 
-// @route   POST /cart/remove/:id
+// @route   POST /cart/remove/:productId/:variantId
 // @desc    Remove item from cart (alternative for HTML forms)
 // @access  Public
-router.post('/remove/:id', cartController.removeCartItem);
+router.post('/remove/:productId/:variantId', cartController.removeCartItem);
 
 // @route   DELETE /cart/clear
 // @desc    Clear cart
@@ -56,5 +56,15 @@ router.post('/coupon', cartController.applyCoupon);
 // @desc    Remove coupon from cart
 // @access  Public
 router.delete('/coupon', cartController.removeCoupon);
+
+// @route   GET /cart/increase/:productId/:variantId
+// @desc    Increase product quantity in cart
+// @access  Public
+router.get('/increase/:productId/:variantId', cartController.increaseQuantity);
+
+// @route   GET /cart/decrease/:productId/:variantId
+// @desc    Decrease product quantity in cart
+// @access  Public
+router.get('/decrease/:productId/:variantId', cartController.decreaseQuantity);
 
 module.exports = router; 

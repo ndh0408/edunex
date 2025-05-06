@@ -8,6 +8,9 @@
         </div>
         <div class="card-body">
           <form id="filter-form" action="/products" method="GET">
+            <!-- Add a hidden input for the current sort parameter -->
+            <input type="hidden" name="sort" value="<%= sort || 'newest' %>">
+            
             <!-- Categories filter -->
             <div class="mb-3">
               <h6 class="mb-2 text-dark">Danh mục</h6>
@@ -97,15 +100,28 @@
         </div>
         
         <div class="d-flex align-items-center">
-          <label for="sort-by" class="me-2 mb-0">Sắp xếp theo:</label>
-          <select id="sort-by" class="form-select" name="sort">
-            <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
-            <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Giá thấp đến cao</option>
-            <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Giá cao đến thấp</option>
-            <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Tên A-Z</option>
-            <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>Tên Z-A</option>
-            <option value="rating" <%= sort === 'rating' ? 'selected' : '' %>>Đánh giá cao nhất</option>
-          </select>
+          <form id="sortForm" action="/products" method="GET" class="d-flex align-items-center">
+            <!-- Preserve all existing query parameters except sort and page -->
+            <% if (typeof queryParams !== 'undefined') { %>
+              <% for (const [key, value] of Object.entries(queryParams)) { %>
+                <% if (key !== 'sort' && key !== 'page') { %>
+                  <input type="hidden" name="<%= key %>" value="<%= value %>">
+                <% } %>
+              <% } %>
+            <% } %>
+            <input type="hidden" name="page" value="1">
+            
+            <label for="sort-by" class="me-2 mb-0">Sắp xếp theo:</label>
+            <select id="sort-by" name="sort" class="form-select" style="min-width: 160px;" onchange="this.form.submit()">
+              <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
+              <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Giá thấp đến cao</option>
+              <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Giá cao đến thấp</option>
+              <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>Tên A-Z</option>
+              <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>Tên Z-A</option>
+              <option value="rating" <%= sort === 'rating' ? 'selected' : '' %>>Đánh giá cao nhất</option>
+            </select>
+            <noscript><button type="submit" class="btn btn-sm btn-primary ms-2">Áp dụng</button></noscript>
+          </form>
         </div>
       </div>
       
@@ -228,17 +244,40 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Sort functionality
-    const sortSelect = document.getElementById('sort-by');
-    sortSelect.addEventListener('change', function() {
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set('sort', this.value);
-      window.location.href = currentUrl.toString();
-    });
+    // Add loading indicator when form submits
+    const sortForm = document.getElementById('sortForm');
+    if (sortForm) {
+      sortForm.addEventListener('submit', function() {
+        document.body.classList.add('loading');
+      });
+    }
+    
+    // Include the sort parameter in the filter form submission
+    const filterForm = document.getElementById('filter-form');
+    if (filterForm) {
+      filterForm.addEventListener('submit', function(e) {
+        // Get the current sort parameter from the sort select
+        const sortSelect = document.getElementById('sort-by');
+        const sortValue = sortSelect ? sortSelect.value : 'newest';
+        
+        // If there's not already a sort input, add one
+        if (!this.querySelector('input[name="sort"]')) {
+          const sortInput = document.createElement('input');
+          sortInput.type = 'hidden';
+          sortInput.name = 'sort';
+          sortInput.value = sortValue;
+          this.appendChild(sortInput);
+        }
+        
+        // Show loading indicator
+        document.body.classList.add('loading');
+      });
+    }
     
     // Clear filters
     const clearFilterBtn = document.getElementById('clear-filter');
     clearFilterBtn.addEventListener('click', function() {
+      document.body.classList.add('loading');
       window.location.href = '/products';
     });
     
@@ -349,4 +388,22 @@
   window.showToast = showCustomToast;
 </script>
 
-<link rel="stylesheet" href="/css/toast.css"> 
+<link rel="stylesheet" href="/css/toast.css">
+
+<style>
+  .loading {
+    cursor: wait !important;
+  }
+  .loading * {
+    cursor: wait !important;
+  }
+  #sort-by {
+    min-width: 160px;
+  }
+  .dropdown-menu {
+    z-index: 1030;
+  }
+  .dropdown-item {
+    cursor: pointer;
+  }
+</style> 

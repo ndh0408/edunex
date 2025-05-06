@@ -255,13 +255,24 @@ exports.updateCartItem = async (req, res) => {
 };
 
 // @desc    Remove item from cart
-// @route   DELETE /cart/remove/:id
+// @route   DELETE /cart/remove/:productId/:variantId
 exports.removeCartItem = (req, res) => {
   try {
-    const itemIndex = req.params.id;
+    const { productId, variantId } = req.params;
     
-    // Validate
-    if (!req.session.cart || !req.session.cart[itemIndex]) {
+    // Initialize cart if not exists
+    if (!req.session.cart) {
+      req.session.cart = [];
+      return res.redirect('/cart');
+    }
+    
+    // Find the item in the cart
+    const itemIndex = req.session.cart.findIndex(item => 
+      item.productId === productId && 
+      (item.variantId === variantId || (!item.variantId && variantId === '0'))
+    );
+    
+    if (itemIndex === -1) {
       req.flash('error_msg', 'Không tìm thấy sản phẩm trong giỏ hàng');
       return res.redirect('/cart');
     }
@@ -376,5 +387,91 @@ exports.removeCoupon = (req, res) => {
     console.error(err);
     req.flash('error_msg', 'Có lỗi xảy ra khi xóa mã giảm giá');
     res.redirect('/cart');
+  }
+};
+
+// @desc    Increase product quantity in cart
+// @route   GET /cart/increase/:productId/:variantId
+exports.increaseQuantity = async (req, res) => {
+  try {
+    const { productId, variantId } = req.params;
+    
+    // Initialize cart if not exists
+    if (!req.session.cart) {
+      req.session.cart = [];
+      return res.redirect('/cart');
+    }
+    
+    // Find the item in the cart
+    const itemIndex = req.session.cart.findIndex(item => 
+      item.productId === productId && 
+      (item.variantId === variantId || (!item.variantId && variantId === '0'))
+    );
+    
+    if (itemIndex === -1) {
+      req.flash('error_msg', 'Không tìm thấy sản phẩm trong giỏ hàng');
+      return res.redirect('/cart');
+    }
+    
+    // Check if product is in stock before increasing
+    const product = await Product.findById(productId);
+    if (!product || product.countInStock <= req.session.cart[itemIndex].quantity) {
+      req.flash('error_msg', 'Sản phẩm đã hết hàng hoặc đã đạt số lượng tối đa');
+      return res.redirect('/cart');
+    }
+    
+    // Increase quantity
+    req.session.cart[itemIndex].quantity += 1;
+    
+    // Calculate total quantity
+    req.session.totalQty = req.session.cart.reduce((total, item) => total + item.quantity, 0);
+    
+    return res.redirect('/cart');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi cập nhật giỏ hàng');
+    return res.redirect('/cart');
+  }
+};
+
+// @desc    Decrease product quantity in cart
+// @route   GET /cart/decrease/:productId/:variantId
+exports.decreaseQuantity = async (req, res) => {
+  try {
+    const { productId, variantId } = req.params;
+    
+    // Initialize cart if not exists
+    if (!req.session.cart) {
+      req.session.cart = [];
+      return res.redirect('/cart');
+    }
+    
+    // Find the item in the cart
+    const itemIndex = req.session.cart.findIndex(item => 
+      item.productId === productId && 
+      (item.variantId === variantId || (!item.variantId && variantId === '0'))
+    );
+    
+    if (itemIndex === -1) {
+      req.flash('error_msg', 'Không tìm thấy sản phẩm trong giỏ hàng');
+      return res.redirect('/cart');
+    }
+    
+    // If quantity is 1, remove the item
+    if (req.session.cart[itemIndex].quantity <= 1) {
+      req.session.cart.splice(itemIndex, 1);
+    } else {
+      // Decrease quantity
+      req.session.cart[itemIndex].quantity -= 1;
+    }
+    
+    // Calculate total quantity
+    req.session.totalQty = req.session.cart.reduce((total, item) => total + item.quantity, 0);
+    
+    return res.redirect('/cart');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra khi cập nhật giỏ hàng');
+    return res.redirect('/cart');
   }
 }; 

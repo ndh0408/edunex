@@ -199,7 +199,8 @@
                   <% } %>
                   
                   <div class="wishlist-icon <%= user && user.wishlist && user.wishlist.includes(product._id) ? 'active' : '' %>"
-                       data-product-id="<%= product._id %>">
+                       data-product-id="<%= product._id %>"
+                       data-logged-in="<%= user ? 'true' : 'false' %>">
                     <i class="<%= user && user.wishlist && user.wishlist.includes(product._id) ? 'fas' : 'far' %> fa-heart"></i>
                   </div>
                 </div>
@@ -263,7 +264,8 @@
                     <div class="d-flex justify-content-between">
                       <h5 class="card-title"><a href="/products/<%= product.slug %>" class="text-decoration-none text-dark"><%= product.name %></a></h5>
                       <div class="wishlist-icon <%= user && user.wishlist && user.wishlist.includes(product._id) ? 'active' : '' %>"
-                          data-product-id="<%= product._id %>">
+                          data-product-id="<%= product._id %>"
+                          data-logged-in="<%= user ? 'true' : 'false' %>">
                         <i class="<%= user && user.wishlist && user.wishlist.includes(product._id) ? 'fas' : 'far' %> fa-heart"></i>
                       </div>
                     </div>
@@ -349,6 +351,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Real-time filtering settings
+  let filterTimeout;
+  const delayTime = 500; // ms delay for debounce
+  const filterForm = document.getElementById('filter-form');
+  let isLoadingProducts = false;
+  
   // View toggle (grid/list)
   const viewButtons = document.querySelectorAll('.view-btn');
   const productsGrid = document.getElementById('products-grid');
@@ -371,35 +379,298 @@ document.addEventListener('DOMContentLoaded', function() {
         productsGrid.classList.add('d-none');
         productsList.classList.remove('d-none');
       }
+      
+      // Store preference in local storage
+      localStorage.setItem('productViewPreference', view);
     });
   });
   
-  // Sorting
+  // Load saved view preference on page load
+  const savedView = localStorage.getItem('productViewPreference');
+  if (savedView) {
+    viewButtons.forEach(btn => {
+      if (btn.dataset.view === savedView) {
+        btn.click();
+      }
+    });
+  }
+  
+  // Sorting - make real-time
   const sortSelect = document.getElementById('sort-select');
   sortSelect.addEventListener('change', function() {
-    const [sort, order] = this.value.split(':');
-    
-    // Get current URL and params
-    const url = new URL(window.location.href);
-    
-    // Update sort and order params
-    url.searchParams.set('sort', sort);
-    url.searchParams.set('order', order);
-    
-    // Redirect to new URL
-    window.location.href = url.toString();
+    applyFiltersAjax();
   });
   
-  // Filter form checkboxes
+  // Filter form checkboxes - make real-time
   const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
   filterCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function() {
-      // Only submit form if sort select is not being changed
-      // to avoid conflicting with the sort select change event
-      if (!sortSelect.matches(':focus')) {
-        document.getElementById('filter-form').submit();
-      }
+      // Apply filter with debounce
+      debouncedApplyFilters();
     });
   });
+  
+  // Handle price input fields
+  const priceInputs = document.querySelectorAll('input[type="number"]');
+  priceInputs.forEach(input => {
+    input.addEventListener('input', debouncedApplyFilters);
+  });
+  
+  // Prevent default form submission
+  filterForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    applyFiltersAjax();
+  });
+  
+  // Debounced filter function
+  function debouncedApplyFilters() {
+    clearTimeout(filterTimeout);
+    
+    // Show loading indicator
+    if (!isLoadingProducts) {
+      showLoading();
+    }
+    
+    filterTimeout = setTimeout(() => {
+      applyFiltersAjax();
+    }, delayTime);
+  }
+  
+  // Apply filters with AJAX
+  function applyFiltersAjax() {
+    isLoadingProducts = true;
+    showLoading();
+    
+    // Get form data
+    const formData = new FormData(filterForm);
+    
+    // Add sort value
+    const [sort, order] = sortSelect.value.split(':');
+    formData.append('sort', sort);
+    formData.append('order', order);
+    formData.append('ajax', 'true');
+    
+    // Build URL
+    const params = new URLSearchParams(formData);
+    const url = '/products?' + params.toString();
+    
+    // Update URL for bookmarking without reloading
+    window.history.pushState({ path: url }, '', url);
+    
+    // Fetch results
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Update products container
+          const productsContainer = document.querySelector('.products-container');
+          if (productsContainer) {
+            productsContainer.innerHTML = data.html;
+          }
+          
+          // Update pagination if exists
+          const paginationContainer = document.querySelector('.pagination-container');
+          if (paginationContainer && data.pagination) {
+            paginationContainer.innerHTML = data.pagination;
+          }
+          
+          // Update product count if provided
+          if (data.productCount !== undefined) {
+            const countEl = document.querySelector('.product-count');
+            if (countEl) {
+              countEl.textContent = data.productCount || 0;
+            }
+          }
+          
+          // Reinitialize wishlist functionality for the new content
+          if (typeof window.initWishlist === 'function') {
+            window.initWishlist();
+          }
+          
+          // Reinitialize event handlers for new content
+          initProductEventHandlers();
+          
+          // Restore view preference (grid/list)
+          const currentView = localStorage.getItem('productViewPreference') || 'grid';
+          if (currentView === 'list') {
+            productsGrid.classList.add('d-none');
+            productsList.classList.remove('d-none');
+          } else {
+            productsGrid.classList.remove('d-none');
+            productsList.classList.add('d-none');
+          }
+        } else {
+          console.error('Error loading products:', data.error);
+          showError('Có lỗi xảy ra khi tải sản phẩm');
+        }
+        
+        // Hide loading indicator
+        hideLoading();
+        isLoadingProducts = false;
+      })
+      .catch(error => {
+        console.error('Error applying filters:', error);
+        showError('Có lỗi xảy ra khi áp dụng bộ lọc');
+        hideLoading();
+        isLoadingProducts = false;
+      });
+  }
+  
+  // Show loading indicator
+  function showLoading() {
+    const container = document.querySelector('.col-lg-9');
+    
+    if (!document.getElementById('loading-overlay')) {
+      const loadingHtml = `
+        <div id="loading-overlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75" style="z-index: 1000;">
+          <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p class="mt-2">Đang lọc sản phẩm...</p>
+          </div>
+        </div>
+      `;
+      
+      container.style.position = 'relative';
+      container.insertAdjacentHTML('beforeend', loadingHtml);
+    }
+  }
+  
+  // Hide loading indicator
+  function hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+      overlay.remove();
+    }
+  }
+  
+  // Show error message
+  function showError(message) {
+    // Create toast notification
+    const toastId = 'error-toast-' + Date.now();
+    const toastHtml = `
+      <div id="${toastId}" class="toast position-fixed bottom-0 end-0 m-3 bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Lỗi</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          ${message}
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    
+    // Show the toast
+    const toast = new bootstrap.Toast(document.getElementById(toastId));
+    toast.show();
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      const toastEl = document.getElementById(toastId);
+      if (toastEl) {
+        toastEl.remove();
+      }
+    }, 5000);
+  }
+  
+  // Initialize event handlers for product items (wishlist, cart, etc.)
+  function initProductEventHandlers() {
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(el => {
+      new bootstrap.Tooltip(el);
+    });
+    
+    // Cart buttons
+    const cartBtns = document.querySelectorAll('.cart-add-btn');
+    cartBtns.forEach(btn => {
+      btn.addEventListener('click', handleAddToCart);
+    });
+  }
+  
+  // Handle add to cart
+  function handleAddToCart() {
+    const productId = this.dataset.productId;
+    
+    fetch('/api/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        productId: productId,
+        quantity: 1
+      })
+    })
+    .then(response => {
+      if (response.status === 401) {
+        window.location.href = '/login?redirect=/products';
+        throw new Error('Unauthorized');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        showToast('Đã thêm sản phẩm vào giỏ hàng', 'success');
+        
+        // Update cart count if available
+        if (data.cartCount) {
+          const cartCountBadge = document.querySelector('.cart-count');
+          if (cartCountBadge) {
+            cartCountBadge.textContent = data.cartCount;
+            cartCountBadge.classList.remove('d-none');
+          }
+        }
+      } else {
+        showToast(data.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+      }
+    })
+    .catch(error => {
+      if (error.message !== 'Unauthorized') {
+        console.error('Error adding to cart:', error);
+        showToast('Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+      }
+    });
+  }
+  
+  // Show toast notification
+  function showToast(message, type = 'success') {
+    const toastId = 'toast-' + Date.now();
+    const bgClass = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-info';
+    
+    const toastHtml = `
+      <div id="${toastId}" class="toast position-fixed bottom-0 end-0 m-3 ${bgClass} text-white" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="toast-header ${bgClass} text-white">
+          <strong class="me-auto">${type === 'success' ? 'Thành công' : type === 'error' ? 'Lỗi' : 'Thông báo'}</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          ${message}
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    
+    // Show the toast
+    const toast = new bootstrap.Toast(document.getElementById(toastId));
+    toast.show();
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      const toastEl = document.getElementById(toastId);
+      if (toastEl) {
+        toastEl.remove();
+      }
+    }, 3000);
+  }
 });
 </script> 

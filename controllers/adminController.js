@@ -1203,10 +1203,16 @@ exports.getStatistics = async (req, res) => {
                 }
             },
             {
+                $addFields: {
+                    // Ensure createdAt is a Date object
+                    createdAtDate: { $toDate: "$createdAt" }
+                }
+            },
+            {
                 $group: {
                     _id: { 
-                        year: { $year: '$createdAt' },
-                        month: { $month: '$createdAt' }
+                        year: { $year: "$createdAtDate" },
+                        month: { $month: "$createdAtDate" }
                     },
                     revenue: { $sum: '$totalAmount' }
                 }
@@ -1271,10 +1277,16 @@ exports.getStatistics = async (req, res) => {
             // Tăng trưởng người dùng
             User.aggregate([
                 {
+                    $addFields: {
+                        // Ensure createdAt is a Date object
+                        createdAtDate: { $toDate: "$createdAt" }
+                    }
+                },
+                {
                     $group: {
                         _id: { 
-                            year: { $year: '$createdAt' },
-                            month: { $month: '$createdAt' }
+                            year: { $year: "$createdAtDate" },
+                            month: { $month: "$createdAtDate" }
                         },
                         count: { $sum: 1 }
                     }

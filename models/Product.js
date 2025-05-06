@@ -96,11 +96,24 @@ ProductSchema.virtual('reviews', {
   justOne: false
 });
 
+// Virtual for average rating calculation
+ProductSchema.virtual('avgRating').get(function() {
+  return this.rating || 0; // Use existing rating field for now
+});
+
+// Add index for the rating field to improve sorting performance
+ProductSchema.index({ rating: -1 });
+
 // Calculate ratings and save to DB
 ProductSchema.methods.updateRatingFromReviews = async function(reviews) {
-  const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
-  this.rating = averageRating;
-  this.numReviews = reviews.length;
+  if (!reviews || reviews.length === 0) {
+    this.rating = 0;
+    this.numReviews = 0;
+  } else {
+    const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+    this.rating = averageRating;
+    this.numReviews = reviews.length;
+  }
   await this.save();
 };
 

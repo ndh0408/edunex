@@ -17,61 +17,155 @@ exports.getProducts = async (req, res) => {
     const category = req.query.category;
     const minPrice = req.query.minPrice;
     const maxPrice = req.query.maxPrice;
+    const rating = req.query.rating;
     const discount = req.query.discount === 'true';
-    const sortBy = req.query.sort || 'createdAt';
-    const sortOrder = req.query.order || 'desc';
+    const sort = req.query.sort || 'newest';
     
-    let query = { status: 'published' };
-    let sort = {};
-    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    // Debug logs to verify sort parameter
+    console.log("Requested sort:", sort);
+    
+    let matchStage = { status: 'published' };
+    let sortStage = {};
+    
+    // Process sort parameter
+    switch (sort) {
+      case 'newest':
+        sortStage = { createdAt: -1 };
+        break;
+      case 'price-asc':
+        // Use effectivePrice field for sorting by price
+        sortStage = { effectivePrice: 1 };
+        break;
+      case 'price-desc':
+        // Use effectivePrice field for sorting by price
+        sortStage = { effectivePrice: -1 };
+        break;
+      case 'name-asc':
+        sortStage = { name: 1 };
+        break;
+      case 'name-desc':
+        sortStage = { name: -1 };
+        break;
+      case 'rating':
+        sortStage = { rating: -1 };
+        break;
+      default:
+        sortStage = { createdAt: -1 };
+    }
+    
+    // Debug logs to verify sort options
+    console.log("Applied sort options:", JSON.stringify(sortStage));
     
     // Apply search if provided
     if (searchQuery) {
-      query.$text = { $search: searchQuery };
+      matchStage.$text = { $search: searchQuery };
     }
     
-    // Apply category filter
+    // Apply category filter (handle both single category and array of categories)
     if (category) {
-      // Kiểm tra nếu category là ObjectId hoặc slug
-      let categoryFilter;
-      if (mongoose.Types.ObjectId.isValid(category)) {
-        categoryFilter = await Category.findById(category);
-      } else {
-        categoryFilter = await Category.findOne({ slug: category });
-      }
+      const categories = Array.isArray(category) ? category : [category];
+      const validCategories = categories.filter(cat => mongoose.Types.ObjectId.isValid(cat));
       
-      if (categoryFilter) {
-        // Tìm tất cả danh mục con
-        const subcategories = await Category.find({ parent: categoryFilter._id });
-        const categoryIds = [categoryFilter._id, ...subcategories.map(c => c._id)];
-        query.category = { $in: categoryIds };
+      if (validCategories.length > 0) {
+        // Get all selected categories and their subcategories
+        const categoryIds = [];
+        
+        for (const catId of validCategories) {
+          categoryIds.push(mongoose.Types.ObjectId(catId));
+          // Also find subcategories
+          const subcategories = await Category.find({ parent: catId });
+          categoryIds.push(...subcategories.map(c => c._id));
+        }
+        
+        matchStage.category = { $in: categoryIds };
       }
     }
     
     // Apply price filter
     if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = parseInt(minPrice);
-      if (maxPrice) query.price.$lte = parseInt(maxPrice);
+      matchStage.price = {};
+      if (minPrice) matchStage.price.$gte = parseInt(minPrice);
+      if (maxPrice) matchStage.price.$lte = parseInt(maxPrice);
+    }
+    
+    // Apply rating filter
+    if (rating) {
+      matchStage.rating = { $gte: parseInt(rating) };
     }
     
     // Apply discount filter
     if (discount) {
-      query.discountPrice = { $gt: 0 };
+      matchStage.discountPrice = { $gt: 0 };
     }
     
-    // Get products count
-    const total = await Product.countDocuments(query);
+    // Print the query for debugging
+    console.log("MongoDB match stage:", JSON.stringify(matchStage));
     
-    // Get products with pagination
-    const products = await Product.find(query)
-      .sort(sort)
-      .skip(startIndex)
-      .limit(limit)
-      .populate('category');
+    // Count total number of matching products
+    const totalDocs = await Product.countDocuments(matchStage);
+    
+    // Use aggregation pipeline for better sorting
+    const pipeline = [
+      // Match products based on filters
+      { $match: matchStage },
+      
+      // Calculate effective price (discounted price or regular price)
+      { $addFields: {
+        effectivePrice: { 
+          $cond: [
+            { $and: [
+              { $gt: ["$discountPrice", 0] },
+              { $lt: ["$discountPrice", "$price"] }
+            ]},
+            "$discountPrice", 
+            "$price"
+          ]
+        }
+      }},
+      
+      // Sort based on the selected criteria
+      { $sort: sortStage },
+      
+      // Skip and limit for pagination
+      { $skip: startIndex },
+      { $limit: limit },
+      
+      // Lookup categories
+      { 
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      
+      // Unwrap the category array to match the populate behavior
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } }
+    ];
+    
+    // Execute the aggregation pipeline
+    const products = await Product.aggregate(pipeline);
+    
+    // Debug: Log the first few products to verify sort
+    if (products.length > 0) {
+      console.log("===== SORTED PRODUCTS DEBUG =====");
+      console.log(`Sort option: ${sort}`);
+      products.slice(0, Math.min(5, products.length)).forEach((product, index) => {
+        const effectivePrice = product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price 
+          ? product.discountPrice 
+          : product.price;
+        
+        console.log(`${index + 1}: ${product.name} - Effective Price: ${effectivePrice.toLocaleString('vi-VN')} VND`);
+      });
+      console.log("==============================");
+    }
     
     // Get all categories for filter sidebar
     const categories = await Category.find({ parent: null }).populate('subcategories');
+    
+    // Process selected categories to always be an array
+    const selectedCategories = Array.isArray(category) ? category : (category ? [category] : []);
     
     // Tạo hàm phân trang URL
     const paginationUrl = (pageNum) => {
@@ -85,21 +179,18 @@ exports.getProducts = async (req, res) => {
       products,
       categories,
       currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalProducts: total,
+      totalPages: Math.ceil(totalDocs / limit),
+      totalProducts: totalDocs,
       search: searchQuery || '',
-      selectedCategory: category || '',
-      minPrice: minPrice || '',
-      maxPrice: maxPrice || '',
-      sort: sortBy,
-      order: sortOrder,
       filters: {
         minPrice: minPrice || '',
-        maxPrice: maxPrice || ''
+        maxPrice: maxPrice || '',
+        rating: rating || ''
       },
-      selectedCategories: category ? [category] : [],
-      sort: `${sortBy}-${sortOrder}`,
-      paginationUrl // Truyền hàm pagination vào template
+      selectedCategories: selectedCategories,
+      sort: sort,
+      paginationUrl, // Truyền hàm pagination vào template
+      queryParams: req.query // Pass all query parameters to the template
     });
   } catch (err) {
     console.error(err);
