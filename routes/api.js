@@ -7,6 +7,7 @@ const { apiAuth } = require('../middlewares/auth');
 
 // Product routes
 router.get('/products', productController.getProducts);
+router.get('/products/search', productController.searchProducts);
 router.get('/products/:id', productController.getProductById);
 router.post('/products/:id/reviews', productController.addReview);
 

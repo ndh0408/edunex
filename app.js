@@ -19,7 +19,10 @@ const app = express();
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fashionstore', {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  autoIndex: true, // Đảm bảo index được tạo
+  serverSelectionTimeoutMS: 5000, // Tăng timeout
+  family: 4 // Sử dụng IPv4
 })
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err));
@@ -48,20 +51,29 @@ app.use(morgan('dev'));
 // Cookie parser - ĐẾN TRƯỚC session
 app.use(cookieParser(process.env.SESSION_SECRET || 'fashionstore_secret'));
 
-// Session configuration should be before CSRF
+// Session configuration should be before CSRF and passport
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fashionstore_secret',
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   store: MongoStore.create({ 
     mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/fashionstore',
-    ttl: 14 * 24 * 60 * 60 // 14 days
+    ttl: 14 * 24 * 60 * 60, // 14 days
+    autoRemove: 'native', // Tự động xóa session hết hạn
+    touchAfter: 24 * 3600 // Cập nhật session time to live mỗi 24 giờ
   }),
   cookie: {
     maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax'
+    secure: false, // Đảm bảo là false khi sử dụng HTTP
+    sameSite: 'lax',
+    path: '/'
+  },
+  proxy: true, // Tin tưởng proxy nếu có
+  
+  // Sử dụng cấu hình này để MongoDB lưu chính xác ID
+  genid: function(req) {
+    return new mongoose.Types.ObjectId().toString(); // Sử dụng MongoDB ObjectID
   }
 }));
 
@@ -116,6 +128,11 @@ app.use(function (err, req, res, next) {
 
 // Global variables
 app.use((req, res, next) => {
+  console.log('SESSION ID:', req.sessionID);
+  console.log('USER DATA:', req.user);
+  console.log('Is Authenticated:', req.isAuthenticated());
+  console.log('SESSION COOKIE:', req.session.cookie);
+  
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');

@@ -1,18 +1,1 @@
-[
-  {
-    "_id": "680b42420500292849aa39ef",
-    "code": "67WG4OV3",
-    "description": "123",
-    "discountType": "percentage",
-    "discountValue": 30,
-    "minAmount": 5,
-    "expiryDate": "2026-08-04T00:00:00.000Z",
-    "usageLimit": 1,
-    "usageCount": 0,
-    "isActive": true,
-    "owner": null,
-    "createdAt": "2025-04-25T08:05:22.185Z",
-    "updatedAt": "2025-04-25T08:05:22.185Z",
-    "__v": 0
-  }
-]
+[]

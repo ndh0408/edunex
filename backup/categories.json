@@ -1,13 +1,35 @@
 [
   {
-    "_id": "680b352bd062fdab5761ae14",
-    "name": "Huy1",
-    "slug": "huy1",
+    "_id": "680feb19ef62cf782fd25512",
+    "name": "Apparel",
+    "slug": "apparel",
     "description": "",
-    "image": "image-1745564971703-248164720.jpeg",
+    "image": "image-1745873689992-701037734.jpg",
     "parent": null,
     "featured": false,
-    "createdAt": "2025-04-25T07:09:31.706Z",
+    "createdAt": "2025-04-28T20:54:49.995Z",
+    "__v": 0
+  },
+  {
+    "_id": "681018a9ef62cf782fd2572b",
+    "name": "Handbag",
+    "slug": "handbag",
+    "description": "",
+    "image": "image-1745885353848-679000108.jpg",
+    "parent": null,
+    "featured": true,
+    "createdAt": "2025-04-29T00:09:13.851Z",
+    "__v": 0
+  },
+  {
+    "_id": "68101997ef62cf782fd2575a",
+    "name": "Shoes",
+    "slug": "shoes",
+    "description": "",
+    "image": "image-1745885591706-855796868.jpg",
+    "parent": null,
+    "featured": false,
+    "createdAt": "2025-04-29T00:13:11.709Z",
     "__v": 0
   }
 ]

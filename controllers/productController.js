@@ -164,7 +164,7 @@ exports.getProduct = async (req, res) => {
     
     // Get related products
     const relatedProducts = await Product.find({
-      category: product.category._id,
+      category: product.category ? product.category._id : null,
       status: 'published',
       _id: { $ne: product._id }
     })

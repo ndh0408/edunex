@@ -115,14 +115,19 @@ exports.register = async (req, res) => {
 // @route   POST /users/login
 exports.login = (req, res, next) => {
   try {
+    console.log('Login attempt for:', req.body.email);
+    
     // Kiểm tra CSRF token trước khi xác thực
     if (!req.body._csrf) {
+      console.log('CSRF token missing');
       req.flash('error', 'Phiên làm việc không hợp lệ. Vui lòng thử lại.');
       return res.redirect('/users/login');
     }
     
     // Sử dụng custom callback thay vì options object
     passport.authenticate('local', function(err, user, info) {
+      console.log('Passport authenticate result:', { error: err ? true : false, userFound: user ? true : false });
+      
       if (err) {
         console.error('Login error:', err);
         req.flash('error', 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại sau.');
@@ -131,11 +136,13 @@ exports.login = (req, res, next) => {
       
       if (!user) {
         // Thông báo lỗi từ passport strategy
+        console.log('Auth failed:', info.message);
         req.flash('error', info.message || 'Email hoặc mật khẩu không chính xác.');
         return res.redirect('/users/login');
       }
       
       // Check if user is verified
+      console.log('User verification status:', user.isVerified);
       if (!user.isVerified) {
         req.flash('error', 'Tài khoản chưa được xác thực. Vui lòng kiểm tra email của bạn hoặc yêu cầu gửi lại email xác thực.');
         return res.redirect('/users/login');
@@ -149,6 +156,9 @@ exports.login = (req, res, next) => {
           return res.redirect('/users/login');
         }
         
+        console.log('User logged in successfully:', user._id, user.email);
+        console.log('Session after login:', req.session);
+        
         // Lưu thông tin ghi nhớ đăng nhập nếu có
         if (req.body.remember) {
           // Kéo dài thời gian sống của cookie session
@@ -158,7 +168,13 @@ exports.login = (req, res, next) => {
           req.session.cookie.expires = false;
         }
         
-        return res.redirect('/');
+        // Lưu session ngay lập tức
+        req.session.save(function(err) {
+          if (err) {
+            console.error('Error saving session:', err);
+          }
+          return res.redirect('/');
+        });
       });
     })(req, res, next);
   } catch (error) {

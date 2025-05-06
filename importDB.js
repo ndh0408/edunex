@@ -34,15 +34,33 @@ async function importCollectionFromFile(filename) {
     }
 
     const jsonData = fs.readFileSync(filePath, 'utf8');
-    const data = JSON.parse(jsonData);
+    let data = JSON.parse(jsonData);
 
     // Nếu file JSON rỗng hoặc không phải là mảng thì bỏ qua
     if (!Array.isArray(data) || data.length === 0) {
       console.log(`ℹ️  File ${filename} rỗng hoặc không hợp lệ, bỏ qua`);
-      // Có thể xóa collection nếu muốn đảm bảo trạng thái sạch
-      // await db.collection(collectionName).deleteMany({}); 
       return; 
     }
+
+    // Chuyển đổi các string ID thành ObjectId
+    data = data.map(item => {
+      // Xử lý _id chính
+      if (item._id && typeof item._id === 'string' && /^[0-9a-fA-F]{24}$/.test(item._id)) {
+        item._id = new mongoose.Types.ObjectId(item._id);
+      }
+      
+      // Xử lý các trường tham chiếu như category, user, v.v.
+      if (item.category && typeof item.category === 'string' && /^[0-9a-fA-F]{24}$/.test(item.category)) {
+        item.category = new mongoose.Types.ObjectId(item.category);
+      }
+      
+      // Các trường tham chiếu khác nếu cần
+      if (item.user && typeof item.user === 'string' && /^[0-9a-fA-F]{24}$/.test(item.user)) {
+        item.user = new mongoose.Types.ObjectId(item.user);
+      }
+      
+      return item;
+    });
 
     const collection = db.collection(collectionName);
 

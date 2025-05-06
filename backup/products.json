@@ -1,24 +1,846 @@
 [
   {
-    "_id": "680b3d311e5b6649cffa6838",
-    "name": "123",
-    "description": "123",
-    "shortDescription": "123",
-    "price": 150,
-    "discountPrice": null,
-    "category": "680b352bd062fdab5761ae14",
-    "brand": "123",
+    "_id": "680fec28ef62cf782fd2552b",
+    "name": "Áo khoác biker",
+    "description": "Áo khoác biker chất da lộn cao cấp, màu nâu trầm sang trọng.\r\n\r\nKhóa kéo kim loại chéo phía trước, 3 túi khóa kéo tiện dụng.\r\n\r\nThiết kế form loose thời thượng, tay áo dài với khoá kéo.\r\n\r\nCác chi tiết nút bấm bạc, đai eo tinh tế tạo điểm nhấn cá tính.\r\n\r\nPhối hợp tuyệt vời với váy maxi, jeans hoặc đầm bodycon.\r\n\r\nLớp lót trong mềm mại, giữ ấm tốt.\r\n\r\nPhù hợp mặc đi chơi, đi tiệc hoặc các dịp cần sự nổi bật.",
+    "shortDescription": "Áo khoác biker da lộn màu nâu, thiết kế dáng rộng thời thượng, chất liệu mềm mại, bề mặt mịn tay.",
+    "price": 2890000,
+    "discountPrice": 2590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
     "images": [
-      "images-1745567025235-16916983.jpeg",
-      "images-1745567025236-958684764.jpeg",
-      "images-1745567025237-84336864.jpeg",
-      "images-1745567025237-833317901.jpeg",
-      "images-1745567025237-451487386.jpeg"
+      "images-1745873960661-994638651.jpg",
+      "images-1745873960663-814303725.jpg",
+      "images-1745873960665-430925399.jpg",
+      "images-1745873960668-114731626.jpg"
     ],
     "colors": [
-      "Đen",
-      "Trắng",
-      "Đỏ"
+      "Nâu đậm"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T20:59:20.673Z",
+    "slug": "ao-khoac-biker",
+    "__v": 0
+  },
+  {
+    "_id": "680fece4ef62cf782fd25553",
+    "name": "Đầm len ôm dài tay cổ bẻ",
+    "description": "Thiết kế đầm dài tay, cổ bẻ tạo điểm nhấn thanh lịch.\r\n\r\nPhom dáng ôm nhẹ body, tôn đường cong tinh tế.\r\n\r\nChất liệu len dệt gân dày dặn, co giãn tốt, giữ ấm mà vẫn thoáng khí.\r\n\r\nChiều dài midi qua gối, phù hợp mặc thu đông.\r\n\r\nCó thể phối với boot cao cổ, giày sneaker hoặc sandal tuỳ style.\r\n\r\nPhù hợp mặc đi làm, đi chơi hoặc dự tiệc tối nhẹ nhàng.",
+    "shortDescription": "Đầm len dài tay cổ bẻ, chất liệu gân mềm mại co giãn, dáng ôm nhẹ nữ tính và thanh lịch.",
+    "price": 1690000,
+    "discountPrice": 1490000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745874148341-105554711.jpg",
+      "images-1745874148350-740795870.jpg",
+      "images-1745874148354-341829889.jpg",
+      "images-1745874148356-97682112.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:02:28.361Z",
+    "slug": "dam-len-om-dai-tay-co-be",
+    "__v": 0
+  },
+  {
+    "_id": "680feec8ef62cf782fd2556f",
+    "name": "Đầm maxi tay dài họa tiết hoa nền đen",
+    "description": "Đầm maxi tay dài, họa tiết hoa nhí vintage tinh tế.\r\n\r\nChất liệu vải chiffon mềm nhẹ, bay bổng, thoải mái khi vận động.\r\n\r\nTay áo phồng nhẹ, cổ tròn kín đáo.\r\n\r\nĐai thắt eo đồng màu giúp tôn dáng, tạo đường cong.\r\n\r\nDáng đầm dài phủ mắt cá chân, thích hợp mặc đi chơi, đi tiệc, du lịch.\r\n\r\nHọa tiết hoa trắng, hồng pastel nổi bật trên nền đen huyền bí.",
+    "shortDescription": "Đầm maxi dáng dài nền đen in hoa, tay dài bo nhẹ, thắt eo nữ tính, chất vải mát nhẹ.",
+    "price": 1890000,
+    "discountPrice": 1690000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745874632090-66928912.jpg",
+      "images-1745874632100-850424672.jpg",
+      "images-1745874632103-404413543.jpg",
+      "images-1745874632106-196647590.jpg"
+    ],
+    "colors": [
+      "Đen họa tiết hoa"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 18,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:10:32.112Z",
+    "slug": "dam-maxi-tay-dai-hoa-tiet-hoa-nen-den",
+    "__v": 0
+  },
+  {
+    "_id": "680ff127ef62cf782fd2557e",
+    "name": "Áo blazer form rộng",
+    "description": "Áo blazer nữ form oversized hiện đại, phong cách menswear.\r\n\r\nChất liệu dày dặn, bề mặt nhẵn mịn, giữ phom đẹp.\r\n\r\nLớp lót tay áo sọc tinh tế, có thể xắn gấu tay tạo điểm nhấn cá tính.\r\n\r\nPhù hợp phối quần âu, jeans, hoặc đầm body.\r\n\r\nDáng suông nhẹ che khuyết điểm tốt.\r\n\r\nMàu sắc trung tính dễ mix-match nhiều trang phục.",
+    "shortDescription": "Blazer dáng rộng thời thượng, chất liệu dày dặn, màu xanh ghi dễ phối nhiều phong cách.",
+    "price": 1590000,
+    "discountPrice": 1390000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745875239262-450941954.jpg",
+      "images-1745875239272-218782100.jpg",
+      "images-1745875239280-735399004.jpg",
+      "images-1745875239282-736617115.jpg"
+    ],
+    "colors": [
+      "Xanh ghi xám"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:20:39.287Z",
+    "slug": "ao-blazer-form-rong",
+    "__v": 0
+  },
+  {
+    "_id": "680ff366ef62cf782fd2559a",
+    "name": "Chân váy voan xếp ly",
+    "description": "Chất liệu voan cao cấp, xếp ly tinh tế, lưng thun co giãn tạo sự thoải mái. Thích hợp mặc đi làm, dạo phố, dự tiệc nhẹ.",
+    "shortDescription": "Chân váy voan dài mềm mại, bay bổng theo từng bước đi.",
+    "price": 1390000,
+    "discountPrice": 1090000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745875814448-72332672.jpg",
+      "images-1745875814453-873548839.jpg",
+      "images-1745875814455-631838492.jpg",
+      "images-1745875814457-72028568.jpg"
+    ],
+    "colors": [
+      "Nâu caramel"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:30:14.462Z",
+    "slug": "chan-vay-voan-xep-ly",
+    "__v": 0
+  },
+  {
+    "_id": "680ff5b2ef62cf782fd255be",
+    "name": "Quần Jogger Nam",
+    "description": "Vải cotton pha spandex mềm mại\r\n\r\nBo gấu co giãn\r\n\r\nDây rút điều chỉnh eo\r\n\r\n2 túi hai bên tiện dụng",
+    "shortDescription": "Quần jogger nam thoải mái, thể thao.",
+    "price": 1300000,
+    "discountPrice": 990000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745876402362-551040722.jpg",
+      "images-1745876402365-991969583.jpg",
+      "images-1745876402368-337708014.jpg",
+      "images-1745876402371-391028739.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 50,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:40:02.377Z",
+    "slug": "quan-jogger-nam",
+    "__v": 0
+  },
+  {
+    "_id": "680ff761ef62cf782fd255cd",
+    "name": "Áo hoodie tank top thể thao",
+    "description": "Nỉ cotton thấm hút mồ hôi\r\n\r\nThiết kế không tay phóng khoáng\r\n\r\nMũ trùm đầu kèm dây rút\r\n\r\nIn logo MOVE tinh tế",
+    "shortDescription": "Áo không tay thể thao, thoải mái.",
+    "price": 699000,
+    "discountPrice": 599000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745876833754-591919023.jpg",
+      "images-1745876833761-878099961.jpg",
+      "images-1745876833765-142366448.jpg",
+      "images-1745876833767-203607194.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 50,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:47:13.772Z",
+    "slug": "ao-hoodie-tank-top-the-thao",
+    "__v": 0
+  },
+  {
+    "_id": "680ff836ef62cf782fd255dc",
+    "name": "Áo Thun Nam In Họa Tiết",
+    "description": "Chất liệu cotton mềm mại, thoáng mát\r\n\r\nForm dáng rộng rãi, thoải mái\r\n\r\nIn chữ \"S/S 202X\" và họa tiết ngôi sao ở mặt trước và mặt sau\r\n\r\nCổ tròn cổ điển, dễ mặc",
+    "shortDescription": "Áo thun nam trắng in họa tiết ngôi sao thời trang",
+    "price": 750000,
+    "discountPrice": 490000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745877046709-953560889.jpg",
+      "images-1745877046710-955475141.jpg",
+      "images-1745877046711-233110575.jpg",
+      "images-1745877046712-476952518.jpg"
+    ],
+    "colors": [
+      "Trắng"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 80,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T21:50:46.717Z",
+    "slug": "ao-thun-nam-in-hoa-tiet",
+    "__v": 0
+  },
+  {
+    "_id": "680ffbbeef62cf782fd25601",
+    "name": "Áo Vest Nam Slim Fit",
+    "description": "Kiểu dáng slim fit ôm vừa vặn\r\n\r\nCổ áo ve nhọn cổ điển\r\n\r\n2 nút cài phía trước\r\n\r\n2 túi nắp trước, 1 túi ngực\r\n\r\nTay áo 4 cúc trang trí\r\n\r\nLớp lót trong mềm mại, dễ chịu",
+    "shortDescription": "Áo vest nam thiết kế slim fit lịch lãm, hiện đại.",
+    "price": 2400000,
+    "discountPrice": 1890000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745877950042-362177336.jpg",
+      "images-1745877950046-154404139.jpg",
+      "images-1745877950048-422048937.jpg",
+      "images-1745877950051-601914980.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T22:05:50.056Z",
+    "slug": "ao-vest-nam-slim-fit",
+    "__v": 0
+  },
+  {
+    "_id": "680ffcf7ef62cf782fd25610",
+    "name": "Quần Jeans Nam Rộng Đen Wash",
+    "description": "Chất denim bền chắc\r\n\r\nPhom ống rộng thoải mái, dễ phối đồ\r\n\r\nWash nhẹ tạo hiệu ứng cổ điển\r\n\r\n5 túi tiêu chuẩn (2 túi trước, 2 túi sau, 1 túi nhỏ)\r\n\r\nCạp quần cứng cáp, có đỉa quần",
+    "shortDescription": "Quần jeans nam phong cách rộng rãi, cá tính.",
+    "price": 1600000,
+    "discountPrice": 1190000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "HM Apparel",
+    "images": [
+      "images-1745878263560-386245932.jpg",
+      "images-1745878263575-949721804.jpg",
+      "images-1745878263586-78614774.jpg",
+      "images-1745878263589-194390635.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T22:11:03.596Z",
+    "slug": "quan-jeans-nam-rong-den-wash",
+    "__v": 0
+  },
+  {
+    "_id": "681005fdef62cf782fd25650",
+    "name": "Quần Jeans Nữ  High Flare",
+    "description": "Dáng ống rộng, cạp cao tôn dáng\r\n\r\nĐường chỉ nổi màu vàng đặc trưng của Levi's®\r\n\r\nChất denim bền chắc, mềm mại theo thời gian\r\n\r\nLogo da cổ điển phía sau lưng quần\r\n\r\nDễ phối cùng áo sơ mi, áo thun, hoặc blazer",
+    "shortDescription": "Quần jeans nữ ống rộng cổ điển, dáng suông xòe thoải mái.",
+    "price": 2500000,
+    "discountPrice": 1890000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745880573361-447966156.jpg",
+      "images-1745880573363-52520100.jpg",
+      "images-1745880573366-454955583.jpg",
+      "images-1745880573369-396982564.jpg"
+    ],
+    "colors": [
+      "Xanh đậm"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 35,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T22:49:33.374Z",
+    "slug": "quan-jeans-nu-high-flare",
+    "__v": 0
+  },
+  {
+    "_id": "68100eaaef62cf782fd2565f",
+    "name": "Quần Jeans Nữ Levi's",
+    "description": "Phom dáng ống loe nhẹ, tôn dáng chân dài\r\n\r\nCạp cao ôm sát vòng eo\r\n\r\nChất vải denim mềm mại, co giãn tốt\r\n\r\nPhối hợp dễ dàng với nhiều loại trang phục: áo sơ mi, áo thun, áo len\r\n\r\nThiết kế 5 túi cổ điển, đường may chắc chắn",
+    "shortDescription": "Quần jeans nữ ống loe hiện đại, nâng tầm phong cách.",
+    "price": 2200000,
+    "discountPrice": 1750000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745882794176-738668745.jpg",
+      "images-1745882794181-411122206.jpg",
+      "images-1745882794184-664032041.jpg",
+      "images-1745882794186-45519208.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:26:34.199Z",
+    "slug": "quan-jeans-nu-levi-s",
+    "__v": 0
+  },
+  {
+    "_id": "681010d4ef62cf782fd25684",
+    "name": "Quần Jeans Ống Loe Levi's",
+    "description": "Dáng quần ống loe thời trang, kéo dài đôi chân\r\n\r\nLưng cao, ôm vừa vặn phần hông và đùi\r\n\r\nVải denim êm nhẹ, co giãn nhẹ\r\n\r\n5 túi cơ bản tiện dụng\r\n\r\nKhóa kéo và nút bấm chắc chắn",
+    "shortDescription": "Quần jeans nữ dáng loe, tôn dáng, phong cách cổ điển Levi's.",
+    "price": 2500000,
+    "discountPrice": 1990000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745883348490-16721626.jpg",
+      "images-1745883348497-626010296.jpg",
+      "images-1745883348500-359993573.jpg",
+      "images-1745883348503-921777736.jpg"
+    ],
+    "colors": [
+      "Xanh nhạt"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 50,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:35:48.515Z",
+    "slug": "quan-jeans-ong-loe-levi-s",
+    "__v": 0
+  },
+  {
+    "_id": "6810130eef62cf782fd25693",
+    "name": "Quần Jean Nữ Ống Rộng",
+    "description": "Phom quần ống rộng, thoải mái.\r\n\r\nLưng cao ôm sát, tôn dáng.\r\n\r\nChất liệu denim mềm mại, độ co giãn nhẹ.\r\n\r\nMàu xanh rêu cá tính, dễ phối đồ.\r\n\r\nThiết kế tối giản với 5 túi truyền thống.",
+    "shortDescription": "Quần jean nữ Levi's ống rộng hiện đại, thời trang.",
+    "price": 2200000,
+    "discountPrice": 1650000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745883918687-658968520.jpg",
+      "images-1745883918689-620790180.jpg",
+      "images-1745883918691-344332508.jpg"
+    ],
+    "colors": [
+      "Xanh rêu"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:45:18.700Z",
+    "slug": "quan-jean-nu-ong-rong",
+    "__v": 0
+  },
+  {
+    "_id": "681013eaef62cf782fd256b2",
+    "name": "Quần Jeans Nữ Levi's",
+    "description": "Thiết kế High Flare cổ điển, tôn dáng\r\n\r\nEo cao, ôm gọn hông\r\n\r\nỐng quần loe rộng vừa phải\r\n\r\nMàu be dễ phối với nhiều kiểu áo\r\n\r\nKhóa kéo và nút cài kim loại chắc chắn\r\n\r\nLogo da Levi’s® đặc trưng ở mặt sau",
+    "shortDescription": "Quần jeans Levi's ống loe, màu be nhẹ nhàng, thời trang.",
+    "price": 2600000,
+    "discountPrice": 1890000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745884138714-181785308.jpg",
+      "images-1745884138716-33125953.jpg",
+      "images-1745884138723-55017967.jpg",
+      "images-1745884138727-300571119.jpg"
+    ],
+    "colors": [
+      "Be"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:48:58.737Z",
+    "slug": "quan-jeans-nu-levi-s-mw6t19cE0",
+    "__v": 0
+  },
+  {
+    "_id": "68101488ef62cf782fd256c1",
+    "name": "Áo Khoác Jean Lót Lông Nam",
+    "description": "Áo khoác jean dáng regular fit cổ điển\r\n\r\nLớp lót lông nhân tạo siêu ấm ở thân áo và cổ áo\r\n\r\nCổ bẻ đặc trưng, khoá cài nút kim loại\r\n\r\n2 túi ngực có nắp và 2 túi sườn tiện lợi\r\n\r\nPhối màu denim wash nhẹ, phong cách cổ điển dễ phối đồ",
+    "shortDescription": "Áo khoác jean nam Levi's® lót lông cổ điển, ấm áp, thời thượng.",
+    "price": 3200000,
+    "discountPrice": 2590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745884296368-410069922.jpg",
+      "images-1745884296377-404347142.jpg",
+      "images-1745884296381-459774313.jpg",
+      "images-1745884296389-321178585.jpg"
+    ],
+    "colors": [
+      "Xanh Denim"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:51:36.398Z",
+    "slug": "ao-khoac-jean-lot-long-nam",
+    "__v": 0
+  },
+  {
+    "_id": "68101569ef62cf782fd256d0",
+    "name": "Áo Sơ Mi Nam Levi's Western Dài Tay",
+    "description": "Kiểu dáng Western đặc trưng Levi's\r\n\r\nForm chuẩn vừa vặn, tôn dáng\r\n\r\nChất liệu cotton dày dặn nhưng mềm mại\r\n\r\nCài nút bấm kim loại cổ điển\r\n\r\n2 túi ngực nắp bấm\r\n\r\nPhối màu be trung tính dễ mặc nhiều phong cách",
+    "shortDescription": "Áo sơ mi dài tay Levi's dáng Western cổ điển, chất vải cotton mềm thoáng.",
+    "price": 1900000,
+    "discountPrice": 1490000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745884521840-811481203.jpg",
+      "images-1745884521843-667001868.jpg",
+      "images-1745884521848-815712417.jpg",
+      "images-1745884521851-686713914.jpg"
+    ],
+    "colors": [
+      "Xanh Denim"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:55:21.858Z",
+    "slug": "ao-so-mi-nam-levi-s-western-dai-tay",
+    "__v": 0
+  },
+  {
+    "_id": "68101617ef62cf782fd256f4",
+    "name": "Áo Sơ Mi Nam Họa Tiết",
+    "description": "Thiết kế cổ bẻ truyền thống\r\n\r\nHọa tiết in nhỏ phủ đều thân áo\r\n\r\nChất liệu vải cotton mềm nhẹ, thấm hút tốt\r\n\r\nKhuy cài phía trước, 1 túi ngực kèm logo Levi's đỏ\r\n\r\nPhù hợp mặc đi làm, đi chơi, dạo phố",
+    "shortDescription": "Áo sơ mi nam ngắn tay, form vừa, họa tiết trẻ trung.",
+    "price": 1290000,
+    "discountPrice": 990000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745884695801-953022023.jpg",
+      "images-1745884695807-145640478.jpg",
+      "images-1745884695812-961593285.jpg"
+    ],
+    "colors": [
+      "Trắng họa tiết xanh"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "specifications": [],
+    "countInStock": 50,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-28T23:58:15.818Z",
+    "slug": "ao-so-mi-nam-hoa-tiet",
+    "__v": 0
+  },
+  {
+    "_id": "6810173def62cf782fd25703",
+    "name": "Áo Sơ Mi Nam Levi's Tay Dài Western",
+    "description": "Thiết kế cổ bẻ truyền thống, tay dài.\r\n\r\n2 túi ngực có nắp với khuy bấm đặc trưng Levi's®.\r\n\r\nChất liệu denim cotton mềm mại, bền chắc.\r\n\r\nKhuy bấm phía trước dễ dàng mặc vào/tháo ra.\r\n\r\nPhối Red Tab™ logo nhỏ đặc trưng tại túi ngực trái.\r\n\r\nPhù hợp mặc riêng hoặc phối layer như jacket nhẹ.",
+    "shortDescription": "Áo sơ mi nam Levi's® dáng chuẩn, vải cotton chắc chắn, kiểu dáng Western khỏe khoắn.",
+    "price": 1790000,
+    "discountPrice": 1390000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745884989764-263194593.jpg",
+      "images-1745884989767-104928183.jpg",
+      "images-1745884989771-830368108.jpg",
+      "images-1745884989772-580539269.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T00:03:09.777Z",
+    "slug": "ao-so-mi-nam-levi-s-tay-dai-western",
+    "__v": 0
+  },
+  {
+    "_id": "681017c7ef62cf782fd25717",
+    "name": "Áo Sơ Mi Nam Denim",
+    "description": "Thiết kế cổ bẻ, tay dài với form regular vừa vặn\r\n\r\nHai túi ngực cài nút, kèm tag đỏ Levi's đặc trưng\r\n\r\nChất liệu denim mềm nhẹ, bền chắc, thoải mái khi mặc\r\n\r\nNút cài phía trước dễ thao tác, kiểu dáng casual dễ phối đồ\r\n\r\nPhù hợp mặc đi chơi, đi làm, dạo phố phong cách năng động",
+    "shortDescription": "Áo sơ mi denim nam Levi's form chuẩn, phong cách cổ điển bụi bặm.",
+    "price": 1690000,
+    "discountPrice": 1290000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Levi",
+    "images": [
+      "images-1745885127292-6076134.jpg",
+      "images-1745885127300-60020122.jpg",
+      "images-1745885127307-694301456.jpg",
+      "images-1745885127312-725688818.jpg"
+    ],
+    "colors": [
+      "Xám bạc (Washed Grey)"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "specifications": [],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T00:05:27.320Z",
+    "slug": "ao-so-mi-nam-denim",
+    "__v": 0
+  },
+  {
+    "_id": "681119fcb230845fff02cfaf",
+    "name": "Áo Nỉ Nữ Uniqlo JW Anderson Dáng Cropped",
+    "description": "Thiết kế cổ tròn, tay dài bo chun thoải mái\r\n\r\nDáng áo cropped trẻ trung, năng động\r\n\r\nChất liệu cotton pha polyester mềm mại, giữ ấm tốt\r\n\r\nLogo JW Anderson dệt nổi ở tay áo\r\n\r\nDễ dàng kết hợp với quần jean, chân váy hay quần ống rộng",
+    "shortDescription": "Áo nỉ nữ dáng ngắn, form rộng nhẹ, phong cách hiện đại phối cùng logo JW Anderson tinh tế.",
+    "price": 799000,
+    "discountPrice": 590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745951244830-133104344.jpg",
+      "images-1745951244832-347367660.jpg",
+      "images-1745951244833-544097059.jpg",
+      "images-1745951244841-166789648.jpg"
+    ],
+    "colors": [
+      "Trắng kem"
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "681119fcb230845fff02cfb0"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "85% Cotton, 15% Polyester",
+        "_id": "681119fcb230845fff02cfb1"
+      }
+    ],
+    "countInStock": 45,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:27:08.463Z",
+    "slug": "ao-ni-nu-uniqlo-jw-anderson-dang-cropped",
+    "__v": 1
+  },
+  {
+    "_id": "68111aa4b230845fff02cfd9",
+    "name": "Áo Thun Uniqlo JW Anderson Sọc Ngang Tay Ngắn",
+    "description": "Thiết kế unisex hiện đại, phối đồ dễ dàng cho cả nam và nữ\r\n\r\nKiểu dáng cổ tròn, tay ngắn rộng rãi\r\n\r\nHọa tiết sọc ngang trẻ trung, phong cách biển cả\r\n\r\nChất liệu cotton mềm mịn, thoáng khí\r\n\r\nPhù hợp mặc hàng ngày, đi học, đi chơi",
+    "shortDescription": "Áo thun unisex tay ngắn, sọc ngang cổ tròn, chất cotton thoáng mát.",
+    "price": 599000,
+    "discountPrice": 399000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745951396656-317862116.jpg",
+      "images-1745951396658-823932595.jpg",
+      "images-1745951396658-201777779.jpg",
+      "images-1745951396661-65395945.jpg"
+    ],
+    "colors": [
+      "Sọc trắng xanh navy"
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111aa4b230845fff02cfda"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "100% Cotton",
+        "_id": "68111aa4b230845fff02cfdb"
+      }
+    ],
+    "countInStock": 80,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:29:56.668Z",
+    "slug": "ao-thun-uniqlo-jw-anderson-soc-ngang-tay-ngan",
+    "__v": 0
+  },
+  {
+    "_id": "68111b24b230845fff02cfee",
+    "name": "Áo Cardigan Nữ UNIQLO JW Anderson Dệt Gân Cài Nút",
+    "description": "Thiết kế cổ chữ V cài nút thanh lịch\r\n\r\nDệt gân tinh tế, vải mềm nhẹ, co giãn\r\n\r\nDễ phối cùng áo thun, quần jeans hoặc váy\r\n\r\nCó nhiều màu trung tính dễ mặc\r\n\r\nLogo JW Anderson may chìm tinh tế nơi tay áo",
+    "shortDescription": "Áo cardigan nữ dệt gân mịn, phom suông nhẹ nhàng, phối được nhiều phong cách.",
+    "price": 899000,
+    "discountPrice": 690000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745951524827-618350473.jpg",
+      "images-1745951524828-245904954.jpg",
+      "images-1745951524830-140645447.jpg",
+      "images-1745951524832-372842821.jpg"
+    ],
+    "colors": [
+      "Nâu be"
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111b24b230845fff02cfef"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "100% Cotton",
+        "_id": "68111b24b230845fff02cff0"
+      }
+    ],
+    "countInStock": 60,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:32:04.838Z",
+    "slug": "ao-cardigan-nu-uniqlo-jw-anderson-det-gan-cai-nut",
+    "__v": 0
+  },
+  {
+    "_id": "68111b9fb230845fff02d005",
+    "name": "Quần Dài Nữ UNIQLO Dệt Gân Lưng Thun Dáng Rộng",
+    "description": "Quần dài dáng suông thoải mái, dễ phối đồ\r\n\r\nThiết kế lưng thun kèm dây rút tiện lợi\r\n\r\nChất vải dệt gân mềm mại, co giãn nhẹ\r\n\r\nCó túi hai bên tiện lợi\r\n\r\nPhù hợp mặc ở nhà, dạo phố hoặc phối layering thu đông",
+    "shortDescription": "Quần dài nữ UNIQLO dáng suông thoải mái, chất vải dệt gân mềm mại, phù hợp mặc hàng ngày.",
+    "price": 899000,
+    "discountPrice": 690000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745951647583-19671837.jpg",
+      "images-1745951647584-480959637.jpg",
+      "images-1745951647585-788191643.jpg",
+      "images-1745951647586-347133030.jpg"
+    ],
+    "colors": [
+      "Xám đậm"
     ],
     "sizes": [
       "S",
@@ -28,24 +850,2350 @@
     ],
     "specifications": [
       {
-        "key": "Chất liệu",
-        "value": "cotton 100%",
-        "_id": "680b3d311e5b6649cffa6839"
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111b9fb230845fff02d006"
       },
+      {
+        "key": "Chất liệu",
+        "value": "52% Polyester, 27% Rayon, 19% Acrylic, 2% Spandex",
+        "_id": "68111b9fb230845fff02d007"
+      }
+    ],
+    "countInStock": 35,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:34:07.592Z",
+    "slug": "quan-dai-nu-uniqlo-det-gan-lung-thun-dang-rong",
+    "__v": 0
+  },
+  {
+    "_id": "68111c6db230845fff02d01e",
+    "name": "Quần Dài Nam",
+    "description": "Thiết kế tối giản, phù hợp phong cách thường ngày\r\n\r\nDáng suông hiện đại, dễ mặc\r\n\r\nLưng thun co giãn kèm dây rút tiện dụng\r\n\r\nChất vải nhẹ, thoáng mát, dễ vận động\r\n\r\nCó túi hai bên và túi sau tiện lợi",
+    "shortDescription": "Quần dài nam chất liệu nhẹ, kiểu dáng thoải mái, dễ phối đồ.",
+    "price": 790000,
+    "discountPrice": 590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745951853183-705392919.jpg",
+      "images-1745951853183-965299034.jpg"
+    ],
+    "colors": [
+      "Xanh rêu"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
       {
         "key": "Xuất xứ",
         "value": "Việt Nam",
-        "_id": "680b3d311e5b6649cffa683a"
+        "_id": "68111c6db230845fff02d01f"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "100% Cotton pha Polyester",
+        "_id": "68111c6db230845fff02d020"
       }
     ],
-    "countInStock": 150,
-    "sold": 123,
-    "featured": true,
-    "rating": 5,
-    "numReviews": 1,
+    "countInStock": 60,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
     "status": "published",
-    "createdAt": "2025-04-25T07:43:45.248Z",
-    "slug": "123",
+    "createdAt": "2025-04-29T18:37:33.190Z",
+    "slug": "quan-dai-nam",
+    "__v": 0
+  },
+  {
+    "_id": "68111d03b230845fff02d039",
+    "name": "Áo Blazer Nam Uniqlo Dáng Slim",
+    "description": "Thiết kế tối giản với ve áo nhọn thanh lịch\r\n\r\nHai túi trước lớn tiện lợi\r\n\r\nCo giãn nhẹ giúp vận động linh hoạt\r\n\r\nCài nút 2 khuy cổ điển\r\n\r\nCó lót mỏng bên trong, thích hợp mặc hằng ngày",
+    "shortDescription": "Áo blazer dáng slim hiện đại, phù hợp đi làm và đi chơi.",
+    "price": 1990000,
+    "discountPrice": 1490000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745952003105-948249046.jpg",
+      "images-1745952003105-49550512.jpg",
+      "images-1745952003106-646059436.jpg",
+      "images-1745952003107-795440124.jpg"
+    ],
+    "colors": [
+      "Xám than"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111d03b230845fff02d03a"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "57% Polyester, 38% Rayon, 5% Spandex",
+        "_id": "68111d03b230845fff02d03b"
+      }
+    ],
+    "countInStock": 35,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:40:03.113Z",
+    "slug": "ao-blazer-nam-uniqlo-dang-slim",
+    "__v": 0
+  },
+  {
+    "_id": "68111d71b230845fff02d056",
+    "name": "Quần Dài Nữ Kẻ Sọc Uniqlo",
+    "description": "Thiết kế thắt lưng chun kết hợp dây rút tiện lợi\r\n\r\nDáng suông rộng, thoải mái vận động\r\n\r\nHọa tiết kẻ sọc dọc giúp tôn dáng\r\n\r\nChất liệu mềm nhẹ, thích hợp cho mùa hè\r\n\r\nPhù hợp mặc đi chơi, dạo phố, du lịch",
+    "shortDescription": "Quần dáng suông, thắt lưng dây rút, họa tiết kẻ sọc nhẹ nhàng, thoải mái khi mặc.",
+    "price": 790000,
+    "discountPrice": 590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745952113637-986203982.jpg",
+      "images-1745952113637-741189096.jpg",
+      "images-1745952113638-704009051.jpg",
+      "images-1745952113639-48583153.jpg"
+    ],
+    "colors": [
+      "Xanh rêu kẻ sọc trắng"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111d71b230845fff02d057"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "65% Polyester, 35% Rayon",
+        "_id": "68111d71b230845fff02d058"
+      }
+    ],
+    "countInStock": 40,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:41:53.644Z",
+    "slug": "quan-dai-nu-ke-soc-uniqlo",
+    "__v": 0
+  },
+  {
+    "_id": "68111e38b230845fff02d075",
+    "name": "Quần Jogger Nữ Uniqlo Lưng Thun Ống Bo",
+    "description": "Chất vải mềm, nhẹ, tạo cảm giác thoải mái khi mặc\r\n\r\nThiết kế lưng thun có dây rút điều chỉnh\r\n\r\nỐng quần có bo nhẹ giúp giữ phom dáng\r\n\r\nCó túi hai bên tiện lợi\r\n\r\nPhù hợp để mặc ở nhà, đi dạo hoặc tập luyện nhẹ",
+    "shortDescription": "Quần jogger nữ dáng suông nhẹ, lưng thun co giãn, phối ống bo năng động, thích hợp cho phong cách thể thao và thường ngày.",
+    "price": 790000,
+    "discountPrice": 590000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745952312567-196112791.jpg",
+      "images-1745952312568-742404700.jpg",
+      "images-1745952312569-167066056.jpg",
+      "images-1745952312570-165677040.jpg"
+    ],
+    "colors": [
+      "Xanh rêu"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111e38b230845fff02d076"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "100% Polyester tái chế",
+        "_id": "68111e38b230845fff02d077"
+      }
+    ],
+    "countInStock": 60,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:45:12.576Z",
+    "slug": "quan-jogger-nu-uniqlo-lung-thun-ong-bo",
+    "__v": 0
+  },
+  {
+    "_id": "68111f32b230845fff02d096",
+    "name": "Áo Khoác Sơ Mi Uniqlo Dáng Rộng",
+    "description": "Thiết kế unisex rộng rãi, dễ phối đồ\r\n\r\nChất liệu cotton pha polyester dày dặn, giữ form tốt\r\n\r\n2 túi ngực có nắp tiện dụng, cài nút phía trước\r\n\r\nTông màu be trung tính, dễ mặc quanh năm\r\n\r\nPhù hợp mặc đi học, đi làm, dạo phố, du lịch",
+    "shortDescription": "Áo khoác sơ mi Uniqlo form rộng, cá tính, phù hợp cả nam và nữ.",
+    "price": 1290000,
+    "discountPrice": 990000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745952562782-983096364.jpg",
+      "images-1745952562783-136289151.jpg",
+      "images-1745952562784-544582167.jpg",
+      "images-1745952562785-737859259.jpg"
+    ],
+    "colors": [
+      "Be nhạt"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111f32b230845fff02d097"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "60% Cotton, 40% Polyester",
+        "_id": "68111f32b230845fff02d098"
+      }
+    ],
+    "countInStock": 42,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:49:22.790Z",
+    "slug": "ao-khoac-so-mi-uniqlo-dang-rong",
+    "__v": 0
+  },
+  {
+    "_id": "68111faab230845fff02d0b9",
+    "name": "Áo Sơ Mi Uniqlo Kẻ Caro Dài Tay",
+    "description": "Thiết kế unisex, phù hợp cho cả nam và nữ\r\n\r\nKiểu dáng oversize nhẹ, dễ phối với nhiều phong cách\r\n\r\nCổ bẻ cơ bản, tay dài, khuy cài phía trước\r\n\r\nHọa tiết caro xanh – ghi thời trang, không lỗi mốt\r\n\r\nTúi ngực nhỏ tiện dụng\r\n\r\nDễ mặc đi làm, đi học, đi chơi hoặc mặc layering",
+    "shortDescription": "Áo sơ mi dài tay với họa tiết kẻ caro cổ điển, chất vải mềm mịn, thoải mái khi mặc.",
+    "price": 799000,
+    "discountPrice": 599000,
+    "category": "680feb19ef62cf782fd25512",
+    "brand": "Uniqlo",
+    "images": [
+      "images-1745952682707-384267534.jpg",
+      "images-1745952682711-605944196.jpg",
+      "images-1745952682715-675346295.jpg",
+      "images-1745952682718-978796816.jpg"
+    ],
+    "colors": [
+      "Caro xanh - ghi"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "specifications": [
+      {
+        "key": "Xuất xứ",
+        "value": "Việt Nam",
+        "_id": "68111faab230845fff02d0ba"
+      },
+      {
+        "key": "Chất liệu",
+        "value": "100% Cotton flannel mềm mại",
+        "_id": "68111faab230845fff02d0bb"
+      }
+    ],
+    "countInStock": 70,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:51:22.727Z",
+    "slug": "ao-so-mi-uniqlo-ke-caro-dai-tay",
+    "__v": 0
+  },
+  {
+    "_id": "681121a2b230845fff02d160",
+    "name": "Túi Gucci Marmont Matelassé",
+    "description": "Thiết kế nắp gập cổ điển, dễ sử dụng và đảm bảo an toàn cho đồ dùng cá nhân\r\n\r\nBiểu tượng GG mạ vàng nổi bật ở mặt trước\r\n\r\nĐường chần bông vân chữ V mềm mại, thời thượng\r\n\r\nDây đeo dạng chuỗi kết hợp da, có thể điều chỉnh để đeo vai hoặc đeo chéo\r\n\r\nMặt sau trơn, hoạ tiết đồng bộ với mặt trước\r\n\r\nPhù hợp dùng khi đi chơi, dự tiệc, gặp gỡ khách hàng, hoặc sử dụng hàng ngày",
+    "shortDescription": "Túi đeo chéo Gucci với thiết kế sang trọng, chất da thật cao cấp cùng logo GG biểu tượng đầy đẳng cấp.",
+    "price": 52000000,
+    "discountPrice": 47800000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745953186512-913955874.jpg",
+      "images-1745953186516-749612350.jpg",
+      "images-1745953186520-774498053.jpg",
+      "images-1745953186527-631962639.jpg"
+    ],
+    "colors": [
+      "Đỏ rượu (Wine Red)"
+    ],
+    "sizes": [
+      "One Size (Dài 26cm x Cao 15cm x Rộng 7cm)"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T18:59:46.540Z",
+    "slug": "tui-gucci-marmont-matelasse",
+    "__v": 0
+  },
+  {
+    "_id": "681122744dbfac8a710be89e",
+    "name": "Túi Xách Gucci Jackie 1961",
+    "description": "Dáng túi hình trăng khuyết thời thượng\r\n\r\nChất liệu da lộn GG Supreme họa tiết monogram biểu tượng\r\n\r\nChi tiết da trơn dập nổi chữ GUCCI tạo điểm nhấn cao cấp\r\n\r\nDây đeo tay cố định, kèm dây đeo dài tháo rời tiện lợi\r\n\r\nKhóa nắp bằng kim loại mạ vàng sang trọng\r\n\r\nPhù hợp đi chơi, dạo phố, dự tiệc hoặc làm quà tặng cao cấp",
+    "shortDescription": "Chiếc túi biểu tượng Jackie 1961 với thiết kế cong tinh tế, chất liệu da lộn sang trọng kết hợp chi tiết da trơn dập logo Gucci.",
+    "price": 68900000,
+    "discountPrice": 57500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745953396020-693845019.jpg",
+      "images-1745953396023-551395499.jpg",
+      "images-1745953396024-246282460.jpg",
+      "images-1745953396024-915396374.jpg"
+    ],
+    "colors": [
+      "Xanh rêu"
+    ],
+    "sizes": [
+      "One size"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T19:03:16.045Z",
+    "slug": "tui-xach-gucci-jackie-1961",
+    "__v": 0
+  },
+  {
+    "_id": "681122f84dbfac8a710be8c1",
+    "name": "Túi Đeo Chéo Gucci GG Matelassé",
+    "description": "Thiết kế hình hộp bo tròn các góc, hiện đại và sang trọng\r\n\r\nLogo GG lớn nổi bật ở mặt trước\r\n\r\nDây đeo vai có thể điều chỉnh, linh hoạt khi sử dụng\r\n\r\nChất da mềm mại, bề mặt mịn màng cao cấp\r\n\r\nGam màu hồng phấn nhẹ nhàng dễ phối đồ\r\n\r\nPhù hợp cho đi chơi, dạo phố, dự tiệc nhẹ\r\n\r\nKiểu khóa kéo chắc chắn, tiện dụng",
+    "shortDescription": "Túi đeo chéo nhỏ gọn từ Gucci với họa tiết GG nổi bật, gam màu hồng phấn nhẹ nhàng mang lại vẻ thanh lịch, nữ tính.",
+    "price": 42000000,
+    "discountPrice": 35500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745953528980-169393061.jpg",
+      "images-1745953528981-105551998.jpg",
+      "images-1745953528982-273873742.jpg",
+      "images-1745953528983-552651026.jpg"
+    ],
+    "colors": [
+      "Hồng phấn (Light Pink)"
+    ],
+    "sizes": [
+      "One size"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T19:05:28.990Z",
+    "slug": "tui-deo-cheo-gucci-gg-matelasse",
+    "__v": 0
+  },
+  {
+    "_id": "681126894dbfac8a710be8e4",
+    "name": "Túi Đeo Chéo Gucci GG Matelassé",
+    "description": "Thiết kế hình hộp chữ nhật nhỏ gọn, tiện dụng\r\n\r\nVải GG Supreme bền chắc, họa tiết logo GUCCI in chìm toàn bộ bề mặt\r\n\r\nLogo GG nổi lớn bằng da may nổi trước túi\r\n\r\nDây đeo điều chỉnh được với móc khóa kim loại\r\n\r\nMàu sắc trung tính dễ phối với nhiều trang phục\r\n\r\nDễ dàng sử dụng cho đi chơi, hẹn hò, hoặc sự kiện nhẹ nhàng",
+    "shortDescription": "Túi đeo chéo Gucci GG Supreme cổ điển, điểm nhấn với logo GG lớn phía trước và thiết kế viền da thật sang trọng.",
+    "price": 39000000,
+    "discountPrice": 32500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745954441831-893782669.jpg",
+      "images-1745954441835-102324787.jpg",
+      "images-1745954441837-456825440.jpg",
+      "images-1745954441837-374714397.jpg"
+    ],
+    "colors": [
+      "Be nâu họa tiết GG Supreme"
+    ],
+    "sizes": [
+      "One size"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T19:20:41.844Z",
+    "slug": "tui-deo-cheo-gucci-gg-matelasse-skdTdFpIS",
+    "__v": 0
+  },
+  {
+    "_id": "68112dc34dbfac8a710be925",
+    "name": "Túi Đeo Chéo Gucci GG Supreme Stripe",
+    "description": "Thiết kế nắp gập cổ điển với khóa cài chắc chắn\r\n\r\nHọa tiết GG Supreme in nổi toàn bộ mặt ngoài\r\n\r\nLogo GG kim loại vàng sang trọng\r\n\r\nDây đeo chéo điều chỉnh được\r\n\r\nSọc canvas đỏ - xanh đặc trưng của Gucci\r\n\r\nPhù hợp đi làm, dạo phố hoặc dự tiệc",
+    "shortDescription": "Túi đeo chéo phong cách cổ điển với họa tiết GG Supreme, điểm nhấn sọc đỏ-xanh và logo GG kim loại, thích hợp cho cả phong cách hàng ngày và sang trọng.",
+    "price": 58000000,
+    "discountPrice": 49000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745956291891-252582920.jpg",
+      "images-1745956291892-517254681.jpg",
+      "images-1745956291893-314646075.jpg",
+      "images-1745956291895-155525571.jpg"
+    ],
+    "colors": [
+      "Beige/Ebony với sọc Đỏ - Xanh lá và viền da nâu"
+    ],
+    "sizes": [
+      "One size"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T19:51:31.900Z",
+    "slug": "tui-deo-cheo-gucci-gg-supreme-stripe",
+    "__v": 0
+  },
+  {
+    "_id": "68112ee64dbfac8a710be948",
+    "name": "Túi Đeo Chéo Gucci Dionysus",
+    "description": "Mặt trước trang trí khoá hình đầu hổ nạm đá đặc trưng dòng Dionysus\r\n\r\nDa bò hạt cao cấp với kết cấu bền bỉ và thẩm mỹ\r\n\r\nDây đeo xích kim loại có thể đeo vai hoặc đeo chéo linh hoạt\r\n\r\nKích thước nhỏ gọn phù hợp đi tiệc hoặc dạo phố\r\n\r\nMàu đen trung tính, dễ phối đồ\r\n\r\nNắp gập có nút bấm từ chắc chắn, bên trong gồm ngăn chính và ngăn kéo nhỏ",
+    "shortDescription": "Túi đeo chéo Gucci Dionysus với thiết kế khoá đầu hổ đặc trưng, chất liệu da hạt cao cấp tạo vẻ ngoài cá tính và sang trọng.",
+    "price": 62000000,
+    "discountPrice": 48500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745956581999-41254917.jpg",
+      "images-1745956582001-631266501.jpg",
+      "images-1745956582003-993663351.jpg",
+      "images-1745956582004-894327132.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "One size"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T19:56:22.009Z",
+    "slug": "tui-deo-cheo-gucci-dionysus",
+    "__v": 0
+  },
+  {
+    "_id": "681141284dbfac8a710be985",
+    "name": "Túi Xách Gucci Bamboo 1947 Medium Tote Bag",
+    "description": "Dáng tote vừa, phù hợp sử dụng hằng ngày hoặc công sở\r\n\r\nTay cầm tre thủ công mang tính biểu tượng từ năm 1947\r\n\r\nChất liệu da cao cấp, độ bền cao, bề mặt vân tự nhiên\r\n\r\nTrang trí logo GG kim loại mạ vàng sang trọng\r\n\r\nDây đeo bản rộng sọc xanh – đỏ có thể tháo rời\r\n\r\nCó khóa kéo bên trong và nhiều ngăn phụ tiện dụng\r\n\r\nThiết kế unisex – nam hay nữ đều sử dụng được",
+    "shortDescription": "Túi tote cao cấp tay cầm tre mang tính biểu tượng của Gucci, thiết kế thanh lịch, hiện đại kết hợp cổ điển, đi kèm dây đeo vải sọc đặc trưng màu xanh – đỏ của nhà mốt.",
+    "price": 89000000,
+    "discountPrice": 76500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745961256611-697144326.jpg",
+      "images-1745961256613-497253563.jpg",
+      "images-1745961256613-578365964.jpg",
+      "images-1745961256616-968529238.jpg"
+    ],
+    "colors": [
+      "Nâu Camel phối sọc đỏ - xanh lá (dây đeo)"
+    ],
+    "sizes": [
+      "Cao 25cm x Rộng 32cm x Sâu 11cm"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T21:14:16.622Z",
+    "slug": "tui-xach-gucci-bamboo-1947-medium-tote-bag",
+    "__v": 0
+  },
+  {
+    "_id": "681141b94dbfac8a710be9c3",
+    "name": "Túi Xách Gucci Ophidia GG Mini Bag",
+    "description": "Thiết kế túi vai nhỏ gọn, nhẹ nhàng và thời trang\r\n\r\nChất liệu canvas GG Supreme bền bỉ, thân thiện với môi trường\r\n\r\nPhối da trắng cao cấp ở viền và dây đeo, tạo điểm nhấn sang trọng\r\n\r\nLogo GG kim loại cổ điển phía trước\r\n\r\nDây đeo vai điều chỉnh được độ dài\r\n\r\nMở khóa kéo chắc chắn, nội thất bên trong có ngăn chính và túi phụ\r\n\r\nPhù hợp đi chơi, dạo phố hoặc tiệc nhẹ",
+    "shortDescription": "Túi Gucci Ophidia mini dáng vai sang trọng, tông màu kem nhã nhặn cùng chi tiết GG cổ điển, mang phong cách tinh tế và hiện đại.",
+    "price": 55000000,
+    "discountPrice": 45900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745961401141-723872137.jpg",
+      "images-1745961401142-234666429.jpg",
+      "images-1745961401143-285100079.jpg",
+      "images-1745961401144-813198166.jpg"
+    ],
+    "colors": [
+      "Kem trắng viền trắng"
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T21:16:41.149Z",
+    "slug": "tui-xach-gucci-ophidia-gg-mini-bag",
+    "__v": 0
+  },
+  {
+    "_id": "681142734dbfac8a710be9fd",
+    "name": "Túi Xách Gucci Ophidia Small GG Tote",
+    "description": "Thiết kế sang trọng, đậm phong cách cổ điển của Gucci\r\n\r\nChất liệu canvas GG Supreme bền bỉ, thân thiện môi trường\r\n\r\nViền da thuộc đen cao cấp, nổi bật với charm hình chó da thật\r\n\r\nQuai xách đôi dài tiện lợi, có dây đeo vai điều chỉnh được\r\n\r\nNội thất rộng rãi, có khóa kéo chắc chắn\r\n\r\nPhù hợp sử dụng đi làm, dạo phố, hoặc du lịch",
+    "shortDescription": "Túi xách GG Ophidia thời thượng, kết hợp họa tiết canvas đặc trưng cùng charm chó đáng yêu và quai xách đôi tiện lợi.",
+    "price": 49800000,
+    "discountPrice": 43900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Gucci",
+    "images": [
+      "images-1745961587351-548318278.jpg",
+      "images-1745961587364-591776733.jpg",
+      "images-1745961587366-211332938.jpg",
+      "images-1745961587367-893904480.jpg"
+    ],
+    "colors": [
+      "Be phối đen viền",
+      "họa tiết GG canvas"
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T21:19:47.377Z",
+    "slug": "tui-xach-gucci-ophidia-small-gg-tote",
+    "__v": 0
+  },
+  {
+    "_id": "6811442d4dbfac8a710bea27",
+    "name": "Túi Louis Vuitton Monogram Empreinte",
+    "description": "Chất liệu da Monogram Empreinte dập nổi cao cấp mềm mại\r\n\r\nTông hồng pastel nhẹ nhàng, nữ tính, dễ phối đồ\r\n\r\nThiết kế hình thang với 2 quai da cầm tay và dây rút 2 bên\r\n\r\nKèm ví phụ có thể tháo rời, tiện lợi sử dụng độc lập\r\n\r\nNội thất bên trong rộng rãi, có túi khóa kéo và móc kim loại cao cấp\r\n\r\nKhóa kéo và chi tiết kim loại mạ vàng sáng bóng\r\n\r\nLý tưởng để sử dụng hàng ngày hoặc du lịch nhờ kích thước lớn\r\n\r\nSản phẩm giới hạn, phù hợp làm quà tặng hoặc đầu tư",
+    "shortDescription": "Túi xách LV Neverfull phiên bản giới hạn màu hồng pastel sang trọng, thiết kế rộng rãi với họa tiết Monogram biểu tượng, phù hợp cho mọi dịp từ công sở đến dạo phố.",
+    "price": 79900000,
+    "discountPrice": 68900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745962029416-914826039.jpg",
+      "images-1745962029419-971922836.jpg",
+      "images-1745962029420-42647850.jpg",
+      "images-1745962029422-802800923.jpg"
+    ],
+    "colors": [
+      "Hồng pastel in nổi họa tiết Monogram trắng"
+    ],
+    "sizes": [
+      "31 x 28 x 14 cm (Dài x Cao x Rộng)"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T21:27:09.427Z",
+    "slug": "tui-louis-vuitton-monogram-empreinte",
+    "__v": 0
+  },
+  {
+    "_id": "681149c54dbfac8a710bea4a",
+    "name": "Túi Xách Louis Vuitton OnTheGo MM Monogram Empreinte",
+    "description": "Thiết kế dạng tote rộng rãi, thích hợp cho công sở, dạo phố hay du lịch\r\n\r\nChất liệu da Monogram Empreinte cao cấp, dập nổi logo LV đặc trưng\r\n\r\nHai tay cầm ngắn để xách tay + dây đeo dài có thể tháo rời để đeo vai hoặc đeo chéo\r\n\r\nBên trong lót vải lộn màu nâu sang trọng, có ngăn khóa kéo và nhiều ngăn phụ\r\n\r\nChi tiết kim loại mạ vàng cao cấp, tăng độ bền và tính thẩm mỹ\r\n\r\nĐường may thủ công tinh tế, logo LV được dập nổi nổi bật ở mặt trước túi",
+    "shortDescription": "Túi xách LV OnTheGo MM da thật với họa tiết Monogram dập nổi tinh tế, sang trọng và hiện đại – lựa chọn lý tưởng cho phong cách thanh lịch hàng ngày.",
+    "price": 89000000,
+    "discountPrice": 78500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745963461823-579864478.jpg",
+      "images-1745963461827-927200032.jpg",
+      "images-1745963461828-985453906.jpg",
+      "images-1745963461829-418711958.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "One Size (35 x 27 x 14 cm)"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T21:51:01.834Z",
+    "slug": "tui-xach-louis-vuitton-onthego-mm-monogram-empreinte",
+    "__v": 0
+  },
+  {
+    "_id": "68114de64dbfac8a710bea6d",
+    "name": "Túi Xách Louis Vuitton Neverfull Monogram Canvas",
+    "description": "Chất liệu canvas Monogram cao cấp phối da bò thật\r\n\r\nLớp lót vải sọc đỏ với logo Louis Vuitton\r\n\r\nQuai da dài, đi kèm dây đeo bản to phối monogram đỏ thời trang\r\n\r\nCó khóa kéo bên trong và túi đựng phụ kiện có thể tháo rời\r\n\r\nThiết kế rộng rãi, nhẹ và tiện dụng khi mang đi làm hoặc du lịch\r\n\r\nĐường may và hoàn thiện thủ công cao cấp chuẩn hãng",
+    "shortDescription": "Túi xách kinh điển Neverfull MM với thiết kế Monogram thời thượng và lót đỏ bên trong nổi bật, thích hợp cho cả phong cách công sở và dạo phố.",
+    "price": 59800000,
+    "discountPrice": 52900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745964518696-99617977.jpg",
+      "images-1745964518699-600512973.jpg",
+      "images-1745964518702-575402746.jpg",
+      "images-1745964518705-53960565.jpg"
+    ],
+    "colors": [
+      "Nâu Monogram họa tiết LV",
+      "lót đỏ sọc đen"
+    ],
+    "sizes": [
+      "31 x 28 x 14 cm"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T22:08:38.715Z",
+    "slug": "tui-xach-louis-vuitton-neverfull-monogram-canvas",
+    "__v": 0
+  },
+  {
+    "_id": "68115b9a4dbfac8a710bea90",
+    "name": "Túi Xách Louis Vuitton Monogram",
+    "description": "Thiết kế túi dạng hobo mềm mại, dây đeo vai điều chỉnh được\r\n\r\nChất liệu canvas cao cấp phủ lớp bảo vệ chống nước nhẹ\r\n\r\nTrang trí logo monogram đa sắc nổi bật, phong cách thời thượng\r\n\r\nKhóa kéo chắc chắn, bên trong rộng rãi, kèm ví cầm tay đồng bộ\r\n\r\nViền và tay cầm da bò thật, bền chắc và tăng vẻ sang trọng\r\n\r\nPhù hợp đi chơi, dạo phố hoặc sử dụng hàng ngày",
+    "shortDescription": "Túi xách Louis Vuitton mang phong cách trẻ trung với họa tiết monogram màu sắc nổi bật trên nền trắng, đi kèm ví nhỏ tiện lợi.",
+    "price": 78000000,
+    "discountPrice": 62500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745968026970-102120054.jpg",
+      "images-1745968026972-135346326.jpg",
+      "images-1745968026976-729960741.jpg",
+      "images-1745968026979-323702668.jpg"
+    ],
+    "colors": [
+      "Trắng – họa tiết monogram nhiều màu"
+    ],
+    "sizes": [
+      "Dài 32cm × Cao 25cm × Rộng 15cm"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:07:06.990Z",
+    "slug": "tui-xach-louis-vuitton-monogram",
+    "__v": 0
+  },
+  {
+    "_id": "68115c284dbfac8a710beaba",
+    "name": "Túi Đeo Vai Louis Vuitton Monogram Empreinte",
+    "description": "Thiết kế flap cổ điển kết hợp khóa cài có logo Louis Vuitton\r\n\r\nHọa tiết Monogram dập nổi trên chất liệu da mềm cao cấp\r\n\r\nDây đeo vai bản rộng có thể điều chỉnh/đổi dây da kèm theo\r\n\r\nKhóa kéo bên trong tiện dụng, giữ đồ an toàn\r\n\r\nPhù hợp sử dụng hằng ngày, dạo phố hoặc đi tiệc\r\n\r\nMàu xám trung tính dễ phối với nhiều phong cách",
+    "shortDescription": "Túi đeo vai cao cấp Louis Vuitton với họa tiết Monogram Empreinte nổi bật, thiết kế tinh tế cùng dây đeo vải bản to thời trang, mang đến phong cách thanh lịch và hiện đại.",
+    "price": 89900000,
+    "discountPrice": 74900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745968168738-179753229.jpg",
+      "images-1745968168740-290838864.jpg",
+      "images-1745968168742-227819844.jpg",
+      "images-1745968168744-496076472.jpg"
+    ],
+    "colors": [
+      "Xám nhạt với hoạ tiết Monogram màu kem"
+    ],
+    "sizes": [
+      "Dài 24cm x Cao 15cm x Rộng 6cm"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:09:28.753Z",
+    "slug": "tui-deo-vai-louis-vuitton-monogram-empreinte",
+    "__v": 0
+  },
+  {
+    "_id": "68115d0b4dbfac8a710beadd",
+    "name": "Túi Xách Louis Vuitton Speedy Bandoulière 25 Shearling",
+    "description": "Thiết kế biểu tượng Speedy được tái hiện với chất liệu lông cừu mềm mịn, giữ ấm tốt\r\n\r\nHọa tiết Monogram LV màu trắng nổi bật trên nền lông đen\r\n\r\nQuai xách bằng da bò tự nhiên màu nâu, kết hợp dây đeo vai có thể tháo rời\r\n\r\nKhoang chứa rộng rãi, có túi nhỏ bên trong\r\n\r\nKhóa kéo chắc chắn, phụ kiện kim loại mạ vàng sáng bóng\r\n\r\nDễ dàng phối với trang phục thu đông, tạo điểm nhấn sang trọng",
+    "shortDescription": "Túi xách Speedy Bandoulière 25 phiên bản lông cừu cao cấp, mang phong cách thời thượng và sang trọng, phù hợp cho mùa đông.",
+    "price": 112000000,
+    "discountPrice": 98000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745968395947-653316896.jpg",
+      "images-1745968395952-943744662.jpg",
+      "images-1745968395953-320929887.jpg",
+      "images-1745968395953-4060821.jpg"
+    ],
+    "colors": [
+      "Đen - Nâu - Trắng (lông cừu đen",
+      "logo trắng",
+      "quai da nâu)"
+    ],
+    "sizes": [
+      "25 x 19 x 15 cm (Dài x Cao x Rộng)"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:13:15.963Z",
+    "slug": "tui-xach-louis-vuitton-speedy-bandouliere-25-shearling",
+    "__v": 0
+  },
+  {
+    "_id": "6811611a4dbfac8a710beb23",
+    "name": "Túi Bucket Louis Vuitton Monogram",
+    "description": "Chất liệu da Monogram Empreinte cao cấp\r\n\r\nDây đeo chéo bằng da phối xích kim loại thời thượng\r\n\r\nCó thể xách tay hoặc đeo vai\r\n\r\nKhóa kéo kim loại màu vàng có khắc logo LV\r\n\r\nThiết kế mềm mại nhưng vẫn giữ form chắc chắn\r\n\r\nLớp lót vải màu đen bên trong rộng rãi",
+    "shortDescription": "Túi bucket Louis Vuitton với họa tiết Monogram cổ điển và thiết kế dây rút cùng dây xích sang trọng, phù hợp đi chơi hoặc dạo phố.",
+    "price": 89000000,
+    "discountPrice": 77000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745969434651-799628464.jpg",
+      "images-1745969434657-619264505.jpg",
+      "images-1745969434658-125648671.jpg",
+      "images-1745969434661-729619267.jpg"
+    ],
+    "colors": [
+      "Nâu Monogram – viền đen"
+    ],
+    "sizes": [
+      "25 x 28 x 17 cm"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:30:34.669Z",
+    "slug": "tui-bucket-louis-vuitton-monogram",
+    "__v": 0
+  },
+  {
+    "_id": "681162684dbfac8a710beb6e",
+    "name": "Túi Bucket Louis Vuitton Monogram",
+    "description": "Chất liệu da Monogram Empreinte mềm mịn, sang trọng\r\n\r\nDây đeo chéo bằng da cao cấp, phối xích mạ vàng sáng bóng\r\n\r\nTay cầm xách tay bằng dây xích bện da ấn tượng\r\n\r\nMiệng túi dạng dây rút tiện lợi, giữ form tốt\r\n\r\nLớp lót vải cao cấp cùng ngăn túi trong tiện lợi\r\n\r\nChi tiết kim loại sáng bóng, khắc logo Louis Vuitton",
+    "shortDescription": "Túi bucket Louis Vuitton với gam màu xám trung tính, hoạ tiết Monogram nổi tinh tế cùng dây xích mạ vàng hiện đại, là điểm nhấn thanh lịch cho mọi outfit.",
+    "price": 91000000,
+    "discountPrice": 79000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745969768432-19892185.jpg",
+      "images-1745969768433-313670247.jpg",
+      "images-1745969768436-154851133.jpg"
+    ],
+    "colors": [
+      "Xám Monogram – viền đồng bộ"
+    ],
+    "sizes": [
+      "24 x 26 x 15 cm"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:36:08.446Z",
+    "slug": "tui-bucket-louis-vuitton-monogram-eeWitfQg9",
+    "__v": 0
+  },
+  {
+    "_id": "681162df4dbfac8a710beb91",
+    "name": "Balo Mini Louis Vuitton Monogram",
+    "description": "Chất liệu da Monogram Empreinte cao cấp mềm mại\r\n\r\nThiết kế balo nhỏ gọn, có nắp gập và hai túi nhỏ phía trước\r\n\r\nDây đeo xích kim loại vàng phối da có thể tháo rời\r\n\r\nCó thể đeo vai, đeo chéo hoặc xách tay\r\n\r\nLớp lót vải hồng tiệp màu bên trong, kèm túi phụ bên trong\r\n\r\nKhóa từ và dây gài chắc chắn, logo Louis Vuitton dập nổi",
+    "shortDescription": "Balo mini Louis Vuitton gam hồng nhẹ nhàng, phối họa tiết Monogram và dây đeo xích vàng sang trọng, là phụ kiện lý tưởng cho các cô nàng yêu phong cách nữ tính, thanh lịch.",
+    "price": 76000000,
+    "discountPrice": 64500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745969887414-456723192.jpg",
+      "images-1745969887415-11210683.jpg",
+      "images-1745969887420-579677568.jpg",
+      "images-1745969887422-758212248.jpg"
+    ],
+    "colors": [
+      "Hồng nhạt – họa tiết Monogram"
+    ],
+    "sizes": [
+      "21 x 25 x 12 cm"
+    ],
+    "specifications": [],
+    "countInStock": 9,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:38:07.436Z",
+    "slug": "balo-mini-louis-vuitton-monogram",
+    "__v": 0
+  },
+  {
+    "_id": "681163674dbfac8a710bebb4",
+    "name": "Túi Hobo Louis Vuitton Dây Xích Da Monogram",
+    "description": "Chất liệu da Monogram Empreinte mềm mại, cao cấp\r\n\r\nDây đeo vai dạng bản lớn kết hợp với tay cầm xích kim loại thời trang\r\n\r\nNgăn lớn tiện lợi, kèm túi nhỏ bên trong\r\n\r\nLớp lót vải nhung cao cấp màu tím sang trọng\r\n\r\nPhụ kiện kim loại màu vàng sáng bóng, khắc logo Louis Vuitton\r\n\r\nPhom túi giữ form đẹp, phù hợp sử dụng hằng ngày hoặc dạo phố",
+    "shortDescription": "Túi Hobo Louis Vuitton thiết kế mềm mại với họa tiết Monogram dập nổi, dây đeo xích kim loại vàng sang trọng kết hợp cùng quai vải to bản cực cá tính.",
+    "price": 89000000,
+    "discountPrice": 78500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "LV",
+    "images": [
+      "images-1745970023770-635795469.jpg",
+      "images-1745970023772-861276493.jpg",
+      "images-1745970023774-58531813.jpg",
+      "images-1745970023775-759437927.jpg"
+    ],
+    "colors": [
+      "Be Monogram"
+    ],
+    "sizes": [
+      "35 x 25 x 14 cm"
+    ],
+    "specifications": [],
+    "countInStock": 9,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:40:23.783Z",
+    "slug": "tui-hobo-louis-vuitton-day-xich-da-monogram",
+    "__v": 0
+  },
+  {
+    "_id": "681164674dbfac8a710bebd7",
+    "name": "Túi Đeo Vai Prada Da Vintage",
+    "description": "Chất liệu da bê cao cấp xử lý theo phong cách vintage\r\n\r\nDây đeo vai có thể tháo rời với xích kim loại mạ vàng nổi bật\r\n\r\nLogo tam giác Prada bằng kim loại đặc trưng ở mặt trước\r\n\r\nPhần nội thất rộng rãi, khóa kéo chắc chắn\r\n\r\nPhù hợp mang chéo hoặc đeo vai linh hoạt",
+    "shortDescription": "Túi đeo vai Prada với chất da vintage mềm mại và dây xích vàng nổi bật, mang đậm dấu ấn sang trọng và cá tính – phù hợp cho cả phong cách hàng ngày lẫn dự tiệc.",
+    "price": 52000000,
+    "discountPrice": 44900000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745970279631-583000431.jpg",
+      "images-1745970279639-738243842.jpg",
+      "images-1745970279641-506863553.jpg",
+      "images-1745970279646-343511512.jpg"
+    ],
+    "colors": [
+      "Xanh rêu vintage – dây đeo xích vàng"
+    ],
+    "sizes": [
+      "28 x 15 x 7 cm"
+    ],
+    "specifications": [],
+    "countInStock": 8,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:44:39.656Z",
+    "slug": "tui-deo-vai-prada-da-vintage",
+    "__v": 0
+  },
+  {
+    "_id": "681165374dbfac8a710bebfa",
+    "name": "Túi Xách Prada Satchel Satin Gắn Lông Vũ Navy",
+    "description": "Vải satin cao cấp với họa tiết lông vũ nổi bật\r\n\r\nQuai xách bằng da bóng màu đen sang trọng\r\n\r\nThiết kế satchel nhỏ gọn, dễ phối đồ\r\n\r\nKhóa kéo kim loại vàng sáng bóng\r\n\r\nLót trong bằng vải mềm, có logo Prada",
+    "shortDescription": "Chiếc túi Prada satchel thời trang với chi tiết lông vũ mềm mại, kết hợp quai cầm da bóng đen và khóa kéo kim loại cao cấp, tạo điểm nhấn độc đáo và sang trọng.",
+    "price": 79000000,
+    "discountPrice": 68000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745970486836-64670449.jpg",
+      "images-1745970486845-310510989.jpg",
+      "images-1745970486847-206410458.jpg",
+      "images-1745970486864-496977212.jpg"
+    ],
+    "colors": [
+      "Xanh navy – viền đen bóng"
+    ],
+    "sizes": [
+      "23 x 16 x 11 cm"
+    ],
+    "specifications": [],
+    "countInStock": 6,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:48:07.054Z",
+    "slug": "tui-xach-prada-satchel-satin-gan-long-vu-navy",
+    "__v": 0
+  },
+  {
+    "_id": "681166214dbfac8a710bec1d",
+    "name": "Túi Prada Tay Xách Hoa Thêu",
+    "description": "Chất liệu da bóng cao cấp với lớp phủ chống trầy xước\r\n\r\nHọa tiết hoa xanh pastel được thêu nổi tinh xảo trên toàn bộ túi\r\n\r\nLogo tam giác Prada mạ vàng ở mặt trước\r\n\r\nCó quai đeo vai kèm theo để linh hoạt sử dụng\r\n\r\n2 ngăn khóa kéo lớn tiện lợi, nội thất rộng rãi\r\n\r\nPhù hợp cho các dịp dạo phố, sự kiện hoặc công việc",
+    "shortDescription": "Túi tay xách Prada da bóng màu đen được điểm xuyết họa tiết hoa thêu nổi tinh tế, toát lên vẻ đẹp thanh lịch và quý phái.",
+    "price": 98000000,
+    "discountPrice": 86000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745970721704-226816630.jpg",
+      "images-1745970721707-429352100.jpg",
+      "images-1745970721712-123482857.jpg",
+      "images-1745970721714-449054837.jpg"
+    ],
+    "colors": [
+      "Đen hoa xanh"
+    ],
+    "sizes": [
+      "26 x 17 x 11 cm"
+    ],
+    "specifications": [],
+    "countInStock": 7,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:52:01.734Z",
+    "slug": "tui-prada-tay-xach-hoa-theu",
+    "__v": 0
+  },
+  {
+    "_id": "681166ba4dbfac8a710bec40",
+    "name": "Túi Xách Prada Mini Tote Đính Đá Vàng Gold",
+    "description": "Thiết kế nhỏ gọn nhưng thu hút với bề mặt phủ đá lấp lánh\r\n\r\nChất liệu da cao cấp phối đá nhân tạo sáng bóng\r\n\r\nTay cầm cứng chắc kết hợp dây đeo chéo tiện lợi\r\n\r\nPhần bên trong lót da mịn màu vàng ánh kim\r\n\r\nLogo tam giác Prada đặc trưng gắn phía trước\r\n\r\nPhù hợp cho các buổi tiệc sang trọng hoặc sự kiện đặc biệt",
+    "shortDescription": "Túi xách mini tote Prada đính đá lấp lánh sắc vàng nổi bật, thiết kế sang trọng tinh tế, tôn vinh sự thanh lịch của phái đẹp.",
+    "price": 119000000,
+    "discountPrice": 105000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745970874476-472615959.jpg",
+      "images-1745970874482-336469833.jpg",
+      "images-1745970874490-134112483.jpg",
+      "images-1745970874494-703006718.jpg"
+    ],
+    "colors": [
+      "Vàng Gold"
+    ],
+    "sizes": [
+      "18 x 20 x 8 cm"
+    ],
+    "specifications": [],
+    "countInStock": 7,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:54:34.514Z",
+    "slug": "tui-xach-prada-mini-tote-dinh-da-vang-gold",
+    "__v": 0
+  },
+  {
+    "_id": "6811674f4dbfac8a710bec63",
+    "name": "Balo Prada Re-Edition 1978 Nylon Đen Cổ Điển",
+    "description": "Chất liệu nylon cao cấp biểu tượng của Prada\r\n\r\nQuai đeo vai điều chỉnh được\r\n\r\nNắp gập có dây rút đóng mở tiện lợi\r\n\r\nCác chi tiết da Saffiano cao cấp\r\n\r\nLogo tam giác kim loại Prada màu vàng phía trước\r\n\r\nHai túi phía trước đóng bằng nắp cài\r\n\r\nLớp lót vải có túi khóa kéo bên trong",
+    "shortDescription": "Balo Prada Re-Edition 1978 với thiết kế cổ điển từ chất liệu nylon biểu tượng, đi kèm chi tiết da và khóa vàng sang trọng, lý tưởng cho phong cách thời thượng hàng ngày.",
+    "price": 54500000,
+    "discountPrice": 48000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745971023961-691987715.jpg",
+      "images-1745971023969-369265190.jpg",
+      "images-1745971023974-192088588.jpg",
+      "images-1745971023976-284507412.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "23 x 28 x 15 cm"
+    ],
+    "specifications": [],
+    "countInStock": 14,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-29T23:57:03.996Z",
+    "slug": "balo-prada-re-edition-1978-nylon-den-co-dien",
+    "__v": 0
+  },
+  {
+    "_id": "681168614dbfac8a710bec86",
+    "name": "Túi Tote Prada Shearling Da Lộn Nâu Lông Cừu",
+    "description": "Chất liệu da lộn kết hợp viền lông cừu shearling tự nhiên\r\n\r\nThiết kế dáng tote mềm mại, tay cầm được lót lông giữ ấm\r\n\r\nPhần miệng túi mở tiện lợi, có nút bấm từ tính\r\n\r\nLogo kim loại tam giác Prada màu vàng phía trước\r\n\r\nKhông gian túi rộng rãi, phù hợp để đựng vật dụng hàng ngày\r\n\r\nCó túi phụ bên trong để đựng đồ nhỏ",
+    "shortDescription": "Túi tote Prada với chất liệu da lộn và viền lông cừu shearling sang trọng, lý tưởng cho mùa đông với thiết kế ấm áp, thời thượng và mang đậm phong cách cao cấp.",
+    "price": 73000000,
+    "discountPrice": 65500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745971297332-433864574.jpg",
+      "images-1745971297336-291009238.jpg",
+      "images-1745971297341-6630080.jpg",
+      "images-1745971297344-232796602.jpg"
+    ],
+    "colors": [
+      "Nâu camel – viền lông trắng"
+    ],
+    "sizes": [
+      "23 x 21 x 15 cm"
+    ],
+    "specifications": [],
+    "countInStock": 9,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:01:37.360Z",
+    "slug": "tui-tote-prada-shearling-da-lon-nau-long-cuu",
+    "__v": 0
+  },
+  {
+    "_id": "681169484dbfac8a710beca9",
+    "name": "Túi Prada Canvas Họa Tiết Tam Giác Cam Nổi Bật",
+    "description": "Chất liệu canvas cao cấp phối da viền chắc chắn\r\n\r\nHọa tiết hình học tam giác cam – trắng đầy cá tính\r\n\r\nQuai xách tay và dây đeo chéo bằng da màu cam\r\n\r\nLogo Prada tam giác kim loại vàng phía trước\r\n\r\nCó ngăn chính rộng rãi, không có ngăn phụ bên trong\r\n\r\nKèm tag da Prada cùng màu nổi bật",
+    "shortDescription": "Túi tote Prada nổi bật với họa tiết hình tam giác cam trắng độc đáo, thiết kế năng động và cá tính, phù hợp cho dạo phố hoặc phong cách hàng ngày.",
+    "price": 52000000,
+    "discountPrice": 45000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745971528223-414822051.jpg",
+      "images-1745971528225-278626139.jpg",
+      "images-1745971528232-761139385.jpg",
+      "images-1745971528236-190278495.jpg"
+    ],
+    "colors": [
+      "Cam – trắng họa tiết hình học"
+    ],
+    "sizes": [
+      "20 x 22 x 10 cm"
+    ],
+    "specifications": [],
+    "countInStock": 16,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:05:28.255Z",
+    "slug": "tui-prada-canvas-hoa-tiet-tam-giac-cam-noi-bat",
+    "__v": 0
+  },
+  {
+    "_id": "681169f94dbfac8a710beccc",
+    "name": "Túi Tote Prada Small Da Sần Màu Be Nhẹ Sang Trọng",
+    "description": "Da bê sần cao cấp với độ bền và kết cấu đẹp mắt\r\n\r\nTay cầm kép chắc chắn, mềm mại\r\n\r\nNgăn chính rộng rãi, có kèm túi nhỏ bên trong\r\n\r\nLogo Prada hình tam giác dập nổi tinh tế ở mặt trước\r\n\r\nKhông kèm dây đeo chéo – kiểu dáng xách tay chuẩn thanh lịch\r\n\r\nMàu be trung tính dễ phối với nhiều phong cách",
+    "shortDescription": "Túi tote Prada thiết kế nhỏ gọn từ chất liệu da sần cao cấp, form cứng cáp thanh lịch, thích hợp cho phong cách công sở hiện đại.",
+    "price": 63000000,
+    "discountPrice": 55000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745971705234-4380688.jpg",
+      "images-1745971705240-724694822.jpg",
+      "images-1745971705243-491883847.jpg",
+      "images-1745971705247-448022451.jpg"
+    ],
+    "colors": [
+      "Be sáng"
+    ],
+    "sizes": [
+      "23 x 20 x 12 cm"
+    ],
+    "specifications": [],
+    "countInStock": 9,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:08:25.266Z",
+    "slug": "tui-tote-prada-small-da-san-mau-be-nhe-sang-trong",
+    "__v": 0
+  },
+  {
+    "_id": "68116ace4dbfac8a710becef",
+    "name": "Túi xách Prada Pattina da lộn nâu cổ điển",
+    "description": "Da lộn mềm mịn, tạo cảm giác cao cấp và sang trọng\r\n\r\nQuai đeo vai cố định bằng da đồng bộ\r\n\r\nKhóa nắp cài bằng kim loại mạ vàng\r\n\r\nLogo Prada dập nổi mặt trước\r\n\r\nNội thất gồm nhiều ngăn, có 1 ngăn khóa kéo tiện lợi\r\n\r\nDây đeo dài có thể tháo rời",
+    "shortDescription": "Túi xách Prada Pattina làm từ da lộn cao cấp với phom dáng thanh lịch, điểm nhấn khóa kim loại màu vàng sang trọng – lựa chọn lý tưởng cho phong cách cổ điển và tinh tế.",
+    "price": 78900000,
+    "discountPrice": 69500000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745971918527-663330278.jpg",
+      "images-1745971918535-648090124.jpg",
+      "images-1745971918540-528691118.jpg",
+      "images-1745971918542-645705644.jpg"
+    ],
+    "colors": [
+      "Nâu da lộn"
+    ],
+    "sizes": [
+      "27 x 18 x 9 cm"
+    ],
+    "specifications": [],
+    "countInStock": 9,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:11:58.580Z",
+    "slug": "tui-xach-prada-pattina-da-lon-nau-co-dien",
+    "__v": 0
+  },
+  {
+    "_id": "68116b6e4dbfac8a710bed20",
+    "name": "Túi Prada Supernova Mini Da Màu Xanh Lam Tròn",
+    "description": "Chất liệu da mềm cao cấp, bề mặt mịn và sang trọng\r\n\r\nTay cầm đôi bằng da đồng màu\r\n\r\nLogo tam giác kim loại Prada màu vàng nổi bật ở mặt trước\r\n\r\nNgăn chính có khóa kéo đôi tiện lợi\r\n\r\nBên trong lót vải với họa tiết logo tinh tế\r\n\r\nThiết kế nhỏ gọn, thích hợp đi làm, đi chơi, dự tiệc nhẹ",
+    "shortDescription": "Túi Prada Supernova Mini mang đậm dấu ấn thanh lịch với kiểu dáng nhỏ gọn, chất liệu da cao cấp, logo tam giác biểu tượng và chi tiết khóa kéo mạ vàng, phù hợp cho các phong cách hiện đại hàng ngày.",
+    "price": 56500000,
+    "discountPrice": 49000000,
+    "category": "681018a9ef62cf782fd2572b",
+    "brand": "Prada",
+    "images": [
+      "images-1745972078021-569833648.jpg",
+      "images-1745972078025-636476327.jpg",
+      "images-1745972078029-569720106.jpg",
+      "images-1745972078032-20772244.jpg"
+    ],
+    "colors": [
+      "Xanh lam tròn"
+    ],
+    "sizes": [
+      "26 x 17 x 11 cm"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:14:38.087Z",
+    "slug": "tui-prada-supernova-mini-da-mau-xanh-lam-tro-n",
+    "__v": 0
+  },
+  {
+    "_id": "6811735d4dbfac8a710beec0",
+    "name": "Giày Adidas Samba OG",
+    "description": "Upper làm từ da thật mềm mại, mũi giày phủ da lộn cao cấp\r\n\r\nLớp lót bên trong êm ái, thoáng khí\r\n\r\nLogo Adidas với tag xanh đặc trưng trên lưỡi gà\r\n\r\nĐế ngoài bằng cao su nâu kiểu gumsole cổ điển, bám tốt và linh hoạt\r\n\r\n3 sọc đen biểu tượng hai bên thân giày\r\n\r\nPhần gót giày phối đen, nổi bật tên “SAMBA” in vàng",
+    "shortDescription": "Giày Adidas Samba OG kết hợp giữa phong cách cổ điển và chất liệu hiện đại, là biểu tượng vượt thời gian trong làng sneaker với thiết kế thể thao thanh lịch, phù hợp cả đi học, đi chơi hay vận động nhẹ.",
+    "price": 2900000,
+    "discountPrice": 2450000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745974109535-605744457.jpg",
+      "images-1745974109538-965825156.jpg",
+      "images-1745974109539-133680142.jpg",
+      "images-1745974109544-918611198.jpg"
+    ],
+    "colors": [
+      "Trắng phối Đen"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44"
+    ],
+    "specifications": [],
+    "countInStock": 22,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:48:29.570Z",
+    "slug": "giay-adidas-samba-og",
+    "__v": 0
+  },
+  {
+    "_id": "681173a64dbfac8a710beee3",
+    "name": "Giày Adidas Gazelle Đỏ Trắng Cổ Điển",
+    "description": "Thiết kế mang hơi hướng retro cổ điển\r\n\r\nThân giày bằng da lộn mềm cao cấp\r\n\r\n3 sọc trắng biểu tượng của Adidas hai bên\r\n\r\nĐế ngoài bằng cao su chống trơn trượt\r\n\r\nDây giày đồng màu tạo sự liền mạch\r\n\r\nLogo Adidas cổ điển trên lưỡi gà và gót giày",
+    "shortDescription": "Giày Adidas Gazelle với phối màu đỏ – trắng cổ điển, mang phong cách retro từ những năm 1960, thiết kế tối giản với lớp da lộn mềm mại và đế cao su đặc trưng, phù hợp cho cả trang phục thể thao lẫn thường ngày.",
+    "price": 2500000,
+    "discountPrice": 2100000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745974182806-517924869.jpg",
+      "images-1745974182807-210656769.jpg",
+      "images-1745974182816-208515229.jpg",
+      "images-1745974182818-586926054.jpg"
+    ],
+    "colors": [
+      "Đỏ phối trắng"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44"
+    ],
+    "specifications": [],
+    "countInStock": 27,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:49:42.843Z",
+    "slug": "giay-adidas-gazelle-d-trang-co-dien",
+    "__v": 0
+  },
+  {
+    "_id": "681174394dbfac8a710bef06",
+    "name": "Giày Adidas Retropy ADISUPER Xám Trắng",
+    "description": "Thiết kế lấy cảm hứng từ giày chạy bộ cổ điển\r\n\r\nThân giày kết hợp giữa da lộn, vải lưới và da tổng hợp cao cấp\r\n\r\nLớp lót trong mềm mại, thoáng khí\r\n\r\nĐế giữa êm ái hỗ trợ lực tốt\r\n\r\nĐế ngoài bằng cao su chống trượt với họa tiết truyền thống\r\n\r\nBa sọc trắng đặc trưng thương hiệu Adidas hai bên thân giày\r\n\r\nLogo Adidas Originals ở lưỡi gà và gót giày",
+    "shortDescription": "Giày Adidas Retropy ADISUPER là sự kết hợp hoàn hảo giữa phong cách cổ điển và công nghệ hiện đại, với tông màu trung tính dễ phối và chất liệu đa dạng mang lại cảm giác thoải mái suốt cả ngày.",
+    "price": 3500000,
+    "discountPrice": 2950000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745974329437-513189921.jpg",
+      "images-1745974329439-874786865.jpg",
+      "images-1745974329442-182955557.jpg",
+      "images-1745974329446-969731454.jpg"
+    ],
+    "colors": [
+      "Xám / Trắng / Đế gum"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44"
+    ],
+    "specifications": [],
+    "countInStock": 18,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:52:09.465Z",
+    "slug": "giay-adidas-retropy-adisuper-xam-trang",
+    "__v": 0
+  },
+  {
+    "_id": "681174e34dbfac8a710bef29",
+    "name": "Giày Thể Thao Adidas Harden Volume 7 Low 'Pulse Aqua'",
+    "description": "Thiết kế low-top năng động, phù hợp cho thi đấu và đi hàng ngày\r\n\r\nUpper bằng lưới kỹ thuật, tăng độ thoáng khí và độ ôm chân\r\n\r\nBộ đệm Lightstrike êm ái, hỗ trợ phản hồi nhanh trong từng bước di chuyển\r\n\r\nĐế ngoài bằng cao su với hoa văn xương cá (herringbone) bám sân tốt\r\n\r\nPhần hông giày với thiết kế nổi tổ ong tạo điểm nhấn thị giác mạnh mẽ\r\n\r\nLogo Harden thêu trên lưỡi gà",
+    "shortDescription": "Adidas Harden Volume 7 Low 'Pulse Aqua' là đôi giày bóng rổ mang tính biểu tượng, kết hợp giữa thiết kế thể thao năng động và phong cách hiện đại. Với phối màu xanh ánh điện nổi bật cùng phần upper bằng lưới thoáng khí, mẫu giày này là lựa chọn hàng đầu cho cả sân đấu lẫn phong cách đường phố.",
+    "price": 4000000,
+    "discountPrice": 3350000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745974499186-387402002.jpg",
+      "images-1745974499189-449337527.jpg",
+      "images-1745974499192-895661588.jpg",
+      "images-1745974499196-651095413.jpg"
+    ],
+    "colors": [
+      "Đen phối xanh dương ánh điện"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45"
+    ],
+    "specifications": [],
+    "countInStock": 18,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:54:59.213Z",
+    "slug": "giay-the-thao-adidas-harden-volume-7-low-pulse-aqua",
+    "__v": 0
+  },
+  {
+    "_id": "681175eb4dbfac8a710bef7b",
+    "name": "Giày Adidas Cloudfoam Pure 2.0 Mint Nữ",
+    "description": "Thân giày dệt bằng vải mesh thoáng khí\r\n\r\nĐệm Cloudfoam siêu êm, hỗ trợ bàn chân tốt khi vận động\r\n\r\nThiết kế slip-on tiện lợi, phối dây buộc chắc chắn\r\n\r\nGót giày có đệm cổ chân mềm mại, chống trầy xước\r\n\r\nLogo 3 sọc đặc trưng của Adidas bên hông\r\n\r\nĐế ngoài bằng cao su có vân tổ ong chống trơn trượt hiệu quả\r\n\r\n",
+    "shortDescription": "Giày Adidas Cloudfoam Pure 2.0 sở hữu thiết kế tối giản với tông xanh mint dịu nhẹ, mang lại cảm giác thoải mái và hiện đại, phù hợp cho cả hoạt động thể thao và thời trang hàng ngày.",
+    "price": 2000000,
+    "discountPrice": 1750000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745974763425-725681204.jpg",
+      "images-1745974763430-253665411.jpg",
+      "images-1745974763434-295427525.jpg",
+      "images-1745974763436-997296924.jpg"
+    ],
+    "colors": [
+      "Xanh mint phối trắng đế gum"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T00:59:23.452Z",
+    "slug": "giay-adidas-cloudfoam-pure-2-0-mint-nu",
+    "__v": 0
+  },
+  {
+    "_id": "681177d44dbfac8a710bef9e",
+    "name": "Adidas Tokyo OG - Blue White",
+    "description": "Giày Adidas Tokyo OG là mẫu giày mang phong cách cổ điển đặc trưng, lấy cảm hứng từ thành phố Tokyo sôi động. Thiết kế nổi bật với phần upper bằng da lộn mềm mại kết hợp vải, tạo độ bền và thoáng khí. Ba sọc trắng biểu tượng Adidas hai bên cùng logo “adidas TOKYO” mạ vàng tạo điểm nhấn tinh tế và sang trọng. Phần đế cao su màu gum mang lại độ bám tốt và sự linh hoạt khi di chuyển",
+    "shortDescription": "Sản phẩm phù hợp cho cả nam và nữ yêu thích thời trang cổ điển, dễ phối đồ khi đi học, đi chơi hay dạo phố.",
+    "price": 2000000,
+    "discountPrice": 1750000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745975252342-912379337.jpg",
+      "images-1745975252344-658786135.jpg",
+      "images-1745975252346-731614468.jpg",
+      "images-1745975252350-787898642.jpg"
+    ],
+    "colors": [
+      "Xanh dương - Trắng"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:07:32.371Z",
+    "slug": "adidas-tokyo-og-blue-white",
+    "__v": 1
+  },
+  {
+    "_id": "68117a104dbfac8a710beffb",
+    "name": "Giày Adidas ADIZERO SL \"Core Black/White\"",
+    "description": "Đôi giày Adidas ADIZERO SL \"Core Black/White\" là lựa chọn tối ưu cho người yêu thích chạy bộ tốc độ. Đế giữa sử dụng công nghệ Light Boost giúp giảm trọng lượng mà vẫn đảm bảo độ nảy và êm ái. Phần upper làm từ lưới thoáng khí, giữ cho đôi chân luôn mát mẻ trong quá trình vận động. Thiết kế ba sọc đặc trưng và phối màu gradient từ vàng sang hồng cực kỳ nổi bật, tạo điểm nhấn độc đáo cho outfit thể thao của bạn.",
+    "shortDescription": "Giày chạy bộ Adidas ADIZERO SL với thiết kế đột phá cùng đế giữa Light Boost êm ái, mang lại hiệu suất cao trong từng bước chân.",
+    "price": 3200000,
+    "discountPrice": 2690000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745975824493-590775806.jpg",
+      "images-1745975824497-83652740.jpg",
+      "images-1745975824503-799518741.jpg",
+      "images-1745975824508-897507815.jpg"
+    ],
+    "colors": [
+      "Đen phối hồng vàng"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 36,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:17:04.520Z",
+    "slug": "giay-adidas-adizero-sl-core-black-white",
+    "__v": 0
+  },
+  {
+    "_id": "68117ae74dbfac8a710bf01e",
+    "name": "Giày Adidas Country OG Màu Xanh Lá",
+    "description": "Lấy cảm hứng từ thiết kế điền kinh cổ điển, Adidas Country OG mang đến sự kết hợp hoàn hảo giữa kiểu dáng retro và công nghệ hiện đại. Phần thân giày làm từ da lộn cao cấp kết hợp nylon nhẹ, đế ngoài cao su bám tốt giúp di chuyển linh hoạt. Phần lót giày in họa tiết Adidas độc quyền tăng độ nhận diện thương hiệu. Phù hợp để đi dạo, chơi thể thao nhẹ hoặc phối đồ thời trang streetstyle.",
+    "shortDescription": "Giày Adidas Country OG với thiết kế cổ điển, phối màu xanh lá và trắng nổi bật, mang lại sự thoải mái và phong cách retro thể thao.",
+    "price": 2600000,
+    "discountPrice": 2190000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745976039064-997132636.jpg",
+      "images-1745976039067-929598568.jpg",
+      "images-1745976039070-150119448.jpg",
+      "images-1745976039074-753873592.jpg"
+    ],
+    "colors": [
+      "Xanh lá phối trắng"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 36,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:20:39.094Z",
+    "slug": "giay-adidas-country-og-mau-xanh-la",
+    "__v": 0
+  },
+  {
+    "_id": "68117bd24dbfac8a710bf04a",
+    "name": "Giày Adidas Forum Bold Triple",
+    "description": "Adidas Forum Bold Triple Black mang kiểu dáng cổ điển kết hợp phần đế cao nâng tầm chiều cao, tạo điểm nhấn cá tính. Chất liệu da tổng hợp và đế cao su giúp tăng độ bền và cảm giác êm ái. Phù hợp cho cả dạo phố và hoạt động thường ngày.",
+    "shortDescription": "Giày Adidas Forum Bold Triple Black - thiết kế đơn sắc cá tính, dễ phối đồ, phù hợp nhiều phong cách.",
+    "price": 2600000,
+    "discountPrice": 2150000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745976274438-63365547.jpg",
+      "images-1745976274441-694560520.jpg",
+      "images-1745976274446-48839769.jpg",
+      "images-1745976274449-534658576.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:24:34.463Z",
+    "slug": "giay-adidas-forum-bold-triple",
+    "__v": 0
+  },
+  {
+    "_id": "68117cd64dbfac8a710bf09b",
+    "name": "Giày thể thao Adidas Trainer Dual Density Trắng",
+    "description": "Giày Adidas Trainer Dual Density có thiết kế đệm kép giúp phân tán lực tác động đều, mang lại cảm giác êm ái và vững chắc. Phần thân giày từ lưới thoáng khí, giúp thoát mồ hôi tốt trong quá trình vận động. Phần gót được gia cố chắc chắn, ôm chân, hạn chế chấn thương. Đế ngoài thiết kế rãnh giúp tăng độ bám. Phù hợp cho cả nam và nữ yêu thích tập luyện thể thao.",
+    "shortDescription": "Giày thể thao Adidas trắng thiết kế tối giản, phù hợp tập gym, chạy bộ hoặc đi chơi thường ngày.",
+    "price": 2500000,
+    "discountPrice": 1950000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Adidas",
+    "images": [
+      "images-1745976534379-811440926.jpg",
+      "images-1745976534381-266304381.jpg",
+      "images-1745976534382-474266165.jpg",
+      "images-1745976534384-940483904.jpg"
+    ],
+    "colors": [
+      "Trắng"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:28:54.390Z",
+    "slug": "giay-the-thao-adidas-trainer-dual-density-trang",
+    "__v": 0
+  },
+  {
+    "_id": "68117de24dbfac8a710bf0be",
+    "name": "Giày đá bóng Nike Mercurial Air Zoom",
+    "description": "Được trang bị đệm Zoom Air và đế đinh FG phù hợp cho sân cỏ tự nhiên, mẫu giày Nike Mercurial Air Zoom nổi bật với thiết kế trắng kết hợp vàng kim mạnh mẽ, nhẹ nhàng nhưng bám sân cực tốt. Phần cổ thun co giãn giúp ôm chân, tăng độ linh hoạt khi thi đấu.",
+    "shortDescription": "Giày đá bóng Nike Mercurial Air Zoom thiết kế năng động, giúp tăng tốc và kiểm soát bóng vượt trội.",
+    "price": 2890000,
+    "discountPrice": 2590000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745976802417-616078054.png",
+      "images-1745976802418-828383826.png",
+      "images-1745976802419-883459409.png",
+      "images-1745976802420-54001240.png"
+    ],
+    "colors": [
+      "Trắng",
+      "Vàng ánh kim"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 35,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:33:22.427Z",
+    "slug": "giay-da-bong-nike-mercurial-air-zoom",
+    "__v": 0
+  },
+  {
+    "_id": "68117ed24dbfac8a710bf0e1",
+    "name": "Giày bóng đá Nike Tiempo Legend 10 Elite FG",
+    "description": "Nike Tiempo Legend 10 Elite FG là phiên bản giày đá bóng cao cấp dành cho sân cỏ tự nhiên. Với phần upper làm từ da tự nhiên cao cấp kết hợp công nghệ Flyknit giúp ôm chân và thoáng khí tối đa. Đế giày thiết kế theo dạng FG (Firm Ground) hỗ trợ bám sân tốt, tăng tốc hiệu quả và kiểm soát bóng vượt trội. Sản phẩm có trọng lượng nhẹ, giúp vận động linh hoạt hơn trên sân.",
+    "shortDescription": "Giày Nike Tiempo Legend 10 Elite FG thiết kế hiện đại, hỗ trợ tối ưu cho các cầu thủ chuyên nghiệp, chất liệu da cao cấp và công nghệ Fit-Mesh tiên tiến.",
+    "price": 4000000,
+    "discountPrice": 3500000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745977042594-733528107.png",
+      "images-1745977042595-122660996.jfif",
+      "images-1745977042596-388765189.png",
+      "images-1745977042597-854602414.png"
+    ],
+    "colors": [
+      "Xanh dương",
+      "Trắng",
+      "Đen"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:37:22.603Z",
+    "slug": "giay-bong-da-nike-tiempo-legend-10-elite-fg",
+    "__v": 0
+  },
+  {
+    "_id": "68117f6e4dbfac8a710bf11d",
+    "name": "Giày Nike Jordan Zion 3 “Camo Pastel”",
+    "description": "Jordan Zion 3 được thiết kế cho những pha bứt tốc bùng nổ với đệm Zoom Air giúp hấp thụ lực và phản hồi tốt. Phần upper dạng lưới kết hợp vật liệu tổng hợp tạo độ ôm chân và nhẹ nhàng. Đế ngoài cao su có họa tiết hình gợn sóng, tăng độ bám sân. Phần gót và đế giữa in logo đặc trưng Zion cùng tông màu pastel nhẹ nhàng, rất nổi bật và cá tính.",
+    "shortDescription": "Giày bóng rổ Jordan Zion 3 mang thiết kế độc đáo với họa tiết sóng và màu pastel hiện đại, mang lại hiệu năng ổn định và phong cách nổi bật trên sân.",
+    "price": 3800000,
+    "discountPrice": 3250000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745977198969-971727346.png",
+      "images-1745977198970-157699693.png",
+      "images-1745977198971-53852304.png",
+      "images-1745977198972-877054306.png"
+    ],
+    "colors": [
+      "Hồng pastel",
+      "Đen",
+      "Xám bạc"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:39:58.979Z",
+    "slug": "giay-nike-jordan-zion-3-camo-pastel",
+    "__v": 0
+  },
+  {
+    "_id": "681180574dbfac8a710bf140",
+    "name": "Nike Air Jordan 1 Low G Golf Metallic Gold",
+    "description": "Lấy cảm hứng từ thiết kế Air Jordan 1 huyền thoại, đôi giày golf này mang đến vẻ ngoài bắt mắt với chất liệu da tổng hợp bóng loáng và phần toe box vàng ánh kim nổi bật. Đế ngoài cao su thiết kế rãnh chống trượt giúp tăng cường độ bám trên sân cỏ. Lớp đệm mềm mại hỗ trợ bước đi ổn định và thoải mái suốt cả ngày thi đấu. Logo Jumpman và dòng chữ \"GOLF\" được in nổi bật ở phần lưỡi gà và lót giày.",
+    "shortDescription": "Giày golf phong cách cổ điển Nike Air Jordan 1 Low G với phối màu metallic gold sang trọng và đế ngoài bám tốt.",
+    "price": 4200000,
+    "discountPrice": 3690000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745977431087-335196012.png",
+      "images-1745977431088-41318630.png",
+      "images-1745977431091-920476521.png",
+      "images-1745977431092-89338776.png"
+    ],
+    "colors": [
+      "Đen",
+      "trắng",
+      "vàng ánh kim"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:43:51.099Z",
+    "slug": "nike-air-jordan-1-low-g-golf-metallic-gold",
+    "__v": 0
+  },
+  {
+    "_id": "681180e54dbfac8a710bf163",
+    "name": "Giày Nike Air Max 97",
+    "description": "Nike Air Max 97 Black White là biểu tượng của sự đổi mới với thiết kế độc đáo lấy cảm hứng từ tàu cao tốc Nhật Bản. Đệm Air chạy dài suốt đế giày kết hợp với chất liệu vải lưới thoáng khí và da tổng hợp cao cấp giúp bạn di chuyển thoải mái cả ngày. Màu sắc đen - trắng trung tính dễ phối đồ, phù hợp cho cả tập luyện và đi chơi hàng ngày.",
+    "shortDescription": "Giày Nike Air Max 97 mang phong cách hiện đại với thiết kế gợn sóng đặc trưng và bộ đệm khí Air toàn bộ đế, mang lại cảm giác êm ái vượt trội.",
+    "price": 3200000,
+    "discountPrice": 2650000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745977573375-790213347.png",
+      "images-1745977573376-955387159.png",
+      "images-1745977573376-476100716.png",
+      "images-1745977573379-913964199.png"
+    ],
+    "colors": [
+      "Đen",
+      "Trắng",
+      "Xám"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:46:13.385Z",
+    "slug": "giay-nike-air-max-97",
+    "__v": 0
+  },
+  {
+    "_id": "681181dd4dbfac8a710bf197",
+    "name": "Nike Air Max 1 x Jacquemus 'Red'",
+    "description": "Nike Air Max 1 Jacquemus 'Red' là sự hòa quyện hoàn hảo giữa thời trang cao cấp và hiệu suất thể thao. Thiết kế đỏ toàn bộ nổi bật với các chi tiết tinh tế từ Jacquemus cùng đế Air Max mang lại cảm giác êm ái, thoải mái. Đôi giày không chỉ là phụ kiện thể thao mà còn là tuyên ngôn thời trang cá tính dành cho mọi tín đồ streetwear.",
+    "shortDescription": "Nike Air Max 1 phối hợp cùng Jacquemus, mang phong cách đỏ toàn diện, hiện đại và phá cách.",
+    "price": 3800000,
+    "discountPrice": 3290000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745977821446-910400040.png",
+      "images-1745977821448-663497916.png",
+      "images-1745977821448-306394465.jfif",
+      "images-1745977821450-369130698.jfif"
+    ],
+    "colors": [
+      "Đỏ"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:50:21.455Z",
+    "slug": "nike-air-max-1-x-jacquemus-red",
+    "__v": 0
+  },
+  {
+    "_id": "681182a74dbfac8a710bf1ba",
+    "name": "Nike Air Max 1 \"Pure Platinum\"",
+    "description": "Nike Air Max 1 \"Pure Platinum\" nổi bật với phần upper bằng chất liệu da tổng hợp cao cấp, tone xám nhẹ tinh tế phối cùng đế trắng tạo điểm nhấn rõ ràng. Đệm Air ở gót chân giúp giảm chấn hiệu quả, trong khi phần outsole có độ bám tốt phù hợp cho cả di chuyển thường nhật và vận động nhẹ. Form giày chuẩn, dễ phối đồ với mọi phong cách từ thể thao đến streetwear.",
+    "shortDescription": "Thiết kế đơn giản nhưng sang trọng, Nike Air Max 1 \"Pure Platinum\" mang lại sự thoải mái tuyệt đối và phong cách cổ điển cho mọi outfit hàng ngày.",
+    "price": 3290000,
+    "discountPrice": 3090000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745978023622-165520451.png",
+      "images-1745978023623-652809312.png",
+      "images-1745978023624-231870378.png",
+      "images-1745978023626-44290613.png"
+    ],
+    "colors": [
+      "Xám bạch kim / Trắng"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42"
+    ],
+    "specifications": [],
+    "countInStock": 25,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:53:43.632Z",
+    "slug": "nike-air-max-1-pure-platinum",
+    "__v": 0
+  },
+  {
+    "_id": "6811840b4dbfac8a710bf1dd",
+    "name": "Nike ZoomX Streakfly 'Sail/Black-Pink'",
+    "description": "Nike ZoomX Streakfly 'Sail/Black-Pink' là mẫu giày chạy bộ lý tưởng cho các vận động viên chuyên nghiệp lẫn người yêu thích chạy bộ. Với phần upper mỏng nhẹ, phần đế ZoomX êm ái và phần đệm giữa tối ưu lực đẩy, đôi giày mang lại sự linh hoạt và bám đường tốt. Thiết kế tinh giản nhưng nổi bật nhờ điểm nhấn logo Swoosh đen và họa tiết hồng phá cách ở phần outsole.",
+    "shortDescription": "Nike ZoomX Streakfly nhẹ và tối ưu cho chạy cự ly ngắn, thiết kế thanh thoát, hiệu suất vượt trội.",
+    "price": 4200000,
+    "discountPrice": 3650000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745978379461-904757309.png",
+      "images-1745978379462-871409249.png",
+      "images-1745978379463-647620274.png",
+      "images-1745978379464-86458257.png"
+    ],
+    "colors": [
+      "Trắng ngà",
+      "đen",
+      "điểm hồng"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T01:59:39.470Z",
+    "slug": "nike-zoomx-streakfly-sail-black-pink",
+    "__v": 0
+  },
+  {
+    "_id": "681185c34dbfac8a710bf200",
+    "name": "Nike Sabrina 1 \"Beyond\"",
+    "description": "Lấy cảm hứng từ nữ vận động viên Sabrina Ionescu, Nike Sabrina 1 \"Beyond\" kết hợp giữa hiệu năng bóng rổ cao cấp và phong cách thời trang hiện đại. Phần upper nhẹ, thoáng khí với họa tiết zig-zag độc đáo cùng đế ngoài hồng cam tạo điểm nhấn sống động. Đây là đôi giày lý tưởng cho cả sân bóng và phong cách thường ngày.",
+    "shortDescription": "Nike Sabrina 1 \"Beyond\" mang thiết kế đột phá và phối màu rực rỡ, nổi bật cá tính trên mọi sân đấu.",
+    "price": 3500000,
+    "discountPrice": 2990000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1745978819695-46524381.png",
+      "images-1745978819696-238162686.png",
+      "images-1745978819696-430613917.png",
+      "images-1745978819699-852751319.png"
+    ],
+    "colors": [
+      "Trắng phối tím",
+      "hồng và xanh mint"
+    ],
+    "sizes": [
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42"
+    ],
+    "specifications": [],
+    "countInStock": 30,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T02:06:59.705Z",
+    "slug": "nike-sabrina-1-beyond",
+    "__v": 0
+  },
+  {
+    "_id": "6812a8d34dbfac8a710bf257",
+    "name": "Nike Jordan Tatum 2 'Cool Grey'",
+    "description": "Jordan Tatum 2 'Cool Grey' là sản phẩm kết hợp giữa tính năng thể thao và thời trang hiện đại. Thiết kế phần upper với các họa tiết dập nổi tạo điểm nhấn nổi bật, kết hợp phần đế ngoài êm ái, độ bám cao giúp người chơi di chuyển linh hoạt trên sân bóng. Với gam màu trắng xám trang nhã, đây là lựa chọn lý tưởng cho cả thi đấu và phong cách thường ngày.",
+    "shortDescription": "Nike Jordan Tatum 2 ‘Cool Grey’ mang thiết kế hiện đại, tinh tế với tông màu lạnh cùng hoạ tiết nổi bật, tối ưu cho vận động thể thao và phong cách cá nhân.",
+    "price": 4200000,
+    "discountPrice": 3550000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "Nike",
+    "images": [
+      "images-1746053331764-603522661.png",
+      "images-1746053331766-41132958.png",
+      "images-1746053331770-157403913.jfif",
+      "images-1746053331772-339222128.png"
+    ],
+    "colors": [
+      "Trắng xám nhạt pha xanh dương nhạt"
+    ],
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T22:48:51.800Z",
+    "slug": "nike-jordan-tatum-2-cool-grey",
+    "__v": 0
+  },
+  {
+    "_id": "6812adc94dbfac8a710bf29a",
+    "name": "Louis Vuitton Football Trainer 'Red'",
+    "description": "Louis Vuitton Football Trainer 'Red' là mẫu giày lấy cảm hứng từ giày bóng đá retro, sở hữu lớp da cao cấp phủ toàn bộ gam đỏ mạnh mẽ. Logo LV đặc trưng được thêu nổi bật bên hông, cùng phần lưỡi gà in biểu tượng \"LV Players United\" độc đáo. Đây là mẫu giày dành cho những ai yêu thích sự pha trộn giữa đẳng cấp thời trang và phong cách thể thao táo bạo.",
+    "shortDescription": "Giày Louis Vuitton Football Trainer phiên bản đỏ nổi bật, thiết kế mang đậm chất thể thao cổ điển pha lẫn thời trang cao cấp.",
+    "price": 29000000,
+    "discountPrice": 24900000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746054601559-571093727.jpg",
+      "images-1746054601563-2723370.jpg",
+      "images-1746054601566-386135809.jpg",
+      "images-1746054601570-231105965.jpg"
+    ],
+    "colors": [
+      "Đỏ"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:10:01.576Z",
+    "slug": "louis-vuitton-football-trainer-red",
+    "__v": 0
+  },
+  {
+    "_id": "6812ae454dbfac8a710bf2bd",
+    "name": "Louis Vuitton Trainer Sneaker Denim Blue",
+    "description": "Đôi giày Louis Vuitton Trainer Sneaker Denim Blue được chế tác từ chất liệu denim xanh phối cùng da bê cao cấp, nổi bật với họa tiết Monogram đặc trưng. Thiết kế chunky đậm chất đường phố với phần đế cao su được phát triển riêng bởi nhà mốt Louis Vuitton, đảm bảo sự êm ái và bền bỉ. Logo LV biểu tượng xuất hiện nổi bật ở phần lưỡi gà và gót giày, thể hiện sự sang trọng và cá tính cho người mang.",
+    "shortDescription": "Louis Vuitton Trainer phiên bản denim kết hợp chất liệu da cao cấp và canvas Monogram mang phong cách hiện đại và đậm chất streetwear.",
+    "price": 33000000,
+    "discountPrice": 28990000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746054725589-982889357.jpg",
+      "images-1746054725593-476404700.jpg",
+      "images-1746054725596-727532175.jpg",
+      "images-1746054725600-183025947.jpg"
+    ],
+    "colors": [
+      "Xanh denim phối trắng"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:12:05.607Z",
+    "slug": "louis-vuitton-trainer-sneaker-denim-blue",
+    "__v": 0
+  },
+  {
+    "_id": "6812af374dbfac8a710bf2e0",
+    "name": "Louis Vuitton Monte Carlo Moccasin 'Brown'",
+    "description": "Louis Vuitton Monte Carlo Moccasin là đôi giày lười tinh tế, được hoàn thiện từ da lộn cao cấp với đường may tỉ mỉ thủ công. Điểm nhấn là khóa LV kim loại ánh vàng sang trọng ở phần mu giày. Thiết kế cổ điển kết hợp với đế cao su linh hoạt, phù hợp cho cả đi làm lẫn dạo phố. Sản phẩm là lựa chọn lý tưởng cho những ai theo đuổi phong cách lịch lãm nhưng vẫn trẻ trung và thoải mái.",
+    "shortDescription": "Mẫu giày Louis Vuitton Monte Carlo Moccasin mang đậm phong cách cổ điển, chế tác thủ công từ chất liệu da cao cấp với tông màu nâu sang trọng.",
+    "price": 27500000,
+    "discountPrice": 24900000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746054967856-652384983.jpg",
+      "images-1746054967860-558044985.jpg",
+      "images-1746054967862-89141041.jpg",
+      "images-1746054967865-229603486.jpg"
+    ],
+    "colors": [
+      "Xanh denim phối trắng"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 15,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:16:07.877Z",
+    "slug": "louis-vuitton-monte-carlo-moccasin-brown",
+    "__v": 0
+  },
+  {
+    "_id": "6812b3c64dbfac8a710bf303",
+    "name": "Louis Vuitton Ranger Boot 'Triple Black'",
+    "description": "Louis Vuitton Ranger Boot 'Triple Black' là sự kết hợp giữa vẻ ngoài mạnh mẽ và tinh tế. Được chế tác từ da lộn cao cấp và vải canvas họa tiết Damier, phần đế cao su răng cưa mang đến sự bền bỉ, chắc chắn, thích hợp cho thời tiết khắc nghiệt lẫn phong cách đường phố cá tính. Logo LV tinh tế được đặt ở phần lưỡi gà và gót giày. Một lựa chọn hoàn hảo cho những ai yêu thích sự đẳng cấp và cá tính trong từng bước chân.\r\n\r\n",
+    "shortDescription": "Boot Louis Vuitton Ranger màu đen toàn bộ, thiết kế mạnh mẽ với chất liệu cao cấp cùng họa tiết Damier mang phong cách đặc trưng.",
+    "price": 38000000,
+    "discountPrice": 33900000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746056134889-155471938.jpg",
+      "images-1746056134893-404247537.jpg",
+      "images-1746056134896-339265238.jpg",
+      "images-1746056134898-147562275.jpg"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 12,
+    "sold": 0,
+    "featured": true,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:35:34.905Z",
+    "slug": "louis-vuitton-ranger-boot-triple-black",
+    "__v": 0
+  },
+  {
+    "_id": "6812b48f4dbfac8a710bf326",
+    "name": "Louis Vuitton Recovery Mule 'White'",
+    "description": "Louis Vuitton Recovery Mule 'White' là đôi dép thời trang mang thiết kế năng động và tối giản. Được làm hoàn toàn từ chất liệu cao su cao cấp với lỗ thoáng khí đặc trưng, đôi giày mang đến sự thoải mái và nhẹ nhàng cho người sử dụng. Đế giày với công nghệ Vibram giúp tăng độ bám và linh hoạt, lý tưởng để di chuyển hàng ngày. Logo Louis Vuitton tinh tế xuất hiện ở mặt trên và đế giày, tạo điểm nhấn sang trọng cho tổng thể thiết kế.",
+    "shortDescription": "Mẫu dép Louis Vuitton Recovery Mule với thiết kế tinh giản, màu trắng kem hiện đại, đem lại cảm giác thoải mái và thời thượng.",
+    "price": 22000000,
+    "discountPrice": 19500000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746056335669-224746485.jpg",
+      "images-1746056335673-581340210.jpg",
+      "images-1746056335676-85538354.jpg"
+    ],
+    "colors": [
+      "Trắng kem"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:38:55.683Z",
+    "slug": "louis-vuitton-recovery-mule-white",
+    "__v": 0
+  },
+  {
+    "_id": "6812b52d4dbfac8a710bf34f",
+    "name": "Louis Vuitton Metropolis Ranger Monogram",
+    "description": "Louis Vuitton Metropolis Ranger Monogram là mẫu giày boots thời trang cao gót dành cho phái đẹp, nổi bật với hoạ tiết monogram biểu tượng cùng chi tiết dây buộc vàng đồng tinh xảo. Phần mũi giày và gót được làm từ da bê đen cao cấp, mang lại độ bền và sự sang trọng. Thiết kế gót cao block-heel kết hợp đế răng cưa giúp tăng chiều cao mà vẫn đảm bảo sự chắc chắn khi di chuyển. Đây là lựa chọn lý tưởng cho những ai yêu thích phong cách cá tính, sang trọng và khác biệt.",
+    "shortDescription": "Đôi boots Louis Vuitton Metropolis mang thiết kế mạnh mẽ với chất liệu canvas Monogram cổ điển, kết hợp da đen cao cấp cùng phần đế cao su dày dặn.",
+    "price": 39500000,
+    "discountPrice": 36900000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746056493754-976135483.jpg",
+      "images-1746056493758-93705175.jpg",
+      "images-1746056493762-239238718.jpg",
+      "images-1746056493765-835345387.jpg"
+    ],
+    "colors": [
+      "Nâu họa tiết monogram phối đen"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 8,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:41:33.774Z",
+    "slug": "louis-vuitton-metropolis-ranger-monogram",
+    "__v": 0
+  },
+  {
+    "_id": "6812b5cc4dbfac8a710bf372",
+    "name": "Louis Vuitton Stellar Slip-On Boots 'Beige Monogram Suede'",
+    "description": "Louis Vuitton Stellar Slip-On Boots là sự kết hợp hoàn hảo giữa sự thoải mái và phong cách. Thiết kế ankle boots đơn giản nhưng tinh tế với chất liệu suede cao cấp in họa tiết Monogram đặc trưng, lót lông mềm mại bên trong và phần đế cao su vững chắc. Đây là mẫu giày lý tưởng cho mùa lạnh, vừa giữ ấm hiệu quả vừa mang lại vẻ ngoài thanh lịch và sang trọng.",
+    "shortDescription": "Giày boots Louis Vuitton Stellar với chất liệu suede monogram, tông beige thời thượng và lớp lót lông sang trọng cho mùa đông ấm áp.",
+    "price": 32000000,
+    "discountPrice": 27990000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746056652719-630001193.jpg",
+      "images-1746056652723-374941229.jpg",
+      "images-1746056652725-920741568.jpg"
+    ],
+    "colors": [
+      "Beige sáng"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 20,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:44:12.736Z",
+    "slug": "louis-vuitton-stellar-slip-on-boots-beige-monogram-suede",
+    "__v": 0
+  },
+  {
+    "_id": "6812b68b4dbfac8a710bf403",
+    "name": "Louis Vuitton LV Blue Denim Clog",
+    "description": "Louis Vuitton LV Blue Denim Clog là sự kết hợp giữa phong cách cổ điển và xu hướng thời trang hiện đại. Phần thân bằng chất liệu denim họa tiết Monogram đặc trưng của LV, kết hợp quai da màu nâu tinh tế, tạo nên vẻ ngoài ấn tượng và dễ phối đồ. Đế giày dày chắc chắn mang lại cảm giác êm ái và ổn định khi di chuyển. Đây là lựa chọn hoàn hảo cho những ai yêu thích sự tiện lợi nhưng vẫn muốn giữ vững gu thời trang cao cấp.",
+    "shortDescription": "Mẫu guốc LV Denim độc đáo, thiết kế năng động với chất liệu denim cao cấp và quai da màu nâu nổi bật.",
+    "price": 29500000,
+    "discountPrice": 26900000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746056843159-397041695.jpg",
+      "images-1746056843163-676965235.jpg",
+      "images-1746056843166-124655704.jpg"
+    ],
+    "colors": [
+      "Xanh denim phối nâu"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:47:23.173Z",
+    "slug": "louis-vuitton-lv-blue-denim-clog",
+    "__v": 0
+  },
+  {
+    "_id": "6812b7404dbfac8a710bf426",
+    "name": "Louis Vuitton Laureate Platform Desert Boot Denim 'Blue'",
+    "description": "Louis Vuitton Laureate Platform Desert Boot Denim ‘Blue’ là biểu tượng của sự táo bạo và thời trang đương đại. Được làm từ chất liệu denim Monogram đặc trưng phối cùng da cao cấp và đế cao su chắc chắn, sản phẩm vừa mang lại vẻ ngoài thời thượng, vừa đảm bảo sự thoải mái khi di chuyển. Thiết kế buộc dây, cổ cao và phần đế nổi bật giúp đôi boots trở thành điểm nhấn hoàn hảo cho phong cách cá nhân mạnh mẽ.",
+    "shortDescription": "Boot Louis Vuitton phiên bản denim cao cấp, đậm chất cá tính với họa tiết Monogram cổ điển.",
+    "price": 39000000,
+    "discountPrice": 33990000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746057024942-204376352.jpg",
+      "images-1746057024945-375266945.jpg",
+      "images-1746057024948-700340379.jpg"
+    ],
+    "colors": [
+      "Xanh denim phối đế đen"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:50:24.955Z",
+    "slug": "louis-vuitton-laureate-platform-desert-boot-denim-blue",
+    "__v": 0
+  },
+  {
+    "_id": "6812b8094dbfac8a710bf449",
+    "name": "Giày Cao Gót Louis Vuitton Madeleine Slingback Silver",
+    "description": "Thiết kế slingback với quai hậu có khóa gài tinh tế\r\n\r\nMũi giày nhọn tạo vẻ thanh thoát và nữ tính\r\n\r\nDa bê metallic bóng sang trọng\r\n\r\nLogo LV kim loại nổi bật phía trước\r\n\r\nLót da mềm mại, đế ngoài bằng da\r\n\r\nCao gót vừa phải, phù hợp đi làm hoặc dự tiệc\r\n\r\nSản xuất thủ công tại Ý, độ hoàn thiện cao",
+    "shortDescription": "Giày cao gót Louis Vuitton Madeleine Slingback mang đến phong cách thanh lịch và hiện đại với thiết kế slingback cùng phần mũi nhọn tinh tế. Điểm nhấn là logo LV kim loại sáng bóng phía trước.",
+    "price": 36500000,
+    "discountPrice": 33990000,
+    "category": "68101997ef62cf782fd2575a",
+    "brand": "LV",
+    "images": [
+      "images-1746057225821-573976467.jpg",
+      "images-1746057225825-338931961.jpg",
+      "images-1746057225827-93998535.jpg",
+      "images-1746057225830-705128667.jpg"
+    ],
+    "colors": [
+      "Bạc ánh kim"
+    ],
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "specifications": [],
+    "countInStock": 10,
+    "sold": 0,
+    "featured": false,
+    "rating": 0,
+    "numReviews": 0,
+    "status": "published",
+    "createdAt": "2025-04-30T23:53:45.837Z",
+    "slug": "giay-cao-got-louis-vuitton-madeleine-slingback-silver",
     "__v": 0
   }
 ]
