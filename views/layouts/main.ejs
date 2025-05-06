@@ -61,12 +61,441 @@
   <!-- Footer -->
   <%- include('../partials/footer') %>
 
+  <!-- Chatbot Widget -->
+  <div id="chatbot-widget" class="chatbot-widget">
+    <!-- Collapsed State -->
+    <div id="chatbot-collapsed" class="chatbot-collapsed">
+      <button id="chatbot-toggle-btn" class="btn btn-primary rounded">
+        <span class="d-flex align-items-center">
+          <i class="fas fa-headset me-2"></i> Hỗ trợ trực tuyến
+        </span>
+      </button>
+    </div>
+    
+    <!-- Expanded State -->
+    <div id="chatbot-expanded" class="chatbot-expanded d-none">
+      <div class="chatbot-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="fas fa-headset me-2"></i> Hỗ trợ khách hàng
+          </div>
+          <div>
+            <button id="toggle-source-badge" class="btn btn-sm text-white p-0 me-3" title="Hiện/ẩn nguồn">
+              <i class="fas fa-tag"></i>
+            </button>
+            <button id="chatbot-minimize" class="btn btn-sm text-white p-0 me-3">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button id="chatbot-close" class="btn btn-sm text-white p-0">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="chatbot-body">
+        <div id="chat-messages" class="chat-messages">
+          <div class="chat-message bot">
+            <div class="message-content">
+              Xin chào! Tôi có thể giúp gì cho bạn?
+            </div>
+          </div>
+        </div>
+        <div id="typing-indicator" class="typing-indicator" style="display: none;">
+          <div class="typing-bubble"></div>
+          <div class="typing-bubble"></div>
+          <div class="typing-bubble"></div>
+        </div>
+      </div>
+      <div class="chatbot-footer">
+        <form id="chat-form">
+          <div class="input-group">
+            <input type="text" id="message-input" class="form-control" placeholder="Nhập tin nhắn..." autocomplete="off">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Main JS -->
   <script src="/js/main.js"></script>
   <!-- Custom Scripts -->
   <script src="/js/wishlist.js"></script>
+  
+  <!-- Chatbot & Back to Top Styles -->
+  <style>
+    /* Chatbot Widget */
+    .chatbot-widget {
+      position: fixed;
+      right: 30px;
+      bottom: 100px;
+      z-index: 1030;
+      font-size: 14px;
+    }
+    
+    /* Collapsed State */
+    .chatbot-collapsed {
+      width: auto;
+      cursor: pointer;
+    }
+    
+    .chatbot-collapsed .btn {
+      border-radius: 30px;
+      padding: 10px 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-collapsed .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    /* Expanded State */
+    .chatbot-expanded {
+      width: 350px;
+      height: 450px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 5px 40px rgba(0,0,0,0.16);
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-header {
+      background: #007bff;
+      color: white;
+      padding: 12px 15px;
+      font-weight: 500;
+    }
+    
+    .chatbot-body {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      padding-bottom: 20px;
+    }
+    
+    .chatbot-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 10px;
+      background: white;
+    }
+    
+    /* Message Styles */
+    .chat-message {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-message.user {
+      align-items: flex-end;
+    }
+    
+    .chat-message.bot {
+      align-items: flex-start;
+    }
+    
+    .message-content {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      word-wrap: break-word;
+      word-break: break-word;
+      position: relative;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      white-space: pre-line;
+      text-align: left;
+    }
+    
+    .user .message-content {
+      background-color: #007bff;
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .bot .message-content {
+      background-color: white;
+      color: #212529;
+      border-bottom-left-radius: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: normal;
+    }
+    
+    /* Source badge styles */
+    .source-badge {
+      position: absolute;
+      bottom: -5px;
+      right: 8px;
+      font-size: 8px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: white;
+      text-transform: uppercase;
+      font-weight: bold;
+      opacity: 0.7;
+    }
+    
+    .badge-db {
+      background-color: #28a745;
+    }
+    
+    .badge-ai {
+      background-color: #17a2b8;
+    }
+    
+    .badge-cache {
+      background-color: #6c757d;
+    }
+    
+    .badge-fallback {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    
+    /* Typing Indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin: 0 15px 10px;
+    }
+    
+    .typing-bubble {
+      height: 8px;
+      width: 8px;
+      margin-right: 4px;
+      background-color: #e9ecef;
+      border-radius: 50%;
+      display: inline-block;
+      animation: typing-bubble 1.5s infinite ease-in-out;
+    }
+    
+    .typing-bubble:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+    
+    .typing-bubble:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes typing-bubble {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    /* Back to top button - if you have one */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1030;
+    }
+    
+    /* Thêm class để ẩn source badge */
+    .hide-source .source-badge {
+      display: none;
+    }
+  </style>
+  
+  <!-- Chatbot Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatbotWidget = document.getElementById('chatbot-widget');
+      const chatbotCollapsed = document.getElementById('chatbot-collapsed');
+      const chatbotExpanded = document.getElementById('chatbot-expanded');
+      const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
+      const chatbotMinimize = document.getElementById('chatbot-minimize');
+      const chatbotClose = document.getElementById('chatbot-close');
+      const messageForm = document.getElementById('chat-form');
+      const messageInput = document.getElementById('message-input');
+      const chatMessages = document.getElementById('chat-messages');
+      const typingIndicator = document.getElementById('typing-indicator');
+      const toggleSourceBadgeBtn = document.getElementById('toggle-source-badge');
+      
+      // Functions to show/hide chat states
+      function showChatExpanded() {
+        chatbotCollapsed.classList.add('d-none');
+        chatbotExpanded.classList.remove('d-none');
+        messageInput.focus();
+        scrollToBottom();
+      }
+      
+      function showChatCollapsed() {
+        chatbotExpanded.classList.add('d-none');
+        chatbotCollapsed.classList.remove('d-none');
+      }
+      
+      // Toggle chat on button click
+      chatbotToggleBtn.addEventListener('click', showChatExpanded);
+      
+      // Minimize chat
+      chatbotMinimize.addEventListener('click', showChatCollapsed);
+      
+      // Close chat (same as minimize)
+      chatbotClose.addEventListener('click', showChatCollapsed);
+      
+      // Auto-scroll to bottom of messages
+      function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      // Add a new message to the chat
+      function addMessage(message, isUser = false, source = null) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('chat-message');
+        messageElement.classList.add(isUser ? 'user' : 'bot');
+        
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        messageContent.textContent = message;
+        
+        // Add source badge if provided
+        if (!isUser && source) {
+          const sourceBadge = document.createElement('div');
+          sourceBadge.classList.add('source-badge');
+          
+          let sourceText = '';
+          let sourceClass = '';
+          
+          switch(source) {
+            case 'database':
+              sourceText = 'DB';
+              sourceClass = 'badge-db';
+              break;
+            case 'api':
+              sourceText = 'AI';
+              sourceClass = 'badge-ai';
+              break;
+            case 'cache':
+              sourceText = 'Cache';
+              sourceClass = 'badge-cache';
+              break;
+            case 'fallback':
+              sourceText = 'Fallback';
+              sourceClass = 'badge-fallback';
+              break;
+          }
+          
+          sourceBadge.textContent = sourceText;
+          sourceBadge.classList.add(sourceClass);
+          messageContent.appendChild(sourceBadge);
+        }
+        
+        messageElement.appendChild(messageContent);
+        chatMessages.appendChild(messageElement);
+        
+        scrollToBottom();
+      }
+      
+      // Show typing indicator
+      function showTyping() {
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+      }
+      
+      // Hide typing indicator
+      function hideTyping() {
+        typingIndicator.style.display = 'none';
+      }
+      
+      // Handle form submission
+      if (messageForm) {
+        messageForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const message = messageInput.value.trim();
+          if (!message) return;
+          
+          // Add user message
+          addMessage(message, true);
+          
+          // Clear input
+          messageInput.value = '';
+          
+          // Show typing indicator
+          showTyping();
+          
+          try {
+            // Send message to server
+            const response = await fetch('/api/chatbot', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                message,
+                apiKey: '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'
+              })
+            });
+            
+            const data = await response.json();
+            
+            // Hide typing indicator
+            hideTyping();
+            
+            if (data.success) {
+              // Add bot response with source
+              addMessage(data.response, false, data.source);
+            } else {
+              // Add error message
+              addMessage('Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.', false);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            hideTyping();
+            addMessage('Xin lỗi, không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+          }
+        });
+      }
+      
+      // Mặc định hiển thị badge - người dùng có thể đặt là false để ẩn mặc định
+      let showSourceBadges = true;
+      
+      if (toggleSourceBadgeBtn && chatMessages) {
+        // Cập nhật trạng thái hiển thị ban đầu
+        updateSourceBadgeDisplay();
+        
+        toggleSourceBadgeBtn.addEventListener('click', function() {
+          showSourceBadges = !showSourceBadges;
+          updateSourceBadgeDisplay();
+        });
+      }
+      
+      function updateSourceBadgeDisplay() {
+        if (showSourceBadges) {
+          chatMessages.classList.remove('hide-source');
+          toggleSourceBadgeBtn.innerHTML = '<i class="fas fa-tag"></i>';
+        } else {
+          chatMessages.classList.add('hide-source');
+          toggleSourceBadgeBtn.innerHTML = '<i class="far fa-tag"></i>';
+        }
+      }
+    });
+  </script>
+  
   <% if (typeof extraScripts !== 'undefined') { %>
     <%- extraScripts %>
   <% } %>

@@ -3,6 +3,7 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
+const chatbotController = require('../controllers/chatbotController');
 const { apiAuth } = require('../middlewares/auth');
 
 // Product routes
@@ -17,6 +18,9 @@ router.delete('/users/wishlist/:productId', apiAuth, userController.removeFromWi
 
 // Cart routes
 router.post('/cart/add', addToCartApi);
+
+// Chatbot route
+router.post('/chatbot', chatbotController.processMessage);
 
 // API Cart add function
 function addToCartApi(req, res) {
