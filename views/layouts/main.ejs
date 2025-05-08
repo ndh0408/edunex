@@ -65,10 +65,8 @@
   <div id="chatbot-widget" class="chatbot-widget">
     <!-- Collapsed State -->
     <div id="chatbot-collapsed" class="chatbot-collapsed">
-      <button id="chatbot-toggle-btn" class="btn btn-primary rounded">
-        <span class="d-flex align-items-center">
-          <i class="fas fa-headset me-2"></i> Hỗ trợ trực tuyến
-        </span>
+      <button id="chatbot-toggle-btn" class="support-btn" title="Hỗ trợ trực tuyến">
+        <i class="fas fa-headset"></i>
       </button>
     </div>
     
@@ -317,6 +315,35 @@
     /* Thêm class để ẩn source badge */
     .hide-source .source-badge {
       display: none;
+    }
+
+    .support-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.15);
+      font-size: 1.6rem;
+      position: fixed;
+      bottom: 120px;
+      right: 32px;
+      z-index: 1000;
+      transition: background 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .support-btn:hover, .support-btn:focus {
+      background: #4f46e5;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.25);
+      color: #fff;
+    }
+    .support-btn i {
+      margin: 0;
+      font-size: 1.7rem;
     }
   </style>
   

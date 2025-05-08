@@ -39,7 +39,7 @@
               <% product.images.forEach((image, index) => { %>
                 <div class="thumbnail-container me-2">
                   <img src="/uploads/products/<%= image %>" 
-                       class="img-thumbnail <%= index === 0 ? 'active' : '' %>" 
+                       class="img-thumbnail product-thumbnail <%= index === 0 ? 'active' : '' %>" 
                        alt="<%= product.name %> - <%= index + 1 %>"
                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
                        onclick="changeMainImage(this.src)">
