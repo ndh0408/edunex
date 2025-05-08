@@ -21,7 +21,7 @@ const shopInfo = {
 // Process the chat message and get response 
 exports.processMessage = async (req, res) => {
   try {
-    const { message, apiKey } = req.body;
+    const { message } = req.body;
     
     if (!message) {
       return res.status(400).json({
@@ -48,15 +48,10 @@ exports.processMessage = async (req, res) => {
       }
     }
 
-    // Get response from HuggingFace API
-    if (!apiKey) {
-      return res.status(400).json({
-        success: false,
-        message: 'API key is required'
-      });
-    }
+    // Use OpenAI API key
+    const openAIApiKey = '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';
 
-    const apiResponse = await getResponseFromAPI(message, apiKey, productInfo);
+    const apiResponse = await getResponseFromAPI(message, openAIApiKey, productInfo);
     
     return res.json({
       success: true,
@@ -82,11 +77,10 @@ exports.processMessage = async (req, res) => {
   }
 };
 
-// Get response from HuggingFace API
+// Get response from OpenAI API
 async function getResponseFromAPI(message, apiKey, productInfo = '') {
   // Create prompt with context about the shop and product info
-  const prompt = `<|system|>
-Bạn là trợ lý ảo của ${shopInfo.name}. ${shopInfo.description}. 
+  const systemMessage = `Bạn là trợ lý ảo của ${shopInfo.name}. ${shopInfo.description}. 
 Thông tin cửa hàng: 
 - Địa chỉ: ${shopInfo.location}
 - Giờ mở cửa: ${shopInfo.openingHours}
@@ -97,53 +91,40 @@ Thông tin cửa hàng:
 - Danh mục sản phẩm: ${shopInfo.categories.join(', ')}
 ${productInfo}
 
-Hãy trả lời đầy đủ và chi tiết. Luôn trả lời bằng tiếng Việt. Không đề cập đến việc bạn là AI, chỉ tập trung vào việc cung cấp thông tin về cửa hàng.
-<|user|>
-${message}
-<|assistant|>`;
+Hãy trả lời đầy đủ và chi tiết. Luôn trả lời bằng tiếng Việt. Không đề cập đến việc bạn là AI, chỉ tập trung vào việc cung cấp thông tin về cửa hàng.`;
 
-  // Call HuggingFace API
-  const modelName = 'HuggingFaceH4/zephyr-7b-beta';
-  console.log(`Gọi API đến model: ${modelName}`);
+  // Call OpenAI API
+  console.log('Calling OpenAI API');
   
   const response = await axios({
     method: 'post',
-    url: `https://api-inference.huggingface.co/models/${modelName}`,
+    url: 'https://api.openai.com/v1/chat/completions',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json'
     },
     data: { 
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: 300,
-        temperature: 0.7,
-        top_p: 0.95,
-        do_sample: true,
-        return_full_text: false
-      }
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: systemMessage
+        },
+        {
+          role: 'user',
+          content: message
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.7
     },
     timeout: 60000 // 60 seconds timeout
   });
 
   // Extract the generated text
-  if (response.data && response.data[0] && response.data[0].generated_text) {
-    // Extract only the assistant's response (after the assistant tag)
-    const fullText = response.data[0].generated_text;
-    
-    // Look for the assistant tag and extract everything after it
-    const assistantTag = '<|assistant|>';
-    const assistantTagIndex = fullText.indexOf(assistantTag);
-    
-    if (assistantTagIndex !== -1) {
-      let botResponse = fullText.substring(assistantTagIndex + assistantTag.length).trim();
-      // Clean up the response if needed
-      botResponse = botResponse.replace(/<\|.*?\|>/g, '').trim();
-      return botResponse;
-    } else {
-      return fullText.substring(prompt.length).trim().replace(/<\|.*?\|>/g, '').trim();
-    }
+  if (response.data && response.data.choices && response.data.choices.length > 0) {
+    return response.data.choices[0].message.content;
   } 
   
-  throw new Error('No valid response from API');
+  throw new Error('No valid response from OpenAI API');
 } 
