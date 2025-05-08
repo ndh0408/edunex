@@ -18,7 +18,7 @@
                 <div class="col product-item">
                   <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card">
                     <div class="position-absolute top-0 end-0 m-3 z-2">
-                      <button type="button" class="btn btn-light btn-sm rounded-circle shadow-sm remove-wishlist" 
+                      <button type="button" class="btn btn-danger btn-sm rounded-circle shadow-sm remove-wishlist" 
                           data-product-id="<%= product._id %>"
                           data-bs-toggle="tooltip" 
                           data-bs-placement="left" 
@@ -65,16 +65,22 @@
                     </div>
                     
                     <div class="card-footer bg-white p-3 border-top-0">
-                      <form action="/cart/add" method="POST">
-                        <input type="hidden" name="productId" value="<%= product._id %>">
-                        <input type="hidden" name="quantity" value="1">
-                        <% if (typeof csrfToken !== "undefined") { %>
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <% } %>
-                        <button type="submit" class="btn btn-primary w-100 rounded-3">
-                          <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                      <div class="d-flex">
+                        <form action="/cart/add" method="POST" class="flex-grow-1 me-2">
+                          <input type="hidden" name="productId" value="<%= product._id %>">
+                          <input type="hidden" name="quantity" value="1">
+                          <% if (typeof csrfToken !== "undefined") { %>
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <% } %>
+                          <button type="submit" class="btn btn-primary w-100 rounded-3">
+                            <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                          </button>
+                        </form>
+                        <button type="button" class="btn btn-outline-danger remove-wishlist" 
+                               data-product-id="<%= product._id %>">
+                          <i class="fas fa-trash-alt"></i>
                         </button>
-                      </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -151,7 +157,16 @@
     transition: all var(--transition-fast);
   }
   
-  .btn-light:hover {
+  .btn-light:hover, .btn-danger:hover, .btn-outline-danger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  }
+  
+  .remove-wishlist {
+    transition: all 0.2s ease;
+  }
+  
+  .remove-wishlist:hover {
     background-color: var(--danger-color);
     color: white;
   }

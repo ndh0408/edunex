@@ -164,7 +164,8 @@
             <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
           </button>
           <button id="add-to-wishlist"
-                  class="btn btn-outline-primary me-2"
+                  type="button"
+                  class="btn <%= user && user.wishlist && user.wishlist.includes(product._id) ? 'btn-danger' : 'btn-outline-danger' %> me-2"
                   data-product-id="<%= product._id %>"
                   data-logged-in="<%= user ? 'true' : 'false' %>">
             <i class="<%= user && user.wishlist && user.wishlist.includes(product._id) ? 'fas' : 'far' %> fa-heart me-2"></i>
@@ -297,7 +298,7 @@
                     </div>
                     <div class="progress flex-grow-1 mx-2" style="height: 10px;">
                       <div class="progress-bar bg-warning" role="progressbar" 
-                           style="width: <%= barWidth %>%;" 
+                           style="width: <%= barWidth %>%" 
                            aria-valuenow="<%= barWidth %>" 
                            aria-valuemin="0" 
                            aria-valuemax="100"></div>
@@ -311,83 +312,49 @@
             </div>
           </div>
           
-          <!-- Write a review -->
-          <div class="card mb-4">
+          <!-- ĐÁNH GIÁ SẢN PHẨM (FIX TRIỆT ĐỂ) -->
+          <div class="card mb-4 shadow-sm border-0" style="max-width: 500px; margin: 0 auto;">
             <div class="card-body">
-              <h4 class="mb-3">Đánh giá sản phẩm</h4>
-              
-              <% if (user) { %>
-                <!-- Meta tag for CSRF token if available -->
-                <% if (typeof csrfToken !== 'undefined') { %>
-                  <meta name="csrf-token" content="<%= csrfToken %>">
-                <% } else { %>
-                  <!-- CSRF token not available -->
-                  <div class="alert alert-warning small">Chú ý: CSRF token không có sẵn, có thể gặp lỗi khi gửi đánh giá</div>
-                <% } %>
-                
-                <!-- Debug info -->
-                <div class="bg-light p-2 mb-3 small d-flex justify-content-between">
-                  <div>
-                    <strong>User ID:</strong> <%= user._id %> 
-                    <strong>Product ID:</strong> <%= product._id %>
-                  </div>
-                  <button type="button" class="btn btn-sm btn-secondary" onclick="testReviewAPI(); return false;">Test API</button>
+              <h4 class="mb-3 text-center">Đánh giá sản phẩm</h4>
+              <% if (!user) { %>
+                <div class="alert alert-info text-center mb-0">
+                  Vui lòng <a href="/users/login?redirect=/products/<%= product.slug %>" class="alert-link">đăng nhập</a> để đánh giá sản phẩm.
                 </div>
-                
-                <div id="api-response" class="alert alert-success mb-3" style="display: none;">
-                  <strong>API Response:</strong> <span id="response-message"></span>
-                </div>
-                
-                <!-- Sử dụng div thay vì form để tránh hoàn toàn việc submit -->
-                <div class="mb-4 review-container">
-                  <input type="hidden" id="productId" value="<%= product._id %>">
-                  <div class="mb-3">
-                    <label class="form-label">Đánh giá của bạn <span class="text-danger">*</span></label>
-                    <div class="d-flex">
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="rating" id="rating-1" value="1">
-                        <label class="form-check-label" for="rating-1">1 <i class="fas fa-star text-warning"></i></label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="rating" id="rating-2" value="2">
-                        <label class="form-check-label" for="rating-2">2 <i class="fas fa-star text-warning"></i></label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="rating" id="rating-3" value="3">
-                        <label class="form-check-label" for="rating-3">3 <i class="fas fa-star text-warning"></i></label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="rating" id="rating-4" value="4">
-                        <label class="form-check-label" for="rating-4">4 <i class="fas fa-star text-warning"></i></label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="rating" id="rating-5" value="5" checked>
-                        <label class="form-check-label" for="rating-5">5 <i class="fas fa-star text-warning"></i></label>
-                      </div>
+              <% } else if (!canReview) { %>
+                <div class="alert alert-warning text-center mb-0">Bạn cần mua sản phẩm này mới có thể đánh giá.</div>
+              <% } else { %>
+                <form id="review-form" method="POST" action="/products/<%= product._id %>/reviews">
+                  <input type="hidden" name="productId" value="<%= product._id %>">
+                  <% if (typeof csrfToken !== 'undefined') { %>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <% } %>
+                  <div class="mb-3 text-center">
+                    <label class="form-label mb-2">Đánh giá của bạn <span class="text-danger">*</span></label>
+                    <div class="d-flex justify-content-center gap-2">
+                      <% for(let i=1; i<=5; i++) { %>
+                        <input type="radio" class="btn-check" name="rating" id="rating-<%= i %>" value="<%= i %>" <%= i === 5 ? 'checked' : '' %>>
+                        <label class="btn btn-outline-warning px-2 py-1" for="rating-<%= i %>"><i class="fa-star <%= i <= 5 ? 'fas' : 'far' %> text-warning"></i> <%= i %></label>
+                      <% } %>
                     </div>
                   </div>
-                  
                   <div class="mb-3">
-                    <label for="direct-comment" class="form-label">Bình luận của bạn</label>
-                    <textarea class="form-control" id="direct-comment" rows="3" placeholder="Nhập bình luận của bạn về sản phẩm...">Sản phẩm rất tốt!</textarea>
+                    <label for="review-comment" class="form-label">Bình luận của bạn</label>
+                    <textarea class="form-control" id="review-comment" name="comment" rows="3" placeholder="Nhập bình luận của bạn về sản phẩm..."></textarea>
                   </div>
-                  
-                  <button type="button" class="btn btn-primary" id="direct-submit-btn" onclick="submitReview()">
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" id="submit-review-btn">
                     <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
                   </button>
                 </div>
-              <% } else { %>
-                <div class="alert alert-info">
-                  Vui lòng <a href="/users/login?redirect=/products/<%= product.slug %>" class="alert-link">đăng nhập</a> để đánh giá sản phẩm.
-                </div>
+                  <div id="review-alert" class="alert mt-3 mb-0 d-none text-center" style="font-size: 0.95em; padding: 0.5em;"></div>
+                </form>
               <% } %>
             </div>
           </div>
           
-          <!-- Reviews list -->
-          <div class="reviews-list">
+          <!-- Danh sách đánh giá -->
+          <div class="reviews-list mt-4" id="reviews-list">
             <h5 class="mb-3">Tất cả đánh giá</h5>
-            
             <% if (product.reviews && product.reviews.length > 0) { %>
               <div class="review-items">
                 <% product.reviews.forEach(review => { %>
@@ -509,444 +476,113 @@
   <% } %>
 </div>
 
-<script>
-  console.log("Loading product detail scripts...");
+<!-- Đặt script ở cuối file, trước </body> -->
+<script type="text/javascript">
+console.log('Review script loaded!');
   
+// Đợi DOM load xong
   document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, initializing...");
-    
-    // Product image gallery
-    const mainImg = document.getElementById('main-product-image');
-    const thumbnails = document.querySelectorAll('.img-thumbnail');
-    
-    thumbnails.forEach(img => {
-      img.addEventListener('click', function() {
-        // Remove active class from all thumbnails
-        thumbnails.forEach(thumb => thumb.classList.remove('active'));
-        
-        // Add active class to clicked thumbnail
-        this.classList.add('active');
-        
-        // Update main image
-        mainImg.src = this.src;
-      });
-    });
-    
-    // Quantity buttons
-    const qtyInput = document.getElementById('quantity');
-    const qtyUp = document.getElementById('increase-quantity');
-    const qtyDown = document.getElementById('decrease-quantity');
-    
-    qtyUp.addEventListener('click', () => {
-      const maxQty = parseInt(qtyInput.getAttribute('max')) || 100;
-      const currentValue = parseInt(qtyInput.value);
+  console.log('DOM fully loaded');
+  
+  // Gắn event listener cho nút đánh giá
+  const submitBtn = document.getElementById('submit-review-btn');
+  if (submitBtn) {
+    console.log('Found submit button, attaching event listener');
+    submitBtn.addEventListener('click', function() {
+      console.log('submitReview function called!');
       
-      if (currentValue < maxQty) {
-        qtyInput.value = currentValue + 1;
+      const alertDiv = document.getElementById('review-alert');
+      const productId = document.getElementById('review-product-id').value;
+      const ratingInput = document.querySelector('input[name="rating"]:checked');
+      const rating = ratingInput ? ratingInput.value : '5';
+      const comment = document.getElementById('review-comment').value.trim();
+      const csrfTokenInput = document.getElementById('review-csrf-token');
+      const csrfToken = csrfTokenInput ? csrfTokenInput.value : '';
+      
+      if (!comment) {
+        alertDiv.className = 'alert alert-warning mt-3 mb-0 text-center';
+        alertDiv.textContent = 'Vui lòng nhập bình luận.';
+        alertDiv.classList.remove('d-none');
+        return;
       }
-    });
-    
-    qtyDown.addEventListener('click', () => {
-      const minQty = parseInt(qtyInput.getAttribute('min')) || 1;
-      const currentValue = parseInt(qtyInput.value);
       
-      if (currentValue > minQty) {
-        qtyInput.value = currentValue - 1;
-      }
-    });
-    
-    // Add to cart functionality
-    const addToCartForm = document.getElementById('add-to-cart-form');
-    
-    addToCartForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...';
+      alertDiv.classList.add('d-none');
       
-      const productId = this.querySelector('[name="productId"]').value;
-      const quantity = parseInt(this.querySelector('[name="quantity"]').value);
-      
-      // Add to cart via fetch API
-      fetch('/cart/add', {
+      fetch(`/api/products/${productId}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>'
+          'X-CSRF-Token': csrfToken
         },
-        body: JSON.stringify({
-          productId,
-          quantity
-        })
+        body: JSON.stringify({ rating, comment })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
+        
         if (data.success) {
-          // Show success message
-          showCustomToast(data.message);
+          alertDiv.className = 'alert alert-success mt-3 mb-0 text-center';
+          alertDiv.textContent = data.message || 'Đánh giá đã được gửi thành công!';
+          alertDiv.classList.remove('d-none');
           
-          // Update cart count in header if available
-          if (data.cartCount) {
-            const cartCountElement = document.querySelector('.cart-count');
-            if (cartCountElement) {
-              cartCountElement.textContent = data.cartCount;
-            }
+          // Thêm đánh giá mới vào danh sách
+          const reviewsList = document.getElementById('reviews-list');
+          const newReviewHtml = `
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                  <div>
+                    <h6 class="mb-0">Bạn</h6>
+                    <small class="text-muted">${new Date().toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'})}</small>
+                  </div>
+                  <div>
+                    ${'<i class="fas fa-star text-warning"></i>'.repeat(rating)}${'<i class="far fa-star text-warning"></i>'.repeat(5-rating)}
+                  </div>
+                </div>
+                <p class="mb-0">${comment.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+              </div>
+            </div>
+          `;
+          
+          const reviewItems = reviewsList.querySelector('.review-items');
+          if (reviewItems) {
+            reviewItems.insertAdjacentHTML('afterbegin', newReviewHtml);
+          } else {
+            reviewsList.innerHTML = `<div class="review-items">${newReviewHtml}</div>`;
+          }
+          
+          // Reset form
+          document.getElementById('review-comment').value = '';
+          const rating5 = document.getElementById('rating-5');
+          if (rating5) rating5.checked = true;
+          
+          // Chuyển tab sang Đánh giá
+          const reviewsTab = document.getElementById('reviews-tab');
+          if (reviewsTab) {
+            reviewsTab.click();
           }
         } else {
-          showCustomToast(data.message, 'error');
+          alertDiv.className = 'alert alert-danger mt-3 mb-0 text-center';
+          alertDiv.textContent = data.message || 'Không thể gửi đánh giá.';
+          alertDiv.classList.remove('d-none');
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        showCustomToast('Có lỗi xảy ra, vui lòng thử lại sau', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
+        alertDiv.className = 'alert alert-danger mt-3 mb-0 text-center';
+        alertDiv.textContent = 'Có lỗi xảy ra khi gửi đánh giá.';
+        alertDiv.classList.remove('d-none');
       });
     });
-    
-    // Xử lý đánh giá sản phẩm
-    console.log("Initializing review form...");
-    
-    const reviewForm = document.getElementById('review-form');
-    console.log("Review form found:", !!reviewForm);
-    
-    const ratingInput = document.getElementById('rating-input');
-    const ratingError = document.getElementById('rating-error');
-    const submitButton = document.getElementById('submit-review-btn');
-    
-    // Star rating functionality
-    const stars = document.querySelectorAll('.star-rating-item');
-    console.log("Star rating items found:", stars.length);
-    
-    if (stars.length > 0) {
-      stars.forEach(star => {
-        star.addEventListener('click', function() {
-          const rating = this.dataset.rating;
-          console.log("Star clicked! Rating:", rating);
-          ratingInput.value = rating;
-          highlightStars(rating);
-          ratingError.classList.add('d-none');
-        });
-        
-        star.addEventListener('mouseover', function() {
-          const rating = this.dataset.rating;
-          highlightStars(rating);
-        });
-        
-        star.addEventListener('mouseout', function() {
-          const currentRating = ratingInput.value;
-          highlightStars(currentRating);
-        });
-      });
-    }
-    
-    function highlightStars(rating) {
-      stars.forEach(star => {
-        const starRating = star.dataset.rating;
-        if (starRating <= rating) {
-          star.classList.remove('far');
-          star.classList.add('fas');
         } else {
-          star.classList.remove('fas');
-          star.classList.add('far');
-        }
-      });
-    }
-    
-    // Form submission
-    if (reviewForm) {
-      console.log("Adding submit event listener to review form");
-      
-      reviewForm.addEventListener('submit', function(e) {
-        console.log("Review form submitted!");
-        e.preventDefault();
-        
-        // Kiểm tra người dùng đã đăng nhập hay chưa
-        const isUserLoggedIn = document.getElementById('review-form').dataset.userLoggedIn === 'true';
-        console.log("User logged in:", isUserLoggedIn);
-        
-        if (!isUserLoggedIn) {
-          alert('Vui lòng đăng nhập để gửi đánh giá');
-          window.location.href = '/users/login?redirect=' + encodeURIComponent(window.location.pathname);
-          return false;
-        }
-        
-        const productId = this.querySelector('[name="productId"]').value;
-        const rating = parseInt(ratingInput.value);
-        const comment = this.querySelector('[name="comment"]').value.trim();
-        
-        console.log("Submitting review:", { productId, rating, comment });
-        
-        // Validate rating
-        if (!rating || rating < 1 || rating > 5) {
-          console.log("Rating validation failed");
-          ratingError.classList.remove('d-none');
-          return false;
-        }
-        
-        try {
-          // Disable submit button
-          submitButton.disabled = true;
-          submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...';
-          
-          // Send review via fetch API
-          console.log("Sending fetch request to API");
-          fetch(`/api/products/${productId}/reviews`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ rating, comment })
-          })
-          .then(response => {
-            console.log('API response status:', response.status);
-            
-            if (response.status === 401) {
-              throw new Error('Vui lòng đăng nhập để gửi đánh giá');
-            }
-            
-            if (!response.ok) {
-              const statusText = response.statusText || 'Lỗi mạng';
-              throw new Error(`Lỗi ${response.status}: ${statusText}`);
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Review API response:', data);
-            
-            if (data.success) {
-              // Show success message
-              alert('Đã gửi đánh giá thành công');
-              if (window.showToast) {
-                window.showToast(data.message || 'Đã gửi đánh giá thành công');
-              }
-              
-              // Clear form
-              reviewForm.reset();
-              ratingInput.value = '0';
-              highlightStars(0);
-              
-              // Reload page after delay
-              setTimeout(() => {
-                window.location.reload();
-              }, 1500);
-            } else {
-              // Enable submit button
-              submitButton.disabled = false;
-              submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
-              
-              // Show error message
-              alert(data.message || 'Không thể gửi đánh giá');
-              if (window.showToast) {
-                window.showToast(data.message || 'Không thể gửi đánh giá', 'error');
-              }
-            }
-          })
-          .catch(error => {
-            console.error('Review submission error:', error);
-            
-            // Enable submit button
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
-            
-            // Show error message with alert for reliability
-            alert('Lỗi: ' + error.message);
-            if (window.showToast) {
-              window.showToast(`Lỗi: ${error.message}`, 'error');
-            }
-          });
-        } catch (error) {
-          console.error('Exception in review submission:', error);
-          alert('Lỗi JavaScript: ' + error.message);
-        }
-        
-        return false;
-      });
-    }
-  });
-
-  // Hàm hiển thị thông báo đẹp
-  function showCustomToast(message, type = 'success') {
-    // Xóa toast cũ nếu có
-    const existingToast = document.querySelector('.custom-toast');
-    if (existingToast) {
-      existingToast.remove();
-    }
-    
-    // Xác định icon dựa vào loại thông báo
-    let icon = '';
-    if (type === 'success') {
-      icon = '<i class="fas fa-check-circle text-success custom-toast-icon"></i>';
-    } else if (type === 'error') {
-      icon = '<i class="fas fa-times-circle text-danger custom-toast-icon"></i>';
-    } else if (type === 'warning') {
-      icon = '<i class="fas fa-exclamation-triangle text-warning custom-toast-icon"></i>';
-    }
-    
-    // Tạo element toast
-    const toast = document.createElement('div');
-    toast.className = `custom-toast ${type}`;
-    toast.innerHTML = `
-      ${icon}
-      <div class="custom-toast-content">${message}</div>
-      <span class="custom-toast-close">&times;</span>
-    `;
-    
-    // Thêm vào body
-    document.body.appendChild(toast);
-    
-    // Xử lý đóng toast khi click
-    toast.querySelector('.custom-toast-close').addEventListener('click', () => {
-      toast.remove();
-    });
-    
-    // Tự động xóa sau 3 giây
-    setTimeout(() => {
-      if (document.body.contains(toast)) {
-        toast.remove();
-      }
-    }, 3000);
+    console.error('Submit review button not found!');
   }
-  
-  // Ghi đè lên hàm showToast của trang
-  window.showToast = showCustomToast;
-  
-  // Hàm kiểm tra API đánh giá
-  function testReviewAPI() {
-    const responseDiv = document.getElementById('api-response');
-    const responseMessage = document.getElementById('response-message');
-    const productId = document.querySelector('input[name="productId"]').value;
-    
-    console.log('Testing review API...');
-    console.log('Product ID:', productId);
-    
-    // Simple test data
-    const testData = {
-      rating: 5,
-      comment: 'Test comment from debug button ' + new Date().toISOString()
-    };
-    
-    // Hiển thị trạng thái "sending"
-    responseDiv.style.display = 'block';
-    responseDiv.className = 'alert alert-info mb-3';
-    responseMessage.textContent = 'Đang gửi yêu cầu tới API...';
-    
-    // Send direct API request
-    fetch(`/api/products/${productId}/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(testData)
-    })
-    .then(response => {
-      console.log('API test response status:', response.status);
-      return response.json().catch(e => ({ success: false, message: 'Invalid JSON response' }));
-    })
-    .then(data => {
-      console.log('API test response:', data);
-      
-      // Hiển thị kết quả
-      responseDiv.className = data.success ? 'alert alert-success mb-3' : 'alert alert-danger mb-3';
-      responseMessage.textContent = data.message || JSON.stringify(data);
-      
-      // Hiển thị toast
-      showCustomToast('API Response: ' + (data.success ? 'Success' : 'Failed') + ' - ' + (data.message || ''), 
-        data.success ? 'success' : 'error');
-    })
-    .catch(error => {
-      console.error('API test error:', error);
-      
-      // Hiển thị lỗi
-      responseDiv.style.display = 'block';
-      responseDiv.className = 'alert alert-danger mb-3';
-      responseMessage.textContent = 'Error: ' + error.message;
-      
-      // Hiển thị toast
-      showCustomToast('API Test Error: ' + error.message, 'error');
-    });
-    
-    return false;
-  }
-
-  // Xử lý form submit để tránh chuyển trang
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, setting up review handling");
-  });
-  
-  // Hàm gửi đánh giá
-  function submitReview() {
-    const form = document.getElementById('review-form');
-    const submitBtn = document.getElementById('submit-review-btn');
-    const responseDiv = document.getElementById('api-response');
-    const responseMessage = document.getElementById('response-message');
-    
-    // Lấy productId từ form
-    const productId = form.querySelector('input[name="productId"]').value;
-    
-    // Lấy rating từ radio buttons
-    const ratingInput = form.querySelector('input[name="rating"]:checked');
-    const rating = ratingInput ? ratingInput.value : '5';
-    
-    // Lấy comment
-    const comment = form.querySelector('#direct-comment').value.trim();
-    
-    // Hiển thị trạng thái loading
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...';
-    
-    console.log('Sending review data:', { productId, rating, comment });
-    
-    // Gửi request đến API endpoint
-    fetch(`/api/products/${productId}/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rating: rating,
-        comment: comment
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('API response:', data);
-      
-      // Enable button lại
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
-      
-      // Hiển thị thông báo
-      responseDiv.style.display = 'block';
-      responseMessage.textContent = data.message || 'Đánh giá đã được gửi thành công';
-      responseDiv.className = data.success ? 'alert alert-success mb-3' : 'alert alert-danger mb-3';
-      
-      if (data.success) {
-        // Hiển thị thông báo thành công
-        showCustomToast(data.message || 'Đánh giá đã được gửi thành công', 'success');
-        
-        // Reload trang sau 2 giây
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        // Hiển thị thông báo lỗi
-        showCustomToast(data.message || 'Không thể gửi đánh giá', 'error');
-      }
-    })
-    .catch(error => {
-      console.error('Error submitting review:', error);
-      
-      // Enable button lại
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Gửi đánh giá';
-      
-      // Hiển thị thông báo lỗi
-      responseDiv.style.display = 'block';
-      responseDiv.className = 'alert alert-danger mb-3';
-      responseMessage.textContent = 'Lỗi khi gửi đánh giá: ' + error.message;
-      
-      // Hiển thị toast
-      showCustomToast('Có lỗi xảy ra khi gửi đánh giá: ' + error.message, 'error');
-    });
-    
-    return false;
-  }
+});
 </script>
 
 <style>

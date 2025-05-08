@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { ensureAuthenticated, ensureGuest } = require('../middlewares/auth');
 const csrf = require('csurf');
+const User = require('../models/User');
 
 // Initialize CSRF protection
 const csrfProtection = csrf({ 
@@ -142,5 +143,45 @@ router.get('/resend-verification', csrfProtection, addCsrfToken, userController.
 // @desc    Resend verification email
 // @access  Public
 router.post('/resend-verification', csrfProtection, userController.resendVerification);
+
+// TEMPORARY: Diagnostic endpoint to fix wishlist duplicates
+router.get('/fix-wishlist', ensureAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    // Check for duplicates
+    const wishlistIds = user.wishlist.map(id => id.toString());
+    const uniqueIds = [...new Set(wishlistIds)];
+    const duplicatesCount = wishlistIds.length - uniqueIds.length;
+    
+    if (duplicatesCount > 0) {
+      // Fix duplicates
+      user.wishlist = uniqueIds;
+      await user.save();
+      
+      return res.send(`
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1>Wishlist Fixed</h1>
+          <p>Found and removed ${duplicatesCount} duplicate items from your wishlist.</p>
+          <p>Original count: ${wishlistIds.length}</p>
+          <p>New count: ${uniqueIds.length}</p>
+          <a href="/users/wishlist" style="display: inline-block; background: #4267B2; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; margin-top: 20px;">Go to My Wishlist</a>
+        </div>
+      `);
+    } else {
+      return res.send(`
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1>Wishlist Check</h1>
+          <p>No duplicates found in your wishlist.</p>
+          <p>Current wishlist count: ${wishlistIds.length}</p>
+          <a href="/users/wishlist" style="display: inline-block; background: #4267B2; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; margin-top: 20px;">Go to My Wishlist</a>
+        </div>
+      `);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;

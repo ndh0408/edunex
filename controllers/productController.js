@@ -4,6 +4,7 @@ const Review = require('../models/Review');
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
+const Order = require('../models/Order');
 
 // @desc    Show all products (with filters and pagination)
 // @route   GET /products
@@ -277,12 +278,24 @@ exports.getProduct = async (req, res) => {
       avgRating = sumRatings / product.reviews.length;
     }
     
+    let canReview = false;
+    if (req.user) {
+      // Kiểm tra user đã mua sản phẩm này chưa (đơn hàng đã thanh toán hoặc delivered)
+      const orders = await Order.find({
+        user: req.user._id,
+        isPaid: true,
+        'items.product': product._id
+      });
+      canReview = orders && orders.length > 0;
+    }
+    
     res.render('products/detail', {
       title: productData.name,
       product: productData,
       relatedProducts,
       isInWishlist,
-      avgRating
+      avgRating,
+      canReview
     });
   } catch (err) {
     console.error('Error in getProduct function:', err);
@@ -607,75 +620,97 @@ exports.addReview = async (req, res) => {
   try {
     console.log('Receiving review submission:', req.body);
     const { rating, comment } = req.body;
-    
-    // Validate rating
+    const productId = req.params.id;
+
+    // Validate input
     if (!rating || rating < 1 || rating > 5) {
+      console.log('Invalid rating:', rating);
       return res.status(400).json({
         success: false,
         message: 'Vui lòng chọn số sao đánh giá từ 1-5'
       });
     }
-    
-    const productId = req.params.id;
-    
-    // Check if product exists
+
+    // Check product exists
     const product = await Product.findById(productId);
     if (!product) {
+      console.log('Product not found:', productId);
       return res.status(404).json({
         success: false,
         message: 'Không tìm thấy sản phẩm'
       });
     }
-    
-    // Tạm thời bỏ kiểm tra đăng nhập
-    // Dùng ID người dùng cố định cho mục đích test
-    const userId = req.user ? req.user._id : '680b30d696e1c0be05346f4';
-    const userName = req.user ? req.user.name : 'Test User';
-    
-    // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
-    const existingReview = await Review.findOne({ user: userId, product: productId });
-    
+
+    // Check user authentication
+    if (!req.user) {
+      console.log('User not authenticated');
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Bạn cần đăng nhập để đánh giá.' 
+      });
+    }
+
+    // Check if user has purchased the product
+    console.log('Checking orders for user:', req.user._id);
+    const orders = await Order.find({
+      user: req.user._id,
+      'items.product': productId,
+      isPaid: true,
+      status: { $in: ['delivered', 'shipped'] }
+    });
+
+    console.log('Found orders:', orders.length);
+    if (!orders || orders.length === 0) {
+      console.log('No valid orders found');
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Bạn cần mua và nhận được sản phẩm này mới có thể đánh giá.' 
+      });
+    }
+
+    // Check if user already reviewed
+    const existingReview = await Review.findOne({ 
+      user: req.user._id, 
+      product: productId 
+    });
+
     if (existingReview) {
-      // Cập nhật đánh giá hiện có
+      console.log('Updating existing review');
       existingReview.rating = Number(rating);
       existingReview.comment = comment;
       existingReview.createdAt = Date.now();
       await existingReview.save();
-      
-      // Cập nhật rating cho sản phẩm
       await updateProductRating(productId);
-      
-      return res.status(200).json({
-        success: true,
-        message: 'Đã cập nhật đánh giá của bạn'
-      });
-    } else {
-      // Tạo đối tượng Review mới
-      const reviewData = {
-        user: userId,
-        product: productId,
-        rating: Number(rating),
-        comment: comment,
-        createdAt: Date.now()
-      };
-      
-      // Tạo review qua model Review
-      const newReview = new Review(reviewData);
-      await newReview.save();
-      
-      // Cập nhật rating cho sản phẩm
-      await updateProductRating(productId);
-      
-      return res.status(201).json({
-        success: true,
-        message: 'Đã thêm đánh giá thành công'
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Đã cập nhật đánh giá của bạn' 
       });
     }
+
+    // Create new review
+    console.log('Creating new review');
+    const reviewData = {
+      user: req.user._id,
+      product: productId,
+      rating: Number(rating),
+      comment: comment,
+      createdAt: Date.now()
+    };
+    const newReview = new Review(reviewData);
+    await newReview.save();
+    await updateProductRating(productId);
+
+    console.log('Review created successfully');
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Đã gửi đánh giá thành công' 
+    });
+
   } catch (err) {
-    console.error('Error in adding review:', err);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra, vui lòng thử lại sau: ' + err.message
+    console.error('Error in addReview:', err);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Có lỗi xảy ra khi gửi đánh giá' 
     });
   }
 };

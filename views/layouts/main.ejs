@@ -117,12 +117,57 @@
     </div>
   </div>
 
+  <!-- Custom Toast -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+  
   <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Main JS -->
   <script src="/js/main.js"></script>
-  <!-- Custom Scripts -->
   <script src="/js/wishlist.js"></script>
+
+  <!-- CSRF Token Refresh Script -->
+  <script>
+    // Refresh CSRF token when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/users/refresh-csrf', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error('Failed to refresh CSRF token');
+      })
+      .then(data => {
+        if (data.csrfToken) {
+          // Update meta tag
+          let metaTag = document.querySelector('meta[name="csrf-token"]');
+          if (!metaTag) {
+            metaTag = document.createElement('meta');
+            metaTag.setAttribute('name', 'csrf-token');
+            document.head.appendChild(metaTag);
+          }
+          metaTag.setAttribute('content', data.csrfToken);
+          console.log('CSRF token refreshed');
+          
+          // Initialize wishlist functionality after token refresh
+          if (typeof initWishlist === 'function') {
+            initWishlist();
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error refreshing CSRF token:', error);
+        
+        // Still try to initialize wishlist even if token refresh fails
+        if (typeof initWishlist === 'function') {
+          initWishlist();
+        }
+      });
+    });
+  </script>
   
   <!-- Chatbot & Back to Top Styles -->
   <style>

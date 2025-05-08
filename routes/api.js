@@ -4,13 +4,20 @@ const productController = require('../controllers/productController');
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
 const chatbotController = require('../controllers/chatbotController');
-const { apiAuth } = require('../middlewares/auth');
+const { apiAuth, ensureAuthenticated } = require('../middlewares/auth');
+const csrf = require('csurf');
+
+// CSRF protection for API routes
+const csrfProtection = csrf({ cookie: true });
+
+// Apply CSRF protection to all routes
+router.use(csrfProtection);
 
 // Product routes
 router.get('/products', productController.getProducts);
 router.get('/products/search', productController.searchProducts);
 router.get('/products/:id', productController.getProductById);
-router.post('/products/:id/reviews', productController.addReview);
+router.post('/products/:id/reviews', ensureAuthenticated, productController.addReview);
 
 // User routes
 router.post('/users/wishlist/:productId', apiAuth, userController.addToWishlist);
