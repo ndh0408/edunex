@@ -20,7 +20,7 @@
         <form action="/admin/categories" method="GET" class="d-flex">
           <input type="text" name="search" class="form-control form-control-sm me-2" placeholder="Tìm kiếm..." value="<%= search || '' %>">
           <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fas fa-search"></i>
+            <i class="bi bi-search"></i>
           </button>
         </form>
       </div>
@@ -75,12 +75,14 @@
                           data-featured="<%= category.featured ? 'true' : 'false' %>"
                           data-image="<%= category.image || 'default-category.jpg' %>">
                           <i class="fas fa-edit"></i>
+                          Sửa
                         </button>
                         <a href="/admin/categories/delete/<%= category._id %>"
                            class="btn btn-sm btn-danger delete-confirm-link"
                            data-name="<%= category.name %>"
                            title="Xóa danh mục <%= category.name %>">
                           <i class="fas fa-trash"></i>
+                          Xóa
                         </a>
                       </div>
                     </td>
