@@ -1,0 +1,56 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0 fw-bold"><i class="fas fa-plus me-2"></i>Thêm địa chỉ mới</h4>
+        </div>
+        <div class="card-body p-4">
+          <% if (locals.messages && messages.error) { %>
+            <div class="alert alert-danger"><%= messages.error %></div>
+          <% } %>
+          <% if (locals.messages && messages.success_msg) { %>
+            <div class="alert alert-success"><%= messages.success_msg %></div>
+          <% } %>
+          <form action="/users/addresses" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Họ tên người nhận *</label>
+              <input type="text" class="form-control" id="fullName" name="fullName" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Số điện thoại *</label>
+              <input type="tel" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="mb-3">
+              <label for="street" class="form-label">Địa chỉ chi tiết *</label>
+              <input type="text" class="form-control" id="street" name="street" required>
+            </div>
+            <div class="mb-3">
+              <label for="ward" class="form-label">Phường/Xã</label>
+              <input type="text" class="form-control" id="ward" name="ward">
+            </div>
+            <div class="mb-3">
+              <label for="district" class="form-label">Quận/Huyện *</label>
+              <input type="text" class="form-control" id="district" name="district" required>
+            </div>
+            <div class="mb-3">
+              <label for="city" class="form-label">Tỉnh/Thành phố *</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="isDefault" name="isDefault">
+              <label class="form-check-label" for="isDefault">
+                Đặt làm địa chỉ mặc định
+              </label>
+            </div>
+            <div class="d-flex justify-content-end">
+              <a href="/users/addresses" class="btn btn-secondary me-2">Hủy</a>
+              <button type="submit" class="btn btn-primary">Lưu địa chỉ</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

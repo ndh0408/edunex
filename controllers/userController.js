@@ -885,4 +885,26 @@ exports.resendVerification = async (req, res) => {
     req.flash('error_msg', 'Có lỗi xảy ra');
     res.redirect('/users/resend-verification');
   }
+};
+
+// @desc    Show edit address page
+// @route   GET /users/edit-address/:id
+exports.showEditAddressPage = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const address = user.addresses.find(addr => addr._id.toString() === req.params.id);
+    if (!address) {
+      req.flash('error_msg', 'Không tìm thấy địa chỉ');
+      return res.redirect('/users/addresses');
+    }
+    res.render('users/edit-address', {
+      title: 'Chỉnh sửa địa chỉ',
+      address,
+      csrfToken: req.csrfToken()
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Có lỗi xảy ra');
+    res.redirect('/users/addresses');
+  }
 }; 

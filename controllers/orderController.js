@@ -71,6 +71,7 @@ exports.showCheckout = async (req, res) => {
     const hasDiscount = discount > 0;
     console.log('hasDiscount:', hasDiscount);
     
+    const user = await User.findById(req.user._id);
     res.render('orders/checkout', {
       title: 'Thanh toán',
       cart: req.session.cart,
@@ -86,7 +87,11 @@ exports.showCheckout = async (req, res) => {
       couponError: req.flash('couponError')[0] || '',
       couponSuccess: req.flash('couponSuccess')[0] || '',
       userCoupons: await getUserCoupons(req.user),
-      user: req.user
+      user,
+      addresses: user.addresses || [],
+      defaultAddress: user.addresses && user.defaultAddress
+        ? user.addresses.find(addr => addr._id.toString() === user.defaultAddress.toString())
+        : (user.addresses && user.addresses[0]) || null
     });
   } catch (err) {
     console.error(err);

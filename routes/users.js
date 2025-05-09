@@ -144,6 +144,18 @@ router.get('/resend-verification', csrfProtection, addCsrfToken, userController.
 // @access  Public
 router.post('/resend-verification', csrfProtection, userController.resendVerification);
 
+// @route   GET /users/add-address
+// @desc    Show add address page
+// @access  Private
+router.get('/add-address', ensureAuthenticated, csrfProtection, addCsrfToken, (req, res) => {
+  res.render('users/add-address', { title: 'Thêm địa chỉ mới' });
+});
+
+// @route   GET /users/edit-address/:id
+// @desc    Show edit address page
+// @access  Private
+router.get('/edit-address/:id', ensureAuthenticated, csrfProtection, addCsrfToken, userController.showEditAddressPage);
+
 // TEMPORARY: Diagnostic endpoint to fix wishlist duplicates
 router.get('/fix-wishlist', ensureAuthenticated, async (req, res) => {
   try {
